@@ -1,20 +1,28 @@
 package com.daawtec.scancheck.entites;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+@Entity(tableName="VERIFICATION")
 public class Verification {
 
+    @ColumnInfo(name="CODE_VERIFICATION")
     @SerializedName("codeVerification")
     public String codeVerification;
 
+    @ColumnInfo(name="CODE_MACARON")
     @SerializedName("codeMacaron")
     public String codeMacaron;
 
+    @ColumnInfo(name="NOMBRE_MILD")
     @SerializedName("nombreMild")
     public int nombreMild;
 
+    @ColumnInfo(name="DATE_VERIFICATION")
     @SerializedName("dateVerification")
     public Date dateVerification;
 

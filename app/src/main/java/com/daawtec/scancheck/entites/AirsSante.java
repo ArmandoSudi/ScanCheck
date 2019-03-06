@@ -1,0 +1,55 @@
+package com.daawtec.scancheck.entites;
+
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+
+import com.google.gson.annotations.SerializedName;
+
+@Entity(tableName="AIRS_SANTE", foreignKeys = {
+        @ForeignKey(entity = ZoneSante.class, parentColumns = "CODE_ZS", childColumns = "CODE_ZS")
+})
+public class AirsSante {
+
+    @ColumnInfo(name="CODE_AS")
+    @SerializedName("codeAS")
+    public String codeAS;
+
+    @ColumnInfo(name="NOM_AS")
+    @SerializedName("nomAS")
+    public String nomAS;
+
+    @ColumnInfo(name="CODE_ZS")
+    @SerializedName("codeZS")
+    public String codeZS;
+
+    public AirsSante(String codeAS, String nomAS, String codeZS) {
+        this.codeAS = codeAS;
+        this.nomAS = nomAS;
+        this.codeZS = codeZS;
+    }
+
+    public String getCodeAS() {
+        return codeAS;
+    }
+
+    public void setCodeAS(String codeAS) {
+        this.codeAS = codeAS;
+    }
+
+    public String getNomAS() {
+        return nomAS;
+    }
+
+    public void setNomAS(String nomAS) {
+        this.nomAS = nomAS;
+    }
+
+    public String getCodeZS() {
+        return codeZS;
+    }
+
+    public void setCodeZS(String codeZS) {
+        this.codeZS = codeZS;
+    }
+}

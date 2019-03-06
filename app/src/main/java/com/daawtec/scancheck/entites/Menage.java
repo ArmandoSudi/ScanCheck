@@ -1,29 +1,44 @@
 package com.daawtec.scancheck.entites;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+@Entity(tableName="MENAGE", foreignKeys = {
+        @ForeignKey(entity = RelaisCommunautaire.class, parentColumns = "CODE_RECO", childColumns = "CODE_RECO"),
+        @ForeignKey(entity = SiteDistribution.class, parentColumns = "CODE_SD", childColumns = "CODE_SD")
+})
 public class Menage {
-
+    
+    @ColumnInfo(name="CODE_MENAGE")
     @SerializedName("codeMenage")
     public String codeMenage;
 
+    @ColumnInfo(name="NOM_RESPONSABLE")
     @SerializedName("nomResponsable")
     public String nomResponsable;
 
+    @ColumnInfo(name="SEXE_RESPONSABLE")
     @SerializedName("sexeResponsable")
     public String sexeResponsable;
 
+    @ColumnInfo(name="AGE_RESPONSABLE")
     @SerializedName("ageResponsable")
     public int ageResponsable;
 
+    @ColumnInfo(name="TAILLE_MENAGE")
     @SerializedName("tailleMenage")
     public String tailleMenage;
 
+    @ColumnInfo(name="DATE_IDENTIFICATION")
     @SerializedName("dateIdentification")
     public Date dateIdentification;
 
+    @ColumnInfo(name="CODE_RECO")
     @SerializedName("codeReco")
     public String codeReco;
 

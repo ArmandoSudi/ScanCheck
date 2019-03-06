@@ -1,15 +1,25 @@
 package com.daawtec.scancheck.entites;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName="ZONE_SANTE", foreignKeys = {
+        @ForeignKey(entity = DivisionProvincialeSante.class, parentColumns = "CODE_DPS", childColumns = "CODE_DPS")
+})
 public class ZoneSante {
 
+    @ColumnInfo(name="CODE_ZS")
     @SerializedName("codeZS")
     public String codeZS;
 
+    @ColumnInfo(name="NOM_ZS")
     @SerializedName("nomZS")
     public String nomZS;
 
+    @ColumnInfo(name="CODE_DPS")
     @SerializedName("codeDPS")
     public String codeDPS;
 
