@@ -8,11 +8,16 @@ import android.arch.persistence.room.Update;
 
 import com.daawtec.scancheck.entites.AirsSante;
 
+import java.util.List;
+
 @Dao
 public interface IAirSanteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insert(AirsSante...airsSantes);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long[] insert(List<AirsSante> airsSantes);
 
     @Update
     int update(AirsSante...airsSantes);

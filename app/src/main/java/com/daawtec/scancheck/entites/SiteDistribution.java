@@ -3,6 +3,8 @@ package com.daawtec.scancheck.entites;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +13,8 @@ import com.google.gson.annotations.SerializedName;
 })
 public class SiteDistribution {
 
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name="CODE_SD")
     @SerializedName("codeSD")
     public String codeSD;
@@ -37,6 +41,11 @@ public class SiteDistribution {
         this.codeAS = codeAS;
         this.quantiteLivree = quantiteLivree;
         this.quantiteSortie = quantiteSortie;
+    }
+
+    @Override
+    public String toString() {
+        return nom ;
     }
 
     public String getCodeSD() {

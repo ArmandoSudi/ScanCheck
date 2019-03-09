@@ -3,6 +3,8 @@ package com.daawtec.scancheck.entites;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -10,10 +12,12 @@ import java.util.Date;
 
 @Entity(tableName="AFFECTATION_MACARON_AS", foreignKeys = {
         @ForeignKey(entity = AirsSante.class, parentColumns = "CODE_AS", childColumns = "CODE_AS"),
-        @ForeignKey(entity = RelaisCommunautaire.class, parentColumns = "CODE_RECO", childColumns = "CODE_REC)")
+        @ForeignKey(entity = RelaisCommunautaire.class, parentColumns = "CODE_RECO", childColumns = "CODE_RECO")
 })
 public class AffectationMacaronAS {
 
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name="CODE_MACARON")
     @SerializedName("codeMacaron")
     public String codeMacaron;
@@ -27,9 +31,9 @@ public class AffectationMacaronAS {
     public String dateAffectationAS;
 
 
-    @ColumnInfo(name="CODE_RELAIS_COMMUNAUTAIRE")
-    @SerializedName("codeRelaisCommunautaire")
-    public String codeRelaisCommunautaire;
+    @ColumnInfo(name="CODE_RECO")
+    @SerializedName("codeReco")
+    public String codeReco;
 
     @ColumnInfo(name="DATE_AFFECTATION_RECO")
     @SerializedName("dateAffectationReco")
@@ -44,11 +48,11 @@ public class AffectationMacaronAS {
     public int nombreMild;
 
 
-    public AffectationMacaronAS(String codeMacaron, String codeAS, String dateAffectationAS, String codeRelaisCommunautaire, String dateAffectationReco, Date dateVerification, int nombreMild) {
+    public AffectationMacaronAS(@NonNull String codeMacaron, String codeAS, String dateAffectationAS, String codeReco, String dateAffectationReco, Date dateVerification, int nombreMild) {
         this.codeMacaron = codeMacaron;
         this.codeAS = codeAS;
         this.dateAffectationAS = dateAffectationAS;
-        this.codeRelaisCommunautaire = codeRelaisCommunautaire;
+        this.codeReco = codeReco;
         this.dateAffectationReco = dateAffectationReco;
         this.dateVerification = dateVerification;
         this.nombreMild = nombreMild;
@@ -78,12 +82,12 @@ public class AffectationMacaronAS {
         this.dateAffectationAS = dateAffectationAS;
     }
 
-    public String getCodeRelaisCommunautaire() {
-        return codeRelaisCommunautaire;
+    public String getCodeReco() {
+        return codeReco;
     }
 
-    public void setCodeRelaisCommunautaire(String codeRelaisCommunautaire) {
-        this.codeRelaisCommunautaire = codeRelaisCommunautaire;
+    public void setCodeReco(String codeReco) {
+        this.codeReco = codeReco;
     }
 
     public String getDateAffectationReco() {

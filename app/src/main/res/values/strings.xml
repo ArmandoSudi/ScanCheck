@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">ScanCheck</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="tab_text_1">Scanner</string>
+    <string name="tab_text_2">Menages</string>
+    <string name="tab_text_3">Rapports</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="sexe_choice">
+        <item>M</item>
+        <item>F</item>
+    </string-array>
 </resources>

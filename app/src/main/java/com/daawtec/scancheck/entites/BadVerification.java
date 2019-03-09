@@ -2,6 +2,8 @@ package com.daawtec.scancheck.entites;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -10,6 +12,8 @@ import java.util.Date;
 @Entity(tableName = "BAD_VERIFICACTION")
 public class BadVerification {
 
+    @PrimaryKey
+    @NonNull
     @SerializedName("codeBadVerification")
     @ColumnInfo(name = "CODE_BAD_VERIFICATION")
     public String codeBadVerification;

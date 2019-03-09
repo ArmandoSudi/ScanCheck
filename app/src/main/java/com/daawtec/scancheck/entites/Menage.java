@@ -3,6 +3,8 @@ package com.daawtec.scancheck.entites;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +15,9 @@ import java.util.Date;
         @ForeignKey(entity = SiteDistribution.class, parentColumns = "CODE_SD", childColumns = "CODE_SD")
 })
 public class Menage {
-    
+
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name="CODE_MENAGE")
     @SerializedName("codeMenage")
     public String codeMenage;
@@ -41,6 +45,14 @@ public class Menage {
     @ColumnInfo(name="CODE_RECO")
     @SerializedName("codeReco")
     public String codeReco;
+
+    @ColumnInfo(name="CODE_SD")
+    @SerializedName("codeSD")
+    public String codeSD;
+
+    @ColumnInfo(name="DATE_AFFECTATION_SD")
+    @SerializedName("dateAffectationSD")
+    public Date dateAffectationSD;
 
     public Menage(String codeMenage, String nomResponsable, String sexeResponsable, int ageResponsable, String tailleMenage, Date dateIdentification, String codeReco) {
         this.codeMenage = codeMenage;

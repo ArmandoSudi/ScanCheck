@@ -3,6 +3,8 @@ package com.daawtec.scancheck.entites;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +13,8 @@ import com.google.gson.annotations.SerializedName;
 })
 public class ZoneSante {
 
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name="CODE_ZS")
     @SerializedName("codeZS")
     public String codeZS;
@@ -27,6 +31,11 @@ public class ZoneSante {
         this.codeZS = codeZS;
         this.nomZS = nomZS;
         this.codeDPS = codeDPS;
+    }
+
+    @Override
+    public String toString() {
+        return nomZS ;
     }
 
     public String getCodeZS() {

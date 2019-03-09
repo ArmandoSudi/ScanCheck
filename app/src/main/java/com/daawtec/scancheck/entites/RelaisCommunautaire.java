@@ -3,6 +3,8 @@ package com.daawtec.scancheck.entites;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +13,8 @@ import com.google.gson.annotations.SerializedName;
 })
 public class RelaisCommunautaire {
 
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name="CODE_RECO")
     @SerializedName("codeReco")
     public String codeReco;
@@ -27,6 +31,11 @@ public class RelaisCommunautaire {
         this.codeReco = codeReco;
         this.nom = nom;
         this.codeAS = codeAS;
+    }
+
+    @Override
+    public String toString() {
+        return this.nom;
     }
 
     public String getCodeReco() {
