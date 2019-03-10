@@ -8,11 +8,16 @@ import android.arch.persistence.room.Update;
 
 import com.daawtec.scancheck.entites.Menage;
 
+import java.util.List;
+
 @Dao
 public interface IMenageDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insert(Menage...menages);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long[] insert(List<Menage> menages);
 
     @Update
     int update(Menage...menages);

@@ -2,6 +2,8 @@ package com.daawtec.scancheck.utils;
 
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
+import com.daawtec.scancheck.entites.InventairePhysique;
+import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.RelaisCommunautaire;
 import com.daawtec.scancheck.entites.ZoneSante;
 
@@ -50,6 +52,26 @@ public class Utils {
         recos.add(new RelaisCommunautaire("1005", "Reco NYOFU", "1005"));
         recos.add(new RelaisCommunautaire("1006", "Reco LABOTTE", "1003"));
         return recos;
+    }
+
+    public static List<InventairePhysique> getInventairePhysiques(){
+        Date date = new Date();
+        List<InventairePhysique> inventairePhysiques = new ArrayList<>();
+        inventairePhysiques.add(new InventairePhysique("1001", date, 123, 120, 3, 200));
+        inventairePhysiques.add(new InventairePhysique("1002", date, 13, 13, 0, 20));
+        inventairePhysiques.add(new InventairePhysique("1003", date, 150, 150, 0, 180));
+        inventairePhysiques.add(new InventairePhysique("1004", date, 400, 370, 30, 400));
+        inventairePhysiques.add(new InventairePhysique("1005", date, 500, 495, 5, 600));
+        return inventairePhysiques;
+    }
+
+    public static List<Menage> getMenages(){
+        Date date = new Date();
+        List<Menage> menages = new ArrayList<>();
+        menages.add(new Menage("1001", "David Muhunga", "M", 45, "8", date,"1001"));
+        menages.add(new Menage("1002", "Rahul Godhani", "M", 35, "5", date,"1002"));
+        menages.add(new Menage("1001", "Vidya Mani", "F", 30, "4", date,"1003"));
+        return menages;
     }
 
     public static String getTimeStamp(){

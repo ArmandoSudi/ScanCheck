@@ -1,11 +1,17 @@
 package com.daawtec.scancheck;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.Preference;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -23,20 +29,40 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.ui.MenageFragment;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.ui.RapportFragment;
+import com.daawtec.scancheck.utils.Constant;
 import com.daawtec.scancheck.utils.Utils;
 
 public class HomeActivity extends AppCompatActivity implements MenageFragment.OnFragmentInteractionListener {
 
+    private static final String TAG = "HomeActivity";
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
     FloatingActionButton mFab;
 
+    SharedPreferences mSharedPref;
+    SharedPreferences.Editor mEditor;
+
     private static final int REQUEST_CODE_QR_SCAN = 101;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mSharedPref = getPreferences(Context.MODE_PRIVATE);
+        mEditor = mSharedPref.edit();
+
+        boolean isInitialized = mSharedPref.getBoolean(Constant.KEY_IS_INITIALIZED, false);
+        if(!isInitialized){
+            ScanCheckDB db = ScanCheckDB.getDatabase(this);
+            new InitDB(db).execute();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +74,9 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
 
         mFab = findViewById(R.id.fab);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mFab);
 
-        // Set up the ViewPager with the sections adapter.
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mFab);
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -105,9 +129,11 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
 
     public static class ScanQRFragment extends Fragment {
 
+        private static final String TAG = "ScanQRFragment";
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         Activity mActivity;
+        ScanCheckDB db;
 
         public ScanQRFragment() {
         }
@@ -121,6 +147,7 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             mActivity = getActivity();
+            db = ScanCheckDB.getDatabase(mActivity);
         }
 
         @Override
@@ -137,11 +164,103 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
                 }
             });
 
-//            FloatingActionButton fab = mActivity.findViewById(R.id.fab);
-//            fab.hide();
             return rootView;
         }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            if(requestCode == REQUEST_CODE_QR_SCAN)
+            {
+                if(data==null)
+                    return;
+                //Getting the passed result
+                String qrCode = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
+                Log.d(TAG,"Scan result : "+ qrCode);
+
+                checkMacaron(qrCode);
+
+            }
+        }
+
+        public void checkMacaron(final String qrCode){
+            (new AsyncTask<Void, Void, Macaron>(){
+                @Override
+                protected void onPostExecute(Macaron macaron) {
+                    super.onPostExecute(macaron);
+
+                    if (macaron instanceof Macaron){
+                        Log.d(TAG, "onPostExecute: LE MACARON EXIST");
+                        showDialog("Le macaron existe", mActivity);
+                    } else {
+                        Log.d(TAG, "onPostExecute: LE MACARON N'EXISTE PAS");
+                        showDialog("Le macaron n'existe pas", mActivity);
+                    }
+                }
+
+                @Override
+                protected Macaron doInBackground(Void... voids) {
+                    return db.getIMacaronDao().check(qrCode);
+                }
+            }).execute();
+        }
+
+        void showDialog(String message, Context context){
+            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+            alertDialog.setTitle("Resultat");
+            alertDialog.setMessage(message);
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+//        if(resultCode != Activity.RESULT_OK)
+//        {
+//            Log.d(TAG,"COULD NOT GET A GOOD RESULT.");
+//            if(data==null)
+//                return;
+//            //Getting the passed result
+//            String result = data.getStringExtra("com.blikoon.qrcodescanner.error_decoding_image");
+//            if( result!=null)
+//            {
+//                AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).create();
+//                alertDialog.setTitle("Scan Error");
+//                alertDialog.setMessage("QR Code could not be scanned");
+//                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                            }
+//                        });
+//                alertDialog.show();
+//            }
+//            return;
+//
+//        }
+//
+//        if(requestCode == REQUEST_CODE_QR_SCAN)
+//        {
+//            if(data==null)
+//                return;
+//            //Getting the passed result
+//            String qrCode = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
+//            Log.d(TAG,"Scan result :"+ qrCode);
+//
+//            checkMacaron(qrCode);
+//
+//        }
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -166,7 +285,7 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
                 case 1:
                     mFab.show();
                     return MenageFragment.newInstance("List of menage");
-                case 2 : return RapportFragment.newInstance("List of menage");
+                case 2 : return RapportFragment.newInstance();
                 default : return null;
             }
         }
@@ -193,6 +312,9 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
             super.onPostExecute(aVoid);
 
             Log.e(TAG, "onPostExecute: DATABASE INITIALIZED ");
+            // pour ne pas initialiser la base des donnees lors de redemarrage ulterieurs
+            mEditor.putBoolean(Constant.KEY_IS_INITIALIZED, true);
+            mEditor.commit();
         }
 
         @Override
@@ -201,7 +323,10 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
             db.getIZoneSanteDao().insert(Utils.getZoneSantes());
             db.getIAirSanteDao().insert(Utils.getAireSantes());
             db.getIRelaisCommunautaireDao().insert(Utils.getReco());
+            db.getIIventairePhysiqueDao().insert(Utils.getInventairePhysiques());
+            db.getIMenageDao().insert(Utils.getMenages());
             return null;
         }
     }
+
 }

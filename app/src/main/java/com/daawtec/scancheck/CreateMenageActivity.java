@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -32,7 +32,7 @@ public class CreateMenageActivity extends AppCompatActivity {
     TextView mDateIdentificationTV, mDateAffectationTV;
     EditText mNomResponsableET, mAgeResponsableET, mTailleMenageET;
     Spinner mSexeSP, mRecoSP, mSiteDistributionSP;
-    ImageButton mDateIdentificationIBT, mDateAffectationIBT;
+    ImageView mDateIdentificationIV, mDateAffectationIV;
     Button mSaveMenageBT;
 
     String mSexe, mRecoCode, mSiteDistributionCode;
@@ -81,8 +81,8 @@ public class CreateMenageActivity extends AppCompatActivity {
             }
         };
 
-        mDateAffectationIBT = findViewById(R.id.date_affecation_bt);
-        mDateAffectationIBT.setOnClickListener(new View.OnClickListener() {
+        mDateAffectationIV = findViewById(R.id.date_affecation_bt);
+        mDateAffectationIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(CreateMenageActivity.this, dateAffectationListener, mCalendar
@@ -90,8 +90,8 @@ public class CreateMenageActivity extends AppCompatActivity {
                         mCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        mDateIdentificationIBT = findViewById(R.id.date_identification_bt);
-        mDateIdentificationIBT.setOnClickListener(new View.OnClickListener() {
+        mDateIdentificationIV = findViewById(R.id.date_identification_bt);
+        mDateIdentificationIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(CreateMenageActivity.this, dateIdentificationListener, mCalendar

@@ -30,7 +30,6 @@ public class AffectationMacaronAS {
     @SerializedName("dateAffectationAS")
     public String dateAffectationAS;
 
-
     @ColumnInfo(name="CODE_RECO")
     @SerializedName("codeReco")
     public String codeReco;
