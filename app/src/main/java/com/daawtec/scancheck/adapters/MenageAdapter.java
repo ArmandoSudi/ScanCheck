@@ -41,7 +41,7 @@ public class MenageAdapter extends RecyclerView.Adapter<MenageAdapter.VH> {
     @Override
     public void onBindViewHolder(@NonNull VH vh, int i) {
         final Menage menage = mMenages.get(i);
-        vh.nomResponsableTV.setText(menage.ageResponsable);
+        vh.nomResponsableTV.setText(menage.nomResponsable);
         vh.tailleMenageTV.setText("" + menage.tailleMenage);
         vh.dateIdentificationTV.setText(mSimpleDateFormat.format(menage.dateIdentification));
     }
@@ -57,5 +57,9 @@ public class MenageAdapter extends RecyclerView.Adapter<MenageAdapter.VH> {
     @Override
     public int getItemCount() {
         return mMenages.size();
+    }
+
+    public void addAll(List<Menage> menages){
+        this.mMenages.addAll(menages);
     }
 }

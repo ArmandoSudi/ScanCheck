@@ -3,14 +3,24 @@ package com.daawtec.scancheck.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.daawtec.scancheck.R;
+import com.daawtec.scancheck.adapters.MenageAdapter;
+import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.Menage;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,40 +31,43 @@ import com.daawtec.scancheck.R;
  * create an instance of this fragment.
  */
 public class MenageFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private String mParam1;
 
     private OnFragmentInteractionListener mListener;
-
+    MenageAdapter mMenageAdapter;
     private Activity mActivity;
+    ScanCheckDB db;
 
     public MenageFragment() {
         // Required empty public constructor
     }
 
-    public static MenageFragment newInstance(String param1) {
+    public static MenageFragment newInstance() {
         MenageFragment fragment = new MenageFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-        }
         mActivity = getActivity();
+        mMenageAdapter = new MenageAdapter(mActivity);
+        db = ScanCheckDB.getDatabase(mActivity);
+        new LoadMenageAsync(db).execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        FloatingActionButton fab = mActivity.findViewById(R.id.fab);
-//        fab.show();
-        return inflater.inflate(R.layout.fragment_menage, container, false);
+        View view =  inflater.inflate(R.layout.fragment_menage, container, false);
+
+        RecyclerView menageRV = view.findViewById(R.id.menage_rv);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+        menageRV.setLayoutManager(linearLayoutManager);
+        menageRV.setHasFixedSize(true);
+        menageRV.addItemDecoration(new DividerItemDecoration(mActivity,linearLayoutManager.getOrientation()));
+        menageRV.setAdapter(mMenageAdapter);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -81,9 +94,31 @@ public class MenageFragment extends Fragment {
         mListener = null;
     }
 
-
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    class LoadMenageAsync extends AsyncTask<Void, Void, List<Menage>>{
+
+        ScanCheckDB db;
+
+        public LoadMenageAsync(ScanCheckDB db) {
+            this.db = db;
+        }
+
+        @Override
+        protected void onPostExecute(List<Menage> menages) {
+            super.onPostExecute(menages);
+            if(menages != null && menages.size() > 0){
+                mMenageAdapter.addAll(menages);
+                mMenageAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        protected List<Menage> doInBackground(Void... voids) {
+            return db.getIMenageDao().all();
+        }
     }
 }

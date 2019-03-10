@@ -14,10 +14,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.RelaisCommunautaire;
 import com.daawtec.scancheck.entites.SiteDistribution;
+import com.daawtec.scancheck.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,14 +32,14 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateMenageActivity";
 
-    TextView mDateIdentificationTV, mDateAffectationTV;
-    EditText mNomResponsableET, mAgeResponsableET, mTailleMenageET;
-    Spinner mSexeSP, mRecoSP, mSiteDistributionSP;
-    ImageView mDateIdentificationIV, mDateAffectationIV;
+    TextView mDateIdentificationTV;
+    EditText mNomResponsableET, mAgeResponsableET, mTailleMenageET, mNumeroMacaronET;
+    Spinner mSexeSP;
+    ImageView mDateIdentificationIV;
     Button mSaveMenageBT;
 
     String mSexe, mRecoCode, mSiteDistributionCode;
-    Date mDateAffecation, mDateIdentification;
+    Date mDateIdentification;
 
     private Calendar mCalendar = Calendar.getInstance();
 
@@ -54,21 +57,11 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     public void initView() {
         mDateIdentificationTV = findViewById(R.id.date_identification_tv);
-        mDateAffectationTV = findViewById(R.id.date_affectation_tv);
         mNomResponsableET = findViewById(R.id.nom_responsable_et);
         mAgeResponsableET = findViewById(R.id.age_responsable_et);
         mTailleMenageET = findViewById(R.id.taille_menage_et);
+        mNumeroMacaronET = findViewById(R.id.numero_macaron_et);
 
-        final DatePickerDialog.OnDateSetListener dateAffectationListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                mCalendar.set(Calendar.YEAR, year);
-                mCalendar.set(Calendar.MONTH, month);
-                mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel(mDateAffectationTV);
-                mDateAffecation = mCalendar.getTime();
-            }
-        };
 
         final DatePickerDialog.OnDateSetListener dateIdentificationListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -81,15 +74,6 @@ public class CreateMenageActivity extends AppCompatActivity {
             }
         };
 
-        mDateAffectationIV = findViewById(R.id.date_affecation_bt);
-        mDateAffectationIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(CreateMenageActivity.this, dateAffectationListener, mCalendar
-                        .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
-                        mCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
         mDateIdentificationIV = findViewById(R.id.date_identification_bt);
         mDateIdentificationIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +88,7 @@ public class CreateMenageActivity extends AppCompatActivity {
         mSaveMenageBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
-                saveMenage();
+                collectMenage();
             }
         });
 
@@ -122,35 +105,6 @@ public class CreateMenageActivity extends AppCompatActivity {
             }
         });
 
-        mRecoSP = findViewById(R.id.relais_communautaire_sp);
-        mRecoSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                RelaisCommunautaire reco = (RelaisCommunautaire) parent.getItemAtPosition(position);
-                mRecoCode = reco.codeReco;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        populateReco();
-
-        mSiteDistributionSP = findViewById(R.id.site_distribution_sp);
-        mSiteDistributionSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SiteDistribution sd = (SiteDistribution) parent.getItemAtPosition(position);
-                mSiteDistributionCode = sd.codeSD;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     public void updateLabel(TextView view) {
@@ -166,10 +120,10 @@ public class CreateMenageActivity extends AppCompatActivity {
             protected void onPostExecute(List<RelaisCommunautaire> relaisCommunautaires) {
                 super.onPostExecute(relaisCommunautaires);
 
-                mRecoSP.setAdapter(new ArrayAdapter<RelaisCommunautaire>(
-                        CreateMenageActivity.this,
-                        android.R.layout.simple_spinner_item,
-                        relaisCommunautaires));
+//                mRecoSP.setAdapter(new ArrayAdapter<RelaisCommunautaire>(
+//                        CreateMenageActivity.this,
+//                        android.R.layout.simple_spinner_item,
+//                        relaisCommunautaires));
             }
 
             @Override
@@ -179,8 +133,32 @@ public class CreateMenageActivity extends AppCompatActivity {
         }).execute();
     }
 
-    public void saveMenage(){
-        Log.e(TAG, "saveMenage: DATE AFFECATION: " + mDateAffecation );
-        Log.e(TAG, "saveMenage: DATE IDENTIFICATION: " + mDateIdentification );
+    public void collectMenage(){
+        String nomResponsable = mNomResponsableET.getText().toString();
+        int ageResponsable = Integer.parseInt(mAgeResponsableET.getText().toString());
+        String tailleMenage = mTailleMenageET.getText().toString();
+        String numeroMacaron = mNumeroMacaronET.getText().toString();
+        String codeMenage = Utils.getTimeStamp();
+
+        Menage menage = new Menage(codeMenage, nomResponsable, mSexe, ageResponsable, tailleMenage, mDateIdentification, numeroMacaron);
+
+        saveMenage(menage);
+
+    }
+
+    public void saveMenage(final Menage menage){
+        (new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                Toast.makeText(CreateMenageActivity.this, "Menage enregistre", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                db.getIMenageDao().insert(menage);
+                return null;
+            }
+        }).execute();
     }
 }

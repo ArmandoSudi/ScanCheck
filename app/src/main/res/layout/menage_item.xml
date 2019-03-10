@@ -39,7 +39,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/date_affecation_tv"
+        app:layout_constraintStart_toStartOf="@+id/date_identification_tv"
         app:layout_constraintTop_toBottomOf="@+id/nom_responsable_tv" />
 
     <TextView
@@ -48,11 +48,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Date d'identification"
-        app:layout_constraintBaseline_toBaselineOf="@+id/date_affecation_tv"
+        app:layout_constraintBaseline_toBaselineOf="@+id/date_identification_tv"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/date_affecation_tv"
+        android:id="@+id/date_identification_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

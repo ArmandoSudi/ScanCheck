@@ -54,14 +54,18 @@ public class Menage {
     @SerializedName("dateAffectationSD")
     public Date dateAffectationSD;
 
-    public Menage(String codeMenage, String nomResponsable, String sexeResponsable, int ageResponsable, String tailleMenage, Date dateIdentification, String codeReco) {
+    @ColumnInfo(name="NUMERO_MACARON")
+    @SerializedName("numeroMacaron")
+    public String numeroMacaron;
+
+    public Menage(String codeMenage, String nomResponsable, String sexeResponsable, int ageResponsable, String tailleMenage, Date dateIdentification, String numeroMacaron) {
         this.codeMenage = codeMenage;
         this.nomResponsable = nomResponsable;
         this.sexeResponsable = sexeResponsable;
         this.ageResponsable = ageResponsable;
         this.tailleMenage = tailleMenage;
         this.dateIdentification = dateIdentification;
-        this.codeReco = codeReco;
+        this.numeroMacaron = numeroMacaron;
     }
 
     public String getCodeMenage() {

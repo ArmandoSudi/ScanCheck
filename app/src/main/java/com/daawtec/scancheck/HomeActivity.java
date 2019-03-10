@@ -73,8 +73,7 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         setSupportActionBar(toolbar);
 
         mFab = findViewById(R.id.fab);
-
-
+        mFab.hide();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mFab);
         mViewPager = findViewById(R.id.container);
@@ -83,13 +82,52 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         TabLayout tabLayout = findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        mFab.hide();
+                        break;
+                    case 1:
+                        mFab.show();
+                        break;
+                    case 2:
+                        mFab.show();
+                        break;
+
+                    default:
+                        mFab.hide();
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, CreateMenageActivity.class);
-                startActivity(intent);
+                int index = mViewPager.getCurrentItem();
+                switch(index){
+                    case 1:
+                        Intent intent_one = new Intent(HomeActivity.this, CreateMenageActivity.class);
+                        startActivity(intent_one);
+                        break;
+                    case 2:
+                        Intent intentTwo = new Intent(HomeActivity.this, CreateRapportActivity.class);
+                        startActivity(intentTwo);
+                        break;
+                }
             }
         });
 
@@ -284,7 +322,7 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
                     return ScanQRFragment.newInstance();
                 case 1:
                     mFab.show();
-                    return MenageFragment.newInstance("List of menage");
+                    return MenageFragment.newInstance();
                 case 2 : return RapportFragment.newInstance();
                 default : return null;
             }
