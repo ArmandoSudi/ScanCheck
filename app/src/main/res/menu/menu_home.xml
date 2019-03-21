@@ -13,4 +13,10 @@
         android:orderInCategory="101"
         android:title="Init DB"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_sync"
+        android:orderInCategory="101"
+        android:title="Synchroniser"
+        app:showAsAction="never" />
 </menu>

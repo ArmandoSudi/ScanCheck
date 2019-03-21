@@ -44,7 +44,7 @@ public class InventairePhysiqueAdapter extends RecyclerView.Adapter<InventairePh
     @Override
     public void onBindViewHolder(@NonNull VH vh, int position) {
         final InventairePhysique inventaire = mInvetaires.get(position);
-        vh.dateTV.setText(mSimpleDateFormat.format(inventaire.date));
+        vh.dateTV.setText("Rapport du : " + mSimpleDateFormat.format(inventaire.date));
         vh.quantitePhysiqueTV.setText("" + inventaire.getQuantitePhysique());
         vh.quantiteTheoriqueTV.setText("" + inventaire.getQuantiteTheorique());
         vh.ecartTV.setText("" + inventaire.getEcart());

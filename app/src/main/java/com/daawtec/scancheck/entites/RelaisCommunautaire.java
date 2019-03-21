@@ -24,7 +24,7 @@ public class RelaisCommunautaire {
     public String nom;
 
     @ColumnInfo(name="CODE_AS")
-    @SerializedName("codeAS")
+    @SerializedName("codeAs")
     public String codeAS;
 
     public RelaisCommunautaire(String codeReco, String nom, String codeAS) {

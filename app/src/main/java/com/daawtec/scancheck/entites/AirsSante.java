@@ -16,15 +16,15 @@ public class AirsSante {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_AS")
-    @SerializedName("codeAS")
+    @SerializedName("codeAs")
     public String codeAS;
 
     @ColumnInfo(name="NOM_AS")
-    @SerializedName("nomAS")
+    @SerializedName("nom")
     public String nomAS;
 
     @ColumnInfo(name="CODE_ZS")
-    @SerializedName("codeZS")
+    @SerializedName("codeZs")
     public String codeZS;
 
     public AirsSante(String codeAS, String nomAS, String codeZS) {

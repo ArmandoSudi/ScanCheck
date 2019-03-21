@@ -13,7 +13,7 @@ public class DivisionProvincialeSante {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_DPS")
-    @SerializedName("codeDPS")
+    @SerializedName("codeDps")
     public String codeDPS;
 
     @ColumnInfo(name="NOM")

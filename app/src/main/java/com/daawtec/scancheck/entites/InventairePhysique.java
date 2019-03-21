@@ -2,6 +2,7 @@ package com.daawtec.scancheck.entites;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -9,7 +10,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-@Entity(tableName="INVENTAIRE_PHYSIQUE")
+@Entity(tableName="INVENTAIRE_PHYSIQUE", foreignKeys = {
+        @ForeignKey(entity = SiteDistribution.class, parentColumns = "CODE_SD", childColumns = "CODE_SD")
+})
 public class InventairePhysique {
 
     @PrimaryKey
@@ -17,6 +20,10 @@ public class InventairePhysique {
     @ColumnInfo(name="CODE_INVENTAIRE")
     @SerializedName("codeInventaire")
     public String codeInventaire;
+
+    @ColumnInfo(name="CODE_SD")
+    @SerializedName("codeSd")
+    public String codeSD;
 
     @ColumnInfo(name="DATE")
     @SerializedName("date")
@@ -38,8 +45,9 @@ public class InventairePhysique {
     @SerializedName("nombreMacaron")
     public int nombreMacaron;
 
-    public InventairePhysique(String codeInventaire, Date date, int quantiteTheorique, int quantitePhysique, int ecart, int nombreMacaron) {
+    public InventairePhysique(@NonNull String codeInventaire, String codeSD, Date date, int quantiteTheorique, int quantitePhysique, int ecart, int nombreMacaron) {
         this.codeInventaire = codeInventaire;
+        this.codeSD = codeSD;
         this.date = date;
         this.quantiteTheorique = quantiteTheorique;
         this.quantitePhysique = quantitePhysique;

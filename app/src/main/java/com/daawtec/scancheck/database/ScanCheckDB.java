@@ -27,6 +27,7 @@ import com.daawtec.scancheck.entites.RelaisCommunautaire;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.entites.Verification;
 import com.daawtec.scancheck.entites.ZoneSante;
+import com.daawtec.scancheck.utils.Converter;
 import com.daawtec.scancheck.utils.DateConverts;
 
 @Database(entities = {
@@ -41,7 +42,7 @@ import com.daawtec.scancheck.utils.DateConverts;
         SiteDistribution.class,
         Verification.class,
         ZoneSante.class},
-        version = 2
+        version = 3
 )
 @TypeConverters(DateConverts.class)
 public abstract class ScanCheckDB extends RoomDatabase {

@@ -16,7 +16,7 @@ public class SiteDistribution {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_SD")
-    @SerializedName("codeSD")
+    @SerializedName("codeSd")
     public String codeSD;
 
     @ColumnInfo(name="NOM")
@@ -24,15 +24,15 @@ public class SiteDistribution {
     public String nom;
 
     @ColumnInfo(name="CODE_AS")
-    @SerializedName("codeAS")
+    @SerializedName("codeAs")
     public String codeAS;
 
     @ColumnInfo(name="QUANTITE_LIVREE")
-    @SerializedName("quantiteLivree")
+    @SerializedName("quantiteLivrees")
     public int quantiteLivree;
 
     @ColumnInfo(name="QUANTITE_SORTIE")
-    @SerializedName("quantiteSortie")
+    @SerializedName("quantiteSorties")
     public int quantiteSortie;
 
     public SiteDistribution(String codeSD, String nom, String codeAS, int quantiteLivree, int quantiteSortie) {

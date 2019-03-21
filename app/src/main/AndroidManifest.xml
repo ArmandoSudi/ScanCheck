@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +31,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CreateMenageActivity" />
-        <activity android:name=".CreateRapportActivity"></activity>
+        <activity android:name=".CreateRapportActivity" />
+        <activity android:name=".SyncActivity"></activity>
     </application>
 
 </manifest>

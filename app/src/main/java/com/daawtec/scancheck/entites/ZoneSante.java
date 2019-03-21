@@ -16,11 +16,11 @@ public class ZoneSante {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_ZS")
-    @SerializedName("codeZS")
+    @SerializedName("codeZs")
     public String codeZS;
 
     @ColumnInfo(name="NOM_ZS")
-    @SerializedName("nomZS")
+    @SerializedName("nom")
     public String nomZS;
 
     @ColumnInfo(name="CODE_DPS")

@@ -25,8 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="Quantite physique"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_tv" />
 
@@ -38,6 +38,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Quantite theorique"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/quantite_physique_label"
         app:layout_constraintTop_toBottomOf="@+id/date_tv" />
@@ -47,7 +48,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
         android:text="120"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -58,7 +58,6 @@
         android:id="@+id/quantite_theorique_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="132"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -70,8 +69,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="Ecart"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/quantite_physique_tv" />
 
@@ -79,8 +79,9 @@
         android:id="@+id/nbre_macaron_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="Macarons recuperes"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="@+id/quantite_theorique_tv"
         app:layout_constraintTop_toBottomOf="@+id/quantite_theorique_tv" />
 
@@ -89,7 +90,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
         android:text="12"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -100,7 +100,6 @@
         android:id="@+id/nbre_macaron_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="354"
         android:textSize="18sp"
         android:textStyle="bold"

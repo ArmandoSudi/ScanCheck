@@ -1,8 +1,6 @@
 package com.daawtec.scancheck.utils;
 
 import com.daawtec.scancheck.entites.AirsSante;
-import com.daawtec.scancheck.entites.DivisionProvincialeSante;
-import com.daawtec.scancheck.entites.InventairePhysique;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.RelaisCommunautaire;
 import com.daawtec.scancheck.entites.ZoneSante;
@@ -14,14 +12,7 @@ import java.util.List;
 
 public class Utils {
 
-    public static List<DivisionProvincialeSante> getDivisionSantes(){
-        List<DivisionProvincialeSante> dps = new ArrayList<>();
-        dps.add(new DivisionProvincialeSante("1001", "Division P. Sante Konoha"));
-        dps.add(new DivisionProvincialeSante("1002", "Division P. Sante Mist"));
-        dps.add(new DivisionProvincialeSante("1003", "Division P. Sante Gaara"));
-
-        return dps;
-    }
+    private static final String TAG = "Utils";
 
     public static List<ZoneSante> getZoneSantes(){
         List<ZoneSante> zs = new ArrayList<>();
@@ -54,17 +45,6 @@ public class Utils {
         return recos;
     }
 
-    public static List<InventairePhysique> getInventairePhysiques(){
-        Date date = new Date();
-        List<InventairePhysique> inventairePhysiques = new ArrayList<>();
-        inventairePhysiques.add(new InventairePhysique("1001", date, 123, 120, 3, 200));
-        inventairePhysiques.add(new InventairePhysique("1002", date, 13, 13, 0, 20));
-        inventairePhysiques.add(new InventairePhysique("1003", date, 150, 150, 0, 180));
-        inventairePhysiques.add(new InventairePhysique("1004", date, 400, 370, 30, 400));
-        inventairePhysiques.add(new InventairePhysique("1005", date, 500, 495, 5, 600));
-        return inventairePhysiques;
-    }
-
     public static List<Menage> getMenages(){
         Date date = new Date();
         List<Menage> menages = new ArrayList<>();
@@ -76,6 +56,14 @@ public class Utils {
 
     public static String getTimeStamp(){
         return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+    }
+
+    public static int stringToInt(String value){
+        if (value .equals("")){
+            return 0;
+        }else {
+            return Integer.parseInt(value);
+        }
     }
 
 }

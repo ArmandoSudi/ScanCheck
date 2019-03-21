@@ -13,35 +13,39 @@ import com.daawtec.scancheck.entites.ZoneSante;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface ScanCheckApiInterface {
 
-    @GET("/checkmacaron/{code_macaron}/")
+    @GET("/")
     Call<String> checkMacaron(@Path("code_macaron") String codeMacaron);
 
-    @GET("/")
+    @GET("dps/")
     Call<List<DivisionProvincialeSante>> getDPS();
-    @GET("/")
+    @GET("zs/")
     Call<List<ZoneSante>> getZoneSante();
-    @GET("/")
+    @GET("as/")
     Call<List<AirsSante>> getAirSantes();
-    @GET("/")
+    @GET("recos/")
     Call<List<RelaisCommunautaire>> getReco();
-    @GET("/")
+    @GET("macarons/")
     Call<List<Macaron>> getMacarons();
-    @GET("/")
+    @GET("sd/")
     Call<List<SiteDistribution>> getSiteDistribution();
 
-    @POST("/")
-    Call<String> postMenage(List<Menage> menages);
-    @POST("/")
-    Call<String> postMacarons(List<Macaron> macarons);
+    @POST("saveMenages/")
+    Call<String> postMenage(@Body List<Menage> menages);
+    @POST("saveMacarons/")
+    Call<String> postMacarons(@Body List<Macaron> macarons);
+
     @POST("/")
     Call<String> postBadVerification(List<BadVerification> badVerifications);
     @POST("/")
     Call<String> postInventairesPhysiques(List<InventairePhysique> inventairePhysiques);
+
+
 
 }

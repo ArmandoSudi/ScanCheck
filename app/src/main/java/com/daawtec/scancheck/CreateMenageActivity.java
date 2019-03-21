@@ -1,13 +1,13 @@
 package com.daawtec.scancheck;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.RelaisCommunautaire;
-import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.utils.Utils;
 
 import java.text.SimpleDateFormat;
@@ -38,7 +37,7 @@ public class CreateMenageActivity extends AppCompatActivity {
     ImageView mDateIdentificationIV;
     Button mSaveMenageBT;
 
-    String mSexe, mRecoCode, mSiteDistributionCode;
+    String mSexe;
     Date mDateIdentification;
 
     private Calendar mCalendar = Calendar.getInstance();
@@ -61,7 +60,6 @@ public class CreateMenageActivity extends AppCompatActivity {
         mAgeResponsableET = findViewById(R.id.age_responsable_et);
         mTailleMenageET = findViewById(R.id.taille_menage_et);
         mNumeroMacaronET = findViewById(R.id.numero_macaron_et);
-
 
         final DatePickerDialog.OnDateSetListener dateIdentificationListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -135,14 +133,25 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     public void collectMenage(){
         String nomResponsable = mNomResponsableET.getText().toString();
-        int ageResponsable = Integer.parseInt(mAgeResponsableET.getText().toString());
+        int ageResponsable = Utils.stringToInt(mAgeResponsableET.getText().toString());
         String tailleMenage = mTailleMenageET.getText().toString();
         String numeroMacaron = mNumeroMacaronET.getText().toString();
         String codeMenage = Utils.getTimeStamp();
 
-        Menage menage = new Menage(codeMenage, nomResponsable, mSexe, ageResponsable, tailleMenage, mDateIdentification, numeroMacaron);
+        boolean isValid = true;
 
-        saveMenage(menage);
+        if (nomResponsable.equals("")){ isValid = false;}
+        if (ageResponsable ==0 ) { isValid = false; }
+        if (tailleMenage.equals("")){ isValid = false;}
+        if(numeroMacaron.equals("")){ isValid = false;}
+        if (mDateIdentification == null) { isValid = false; }
+
+        if (isValid){
+            Menage menage = new Menage(codeMenage, nomResponsable, mSexe, ageResponsable, tailleMenage, mDateIdentification, numeroMacaron);
+            saveMenage(menage);
+        } else {
+            Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -152,6 +161,8 @@ public class CreateMenageActivity extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 Toast.makeText(CreateMenageActivity.this, "Menage enregistre", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(CreateMenageActivity.this, HomeActivity.class);
+                startActivity(intent);
             }
 
             @Override
