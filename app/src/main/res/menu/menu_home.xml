@@ -9,9 +9,15 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_init_db"
+        android:id="@+id/action_pref"
         android:orderInCategory="101"
-        android:title="Init DB"
+        android:title="Check Pref"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_affectation"
+        android:orderInCategory="101"
+        android:title="Check Affectation"
         app:showAsAction="never" />
 
     <item

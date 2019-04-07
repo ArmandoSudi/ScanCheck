@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import com.daawtec.scancheck.entites.AirsSante;
@@ -24,4 +25,7 @@ public interface IAirSanteDao {
 
     @Delete
     int delete(AirsSante...airsSantes);
+
+    @Query("SELECT * FROM AIRS_SANTE")
+    List<AirsSante> all();
 }

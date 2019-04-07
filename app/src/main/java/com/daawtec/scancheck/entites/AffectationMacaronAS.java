@@ -12,12 +12,18 @@ import java.util.Date;
 
 @Entity(tableName="AFFECTATION_MACARON_AS", foreignKeys = {
         @ForeignKey(entity = AirsSante.class, parentColumns = "CODE_AS", childColumns = "CODE_AS"),
-        @ForeignKey(entity = RelaisCommunautaire.class, parentColumns = "CODE_RECO", childColumns = "CODE_RECO")
+        @ForeignKey(entity = RelaisCommunautaire.class, parentColumns = "CODE_RECO", childColumns = "CODE_RECO"),
+        @ForeignKey(entity = Menage.class, parentColumns = "CODE_MENAGE", childColumns = "CODE_MENAGE"),
+        @ForeignKey(entity = Macaron.class, parentColumns = "CODE_MACARON", childColumns = "CODE_MACARON")
 })
 public class AffectationMacaronAS {
 
     @PrimaryKey
     @NonNull
+    @ColumnInfo(name="CODE_AFFECTATION")
+    @SerializedName("codeAffectation")
+    public String codeAffectation;
+
     @ColumnInfo(name="CODE_MACARON")
     @SerializedName("codeMacaron")
     public String codeMacaron;
@@ -26,35 +32,78 @@ public class AffectationMacaronAS {
     @SerializedName("codeAS")
     public String codeAS;
 
-    @ColumnInfo(name="DATE_AFFECTATION_AS")
-    @SerializedName("dateAffectationAS")
-    public String dateAffectationAS;
-
     @ColumnInfo(name="CODE_RECO")
     @SerializedName("codeReco")
     public String codeReco;
 
+    @ColumnInfo(name="CODE_MENAGE")
+    @SerializedName("codeMenage")
+    public String codeMenage;
+
+    @ColumnInfo(name="DATE_AFFECTATION_AS")
+    @SerializedName("dateAffectationAS")
+    public Date dateAffectationAS;
+
     @ColumnInfo(name="DATE_AFFECTATION_RECO")
     @SerializedName("dateAffectationReco")
-    public String dateAffectationReco;
+    public Date dateAffectationReco;
 
     @ColumnInfo(name="DATE_VERIFICATION")
     @SerializedName("dateVerification")
     public Date dateVerification;
+
+    @ColumnInfo(name="DATE_AFFECTATION_MENAGE")
+    @SerializedName("dateAffectationMenage")
+    public Date dateAffectationMenage;
 
     @ColumnInfo(name="NOMBRE_MILD")
     @SerializedName("nombreMild")
     public int nombreMild;
 
 
-    public AffectationMacaronAS(@NonNull String codeMacaron, String codeAS, String dateAffectationAS, String codeReco, String dateAffectationReco, Date dateVerification, int nombreMild) {
-        this.codeMacaron = codeMacaron;
-        this.codeAS = codeAS;
+    public AffectationMacaronAS() {
+
+    }
+
+    @NonNull
+    public String getCodeAffectation() {
+        return codeAffectation;
+    }
+
+    public void setCodeAffectation(@NonNull String codeAffectation) {
+        this.codeAffectation = codeAffectation;
+    }
+
+    public String getCodeMenage() {
+        return codeMenage;
+    }
+
+    public void setCodeMenage(String codeMenage) {
+        this.codeMenage = codeMenage;
+    }
+
+    public Date getDateAffectationAS() {
+        return dateAffectationAS;
+    }
+
+    public void setDateAffectationAS(Date dateAffectationAS) {
         this.dateAffectationAS = dateAffectationAS;
-        this.codeReco = codeReco;
+    }
+
+    public Date getDateAffectationReco() {
+        return dateAffectationReco;
+    }
+
+    public void setDateAffectationReco(Date dateAffectationReco) {
         this.dateAffectationReco = dateAffectationReco;
-        this.dateVerification = dateVerification;
-        this.nombreMild = nombreMild;
+    }
+
+    public Date getDateAffectationMenage() {
+        return dateAffectationMenage;
+    }
+
+    public void setDateAffectationMenage(Date dateAffectationMenage) {
+        this.dateAffectationMenage = dateAffectationMenage;
     }
 
     public String getCodeMacaron() {
@@ -73,28 +122,12 @@ public class AffectationMacaronAS {
         this.codeAS = codeAS;
     }
 
-    public String getDateAffectationAS() {
-        return dateAffectationAS;
-    }
-
-    public void setDateAffectationAS(String dateAffectationAS) {
-        this.dateAffectationAS = dateAffectationAS;
-    }
-
     public String getCodeReco() {
         return codeReco;
     }
 
     public void setCodeReco(String codeReco) {
         this.codeReco = codeReco;
-    }
-
-    public String getDateAffectationReco() {
-        return dateAffectationReco;
-    }
-
-    public void setDateAffectationReco(String dateAffectationReco) {
-        this.dateAffectationReco = dateAffectationReco;
     }
 
     public Date getDateVerification() {

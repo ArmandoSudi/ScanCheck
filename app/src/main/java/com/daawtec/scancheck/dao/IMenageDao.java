@@ -28,4 +28,7 @@ public interface IMenageDao {
 
     @Query("SELECT * FROM MENAGE")
     List<Menage> all();
+
+    @Query("SELECT COUNT(*) FROM MENAGE")
+    int size();
 }

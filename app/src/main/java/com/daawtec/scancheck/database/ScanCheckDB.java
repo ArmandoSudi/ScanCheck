@@ -42,7 +42,7 @@ import com.daawtec.scancheck.utils.DateConverts;
         SiteDistribution.class,
         Verification.class,
         ZoneSante.class},
-        version = 3
+        version = 4
 )
 @TypeConverters(DateConverts.class)
 public abstract class ScanCheckDB extends RoomDatabase {

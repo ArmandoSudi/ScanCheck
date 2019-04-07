@@ -11,7 +11,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 @Entity(tableName="MENAGE", foreignKeys = {
-        @ForeignKey(entity = RelaisCommunautaire.class, parentColumns = "CODE_RECO", childColumns = "CODE_RECO"),
         @ForeignKey(entity = SiteDistribution.class, parentColumns = "CODE_SD", childColumns = "CODE_SD")
 })
 public class Menage {
@@ -42,10 +41,6 @@ public class Menage {
     @SerializedName("dateIdentification")
     public Date dateIdentification;
 
-    @ColumnInfo(name="CODE_RECO")
-    @SerializedName("codeReco")
-    public String codeReco;
-
     @ColumnInfo(name="CODE_SD")
     @SerializedName("codeSD")
     public String codeSD;
@@ -54,18 +49,14 @@ public class Menage {
     @SerializedName("dateAffectationSD")
     public Date dateAffectationSD;
 
-    @ColumnInfo(name="NUMERO_MACARON")
-    @SerializedName("numeroMacaron")
-    public String numeroMacaron;
 
-    public Menage(String codeMenage, String nomResponsable, String sexeResponsable, int ageResponsable, String tailleMenage, Date dateIdentification, String numeroMacaron) {
+    public Menage(@NonNull String codeMenage, String nomResponsable, String sexeResponsable, int ageResponsable, String tailleMenage, Date dateIdentification) {
         this.codeMenage = codeMenage;
         this.nomResponsable = nomResponsable;
         this.sexeResponsable = sexeResponsable;
         this.ageResponsable = ageResponsable;
         this.tailleMenage = tailleMenage;
         this.dateIdentification = dateIdentification;
-        this.numeroMacaron = numeroMacaron;
     }
 
     public String getCodeMenage() {
@@ -114,13 +105,5 @@ public class Menage {
 
     public void setDateIdentification(Date dateIdentification) {
         this.dateIdentification = dateIdentification;
-    }
-
-    public String getCodeReco() {
-        return codeReco;
-    }
-
-    public void setCodeReco(String codeReco) {
-        this.codeReco = codeReco;
     }
 }

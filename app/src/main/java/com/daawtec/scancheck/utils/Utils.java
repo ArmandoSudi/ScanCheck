@@ -1,7 +1,6 @@
 package com.daawtec.scancheck.utils;
 
 import com.daawtec.scancheck.entites.AirsSante;
-import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.RelaisCommunautaire;
 import com.daawtec.scancheck.entites.ZoneSante;
 
@@ -45,15 +44,6 @@ public class Utils {
         return recos;
     }
 
-    public static List<Menage> getMenages(){
-        Date date = new Date();
-        List<Menage> menages = new ArrayList<>();
-        menages.add(new Menage("1001", "David Muhunga", "M", 45, "8", date,"1001"));
-        menages.add(new Menage("1002", "Rahul Godhani", "M", 35, "5", date,"1002"));
-        menages.add(new Menage("1001", "Vidya Mani", "F", 30, "4", date,"1003"));
-        return menages;
-    }
-
     public static String getTimeStamp(){
         return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
     }
@@ -64,6 +54,11 @@ public class Utils {
         }else {
             return Integer.parseInt(value);
         }
+    }
+
+    // TODO : implement the algorithm to compute the number of mild
+    public static int computeMildNumber(int tailleMenage){
+        return 2;
     }
 
 }

@@ -2,10 +2,14 @@ package com.daawtec.scancheck;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -17,8 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.AffectationMacaronAS;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.RelaisCommunautaire;
+import com.daawtec.scancheck.utils.Constant;
 import com.daawtec.scancheck.utils.Utils;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +46,8 @@ public class CreateMenageActivity extends AppCompatActivity {
     String mSexe;
     Date mDateIdentification;
 
+    SharedPreferences mSharedPref;
+
     private Calendar mCalendar = Calendar.getInstance();
 
     ScanCheckDB db;
@@ -48,6 +56,8 @@ public class CreateMenageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_menage);
+
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         db = ScanCheckDB.getDatabase(this);
 
@@ -112,24 +122,6 @@ public class CreateMenageActivity extends AppCompatActivity {
         view.setText(sdf.format(mCalendar.getTime()));
     }
 
-    public void populateReco(){
-        (new AsyncTask<Void, Void, List<RelaisCommunautaire>>(){
-            @Override
-            protected void onPostExecute(List<RelaisCommunautaire> relaisCommunautaires) {
-                super.onPostExecute(relaisCommunautaires);
-
-//                mRecoSP.setAdapter(new ArrayAdapter<RelaisCommunautaire>(
-//                        CreateMenageActivity.this,
-//                        android.R.layout.simple_spinner_item,
-//                        relaisCommunautaires));
-            }
-
-            @Override
-            protected List<RelaisCommunautaire> doInBackground(Void... voids) {
-                return db.getIRelaisCommunautaireDao().all();
-            }
-        }).execute();
-    }
 
     public void collectMenage(){
         String nomResponsable = mNomResponsableET.getText().toString();
@@ -138,21 +130,43 @@ public class CreateMenageActivity extends AppCompatActivity {
         String numeroMacaron = mNumeroMacaronET.getText().toString();
         String codeMenage = Utils.getTimeStamp();
 
+        String codeAS = mSharedPref.getString(Constant.KEY_USER_AS, null);
+        String codeReco = mSharedPref.getString(Constant.KEY_USER_RECO, null);
+
         boolean isValid = true;
 
+        // Validation Menage
         if (nomResponsable.equals("")){ isValid = false;}
-        if (ageResponsable ==0 ) { isValid = false; }
+        if (ageResponsable == 0 ) { isValid = false; }
         if (tailleMenage.equals("")){ isValid = false;}
-        if(numeroMacaron.equals("")){ isValid = false;}
+        if (numeroMacaron.equals("")){ isValid = false;}
         if (mDateIdentification == null) { isValid = false; }
 
+        // Validation pour AffectationMacaronAS
+        if (codeAS == null) { isValid = false;}
+        if (codeReco == null) { isValid = false;}
+
         if (isValid){
-            Menage menage = new Menage(codeMenage, nomResponsable, mSexe, ageResponsable, tailleMenage, mDateIdentification, numeroMacaron);
+
+            Menage menage = new Menage(codeMenage, nomResponsable, mSexe, ageResponsable, tailleMenage, mDateIdentification);
             saveMenage(menage);
+
+            AffectationMacaronAS affectationMacaronAS = new AffectationMacaronAS();
+            affectationMacaronAS.setCodeAffectation(Utils.getTimeStamp());
+            affectationMacaronAS.setCodeMenage(codeMenage);
+
+            //Todo Grab a real Macaron ID to assign here
+            affectationMacaronAS.setCodeMacaron("000001");
+
+            affectationMacaronAS.setDateAffectationMenage(mDateIdentification);
+            affectationMacaronAS.setCodeReco(codeReco);
+            affectationMacaronAS.setCodeAS(codeAS);
+            affectationMacaronAS.setNombreMild(Utils.computeMildNumber(Integer.parseInt(tailleMenage)));
+            saveAffectation(affectationMacaronAS);
+
         } else {
             Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void saveMenage(final Menage menage){
@@ -168,6 +182,22 @@ public class CreateMenageActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... voids) {
                 db.getIMenageDao().insert(menage);
+                return null;
+            }
+        }).execute();
+    }
+
+    public void saveAffectation(final AffectationMacaronAS affectationMacaronAS){
+        (new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                Log.d(TAG, "onPostExecute: AFFECTATION_MACARON_AS enregistre");
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                db.getIIAffectationMacaronASDao().insert(affectationMacaronAS);
                 return null;
             }
         }).execute();

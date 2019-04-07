@@ -23,16 +23,20 @@
 
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CreateMenageActivity" />
+        <activity android:name=".CreateRapportActivity" />
+        <activity android:name=".SyncActivity" />
+        <activity android:name=".AutheticationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateMenageActivity" />
-        <activity android:name=".CreateRapportActivity" />
-        <activity android:name=".SyncActivity"></activity>
+        <activity
+            android:name=".ParameterActivity"
+            android:label="Parametres"/>
     </application>
 
 </manifest>

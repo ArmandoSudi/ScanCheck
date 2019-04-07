@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+import android.support.v7.widget.RecyclerView;
 
 import com.daawtec.scancheck.entites.RelaisCommunautaire;
 
@@ -28,4 +29,7 @@ public interface IRelaisCommunautaireDao {
 
     @Query("SELECT * FROM RELAIS_COMMUNAUTAIRE")
     List<RelaisCommunautaire> all();
+
+    @Query("SELECT * FROM RELAIS_COMMUNAUTAIRE WHERE CODE_AS=:asCode")
+    List<RelaisCommunautaire> get(String asCode);
 }

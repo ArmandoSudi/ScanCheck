@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -30,6 +31,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.AffectationMacaronAS;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
 import com.daawtec.scancheck.entites.Macaron;
@@ -38,6 +40,7 @@ import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.entites.ZoneSante;
 import com.daawtec.scancheck.service.ScanCheckApi;
 import com.daawtec.scancheck.service.ScanCheckApiInterface;
+import com.daawtec.scancheck.ui.DashboardFragment;
 import com.daawtec.scancheck.ui.MenageFragment;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
@@ -64,6 +67,7 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
     SharedPreferences.Editor mEditor;
 
     ScanCheckApiInterface scanCheckApiInterface;
+    ScanCheckDB db;
 
     List<DivisionProvincialeSante> mDPSs = new ArrayList<>();
     List<ZoneSante> mZSs = new ArrayList<>();
@@ -78,7 +82,7 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
     protected void onStart() {
         super.onStart();
 
-        mSharedPref = getPreferences(Context.MODE_PRIVATE);
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mSharedPref.edit();
 
         scanCheckApiInterface = ScanCheckApi.getService();
@@ -98,6 +102,8 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        db = ScanCheckDB.getDatabase(this);
 
         mFab = findViewById(R.id.fab);
         mFab.hide();
@@ -173,12 +179,19 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this, ParameterActivity.class);
+            startActivity(intent);
         }
 
-        if (id == R.id.action_init_db){
-            ScanCheckDB db = ScanCheckDB.getDatabase(this);
-            new InitDB(db).execute();
+        if (id == R.id.action_affectation){
+            checkAffectation();
+        }
+
+        if (id == R.id.action_pref){
+            String username = mSharedPref.getString(Constant.KEY_USERNAME, "");
+            String password = mSharedPref.getString(Constant.KEY_PASSWORD, "");
+            Log.e(TAG, "USERNAME: " + username);
+            Log.e(TAG, "PASSWORD: " + password);
         }
 
         if(id == R.id.action_sync){
@@ -255,7 +268,11 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
             }
         }
 
-        public void checkMacaron(final String qrCode){
+        /**
+         * Verifie si un macaron avec le code secret passe en parametre existe dans la base des donnees.
+         * @param codeSecret
+         */
+        public void checkMacaron(final String codeSecret){
             (new AsyncTask<Void, Void, Macaron>(){
                 @Override
                 protected void onPostExecute(Macaron macaron) {
@@ -264,17 +281,37 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
                     if (macaron instanceof Macaron){
                         Log.d(TAG, "onPostExecute: LE MACARON EXIST");
                         showDialog("Le macaron existe", mActivity);
+                        //TODO Implementer la methode de mis a jour de la date_verification la table "MACARON_AS"
+                        updateDateVerification(macaron.codeMacaron);
                     } else {
                         Log.d(TAG, "onPostExecute: LE MACARON N'EXISTE PAS");
                         showDialog("Le macaron n'existe pas", mActivity);
+                        //TODO Implementer la methode de creation d'une entree dans la table "BAD_VERIFICATION" pour dire que c'est un macaton frauduleux
+                        saveBadVerification(codeSecret);
                     }
                 }
 
                 @Override
                 protected Macaron doInBackground(Void... voids) {
-                    return db.getIMacaronDao().check(qrCode);
+                    return db.getIMacaronDao().check(codeSecret);
                 }
             }).execute();
+        }
+
+        /**
+         * Mettre a jour la date_verification dans la table MACARON_AS dont le codeMacaron correspond
+         * @param codeMacaron
+         */
+        public void updateDateVerification(String codeMacaron){
+
+        }
+
+        /**
+         * Creer une entree dans la table BAD_VERIFICATION pour le codeSecret encode dans le macaron frauduleux
+         * @param codeSecret
+         */
+        public void saveBadVerification(String codeSecret){
+
         }
 
         void showDialog(String message, Context context){
@@ -355,7 +392,10 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
                 case 1:
                     mFab.show();
                     return MenageFragment.newInstance();
-                case 2 : return RapportFragment.newInstance();
+                case 2 :
+                    return RapportFragment.newInstance();
+                case 3 :
+                    return DashboardFragment.newInstance();
                 default : return null;
             }
         }
@@ -363,7 +403,7 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
     }
 
@@ -375,7 +415,6 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
                 mSDs.size() > 0 &&
                 mRecos.size() > 0){
             Log.d(TAG, "canInsert: INSERTING VALUES IN THE DATABASE");
-            ScanCheckDB db = ScanCheckDB.getDatabase(this);
             new InitDB(db).execute();
         }
     }
@@ -555,6 +594,22 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
 
     void hideProgressDiag(ProgressDialog progressDiag){
         progressDiag.dismiss();
+    }
+
+    public void checkAffectation(){
+        (new AsyncTask<Void, Void, List<AffectationMacaronAS>>(){
+            @Override
+            protected void onPostExecute(List<AffectationMacaronAS> affectationMacaronAS) {
+                super.onPostExecute(affectationMacaronAS);
+                if (affectationMacaronAS != null ) Log.e(TAG, "onPostExecute: SIZE AFFECTATION: " +
+                        affectationMacaronAS.size() );
+            }
+
+            @Override
+            protected List<AffectationMacaronAS> doInBackground(Void... voids) {
+                return db.getIIAffectationMacaronASDao().all();
+            }
+        }).execute();
     }
 
 }
