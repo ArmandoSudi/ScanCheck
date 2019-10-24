@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +14,6 @@ import java.util.Date;
 @Entity(tableName="AFFECTATION_MACARON_AS", foreignKeys = {
         @ForeignKey(entity = AirsSante.class, parentColumns = "CODE_AS", childColumns = "CODE_AS"),
         @ForeignKey(entity = RelaisCommunautaire.class, parentColumns = "CODE_RECO", childColumns = "CODE_RECO"),
-        @ForeignKey(entity = Menage.class, parentColumns = "CODE_MENAGE", childColumns = "CODE_MENAGE"),
         @ForeignKey(entity = Macaron.class, parentColumns = "CODE_MACARON", childColumns = "CODE_MACARON")
 })
 public class AffectationMacaronAS {
@@ -21,7 +21,7 @@ public class AffectationMacaronAS {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_AFFECTATION")
-    @SerializedName("codeAffectation")
+    @SerializedName("codeMacaronAs")
     public String codeAffectation;
 
     @ColumnInfo(name="CODE_MACARON")
@@ -29,32 +29,32 @@ public class AffectationMacaronAS {
     public String codeMacaron;
 
     @ColumnInfo(name="CODE_AS")
-    @SerializedName("codeAS")
+    @SerializedName("codeAs")
     public String codeAS;
 
     @ColumnInfo(name="CODE_RECO")
     @SerializedName("codeReco")
     public String codeReco;
 
-    @ColumnInfo(name="CODE_MENAGE")
-    @SerializedName("codeMenage")
-    public String codeMenage;
-
+    @Nullable
     @ColumnInfo(name="DATE_AFFECTATION_AS")
-    @SerializedName("dateAffectationAS")
-    public Date dateAffectationAS;
+    @SerializedName("dateAffectationAs")
+    public String dateAffectationAS;
 
+    @Nullable
     @ColumnInfo(name="DATE_AFFECTATION_RECO")
     @SerializedName("dateAffectationReco")
-    public Date dateAffectationReco;
+    public String dateAffectationReco;
 
     @ColumnInfo(name="DATE_VERIFICATION")
     @SerializedName("dateVerification")
-    public Date dateVerification;
+    @Nullable
+    public String dateVerification;
 
+    @Nullable
     @ColumnInfo(name="DATE_AFFECTATION_MENAGE")
     @SerializedName("dateAffectationMenage")
-    public Date dateAffectationMenage;
+    public String dateAffectationMenage;
 
     @ColumnInfo(name="NOMBRE_MILD")
     @SerializedName("nombreMild")
@@ -63,6 +63,13 @@ public class AffectationMacaronAS {
 
     public AffectationMacaronAS() {
 
+    }
+
+    public AffectationMacaronAS(@NonNull String codeAffectation, String codeMacaron, String dateAffectationAS, String dateAffectationReco) {
+        this.codeAffectation = codeAffectation;
+        this.codeMacaron = codeMacaron;
+        this.dateAffectationAS = dateAffectationAS;
+        this.dateAffectationReco = dateAffectationReco;
     }
 
     @NonNull
@@ -74,35 +81,27 @@ public class AffectationMacaronAS {
         this.codeAffectation = codeAffectation;
     }
 
-    public String getCodeMenage() {
-        return codeMenage;
-    }
-
-    public void setCodeMenage(String codeMenage) {
-        this.codeMenage = codeMenage;
-    }
-
-    public Date getDateAffectationAS() {
+    public String getDateAffectationAS() {
         return dateAffectationAS;
     }
 
-    public void setDateAffectationAS(Date dateAffectationAS) {
+    public void setDateAffectationAS(String dateAffectationAS) {
         this.dateAffectationAS = dateAffectationAS;
     }
 
-    public Date getDateAffectationReco() {
+    public String getDateAffectationReco() {
         return dateAffectationReco;
     }
 
-    public void setDateAffectationReco(Date dateAffectationReco) {
+    public void setDateAffectationReco(String dateAffectationReco) {
         this.dateAffectationReco = dateAffectationReco;
     }
 
-    public Date getDateAffectationMenage() {
+    public String getDateAffectationMenage() {
         return dateAffectationMenage;
     }
 
-    public void setDateAffectationMenage(Date dateAffectationMenage) {
+    public void setDateAffectationMenage(String dateAffectationMenage) {
         this.dateAffectationMenage = dateAffectationMenage;
     }
 
@@ -130,11 +129,11 @@ public class AffectationMacaronAS {
         this.codeReco = codeReco;
     }
 
-    public Date getDateVerification() {
+    public String getDateVerification() {
         return dateVerification;
     }
 
-    public void setDateVerification(Date dateVerification) {
+    public void setDateVerification(String dateVerification) {
         this.dateVerification = dateVerification;
     }
 
@@ -144,5 +143,20 @@ public class AffectationMacaronAS {
 
     public void setNombreMild(int nombreMild) {
         this.nombreMild = nombreMild;
+    }
+
+    @Override
+    public String toString() {
+        return "AffectationMacaronAS{" +
+                "codeAffectation='" + codeAffectation + '\'' +
+                ", codeMacaron='" + codeMacaron + '\'' +
+                ", codeAS='" + codeAS + '\'' +
+                ", codeReco='" + codeReco + '\'' +
+                ", dateAffectationAS='" + dateAffectationAS + '\'' +
+                ", dateAffectationReco='" + dateAffectationReco + '\'' +
+                ", dateVerification='" + dateVerification + '\'' +
+                ", dateAffectationMenage='" + dateAffectationMenage + '\'' +
+                ", nombreMild=" + nombreMild +
+                '}';
     }
 }

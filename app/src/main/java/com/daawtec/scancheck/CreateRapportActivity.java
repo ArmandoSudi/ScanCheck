@@ -2,7 +2,9 @@ package com.daawtec.scancheck;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.InventairePhysique;
 import com.daawtec.scancheck.entites.SiteDistribution;
+import com.daawtec.scancheck.utils.Constant;
 import com.daawtec.scancheck.utils.Utils;
 
 import java.text.SimpleDateFormat;
@@ -39,7 +42,6 @@ public class CreateRapportActivity extends AppCompatActivity {
     ImageView mDateIV;
     TextView mDateIdentificationTV, mQuantiteTheoriqueTV, mEcartTV;
     Button mSaveBT;
-    Spinner mSiteDistributionSP;
     Date mDateIdentification;
 
     private Calendar mCalendar = Calendar.getInstance();
@@ -48,6 +50,7 @@ public class CreateRapportActivity extends AppCompatActivity {
     int mQuantiteDispo;
 
     ScanCheckDB db;
+    SharedPreferences mSharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,8 @@ public class CreateRapportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_rapport);
 
         db = ScanCheckDB.getDatabase(this);
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mCodeSD = mSharedPref.getString(Constant.KEY_USER_SD, null);
 
         initView();
     }
@@ -65,24 +70,6 @@ public class CreateRapportActivity extends AppCompatActivity {
         mEcartTV = findViewById(R.id.ecart_tv);
         mNombreMacaronET = findViewById(R.id.nombre_macaron_et);
         mDateIdentificationTV = findViewById(R.id.date_identification_tv);
-        mSiteDistributionSP = findViewById(R.id.site_distribution_sp);
-
-        loadSiteDistribution(mSiteDistributionSP);
-
-        mSiteDistributionSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SiteDistribution siteDistribution = (SiteDistribution) parent.getItemAtPosition(position);
-                mCodeSD = siteDistribution.codeSD;
-                mQuantiteDispo = siteDistribution.quantiteLivree;
-                mQuantiteTheoriqueTV.setText("" + mQuantiteDispo);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         mQuantitePhysiqueET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -160,6 +147,12 @@ public class CreateRapportActivity extends AppCompatActivity {
         if (mDateIdentification == null){ isValid = false; }
         if (nombreMacaron == 0) { isValid = false; }
 
+        // Le site de distribution utilise dans les rapports est celui selectionne dans les parametres
+        if (mCodeSD == null) {
+            showErrorMessage("Le Site de Distribution n'est pas encore parametre");
+            return;
+        }
+
         String codeInventairePhysique = Utils.getTimeStamp();
 
         if (isValid) {
@@ -167,7 +160,7 @@ public class CreateRapportActivity extends AppCompatActivity {
                     quantiteTheorique, quantitePyhsique, ecart, nombreMacaron);
             saveRapport(inventairePhysique);
         } else {
-            showErrorMessage();
+            showErrorMessage("Veuillez remplir tous les champs");
         }
 
     }
@@ -191,31 +184,8 @@ public class CreateRapportActivity extends AppCompatActivity {
         }).execute();
     }
 
-    public void loadSiteDistribution(final Spinner spinner){
-        (new AsyncTask<Void, Void, List<SiteDistribution>>(){
-            @Override
-            protected void onPostExecute(List<SiteDistribution> siteDistributions) {
-                super.onPostExecute(siteDistributions);
-
-                if (siteDistributions != null ){
-                    if(siteDistributions.size() > 0) {
-                        spinner.setAdapter(new ArrayAdapter<SiteDistribution>(CreateRapportActivity.this,
-                                android.R.layout.simple_spinner_dropdown_item, siteDistributions));
-                    }
-                }
-            }
-
-            @Override
-            protected List<SiteDistribution> doInBackground(Void... voids) {
-                List<SiteDistribution> sites = db.getISiteDistributionDao().all();
-                return sites;
-            }
-        }).execute();
-    }
-
-    public void showErrorMessage(){
+    public void showErrorMessage(String msg){
         Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
     }
-
 
 }

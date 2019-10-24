@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/menu_scanner_macaron"
+            android:icon="@drawable/ic_scan"
+            android:title="Scanner macaron" />
+        <item android:id="@+id/menu_menages"
+            android:icon="@drawable/ic_home"
+            android:title="Menages" />
+        <item android:id="@+id/menu_rapport"
+            android:icon="@drawable/ic_repport"
+            android:title="Rapports" />
+        <item android:id="@+id/menu_dashboard"
+            android:icon="@drawable/icon_dashboard"
+            android:title="Dashboard" />
+    </group>
+</menu>

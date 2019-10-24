@@ -11,7 +11,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 @Entity(tableName="MENAGE", foreignKeys = {
-        @ForeignKey(entity = SiteDistribution.class, parentColumns = "CODE_SD", childColumns = "CODE_SD")
+        @ForeignKey(entity = SiteDistribution.class, parentColumns = "CODE_SD", childColumns = "CODE_SD"),
+        @ForeignKey(entity = Macaron.class, parentColumns = "CODE_MACARON", childColumns = "CODE_MACARON")
 })
 public class Menage {
 
@@ -35,7 +36,7 @@ public class Menage {
 
     @ColumnInfo(name="TAILLE_MENAGE")
     @SerializedName("tailleMenage")
-    public String tailleMenage;
+    public int tailleMenage;
 
     @ColumnInfo(name="DATE_IDENTIFICATION")
     @SerializedName("dateIdentification")
@@ -45,18 +46,40 @@ public class Menage {
     @SerializedName("codeSD")
     public String codeSD;
 
-    @ColumnInfo(name="DATE_AFFECTATION_SD")
-    @SerializedName("dateAffectationSD")
-    public Date dateAffectationSD;
+    @ColumnInfo(name="NOMBRE_MILD")
+    @SerializedName("nombreMild")
+    public int nombreMild;
+
+    @ColumnInfo(name="LATITUDE")
+    @SerializedName("latitude")
+    public double latitude;
+
+    @ColumnInfo(name="LONGITUDE")
+    @SerializedName("longitude")
+    public double longitude;
+
+    @ColumnInfo(name="CODE_MACARON")
+    @SerializedName("codeMacaron")
+    public String codeMacaron;
+
+    @ColumnInfo(name="ETAT_SERVI")
+    @SerializedName("etatServi")
+    public boolean etatServi;
 
 
-    public Menage(@NonNull String codeMenage, String nomResponsable, String sexeResponsable, int ageResponsable, String tailleMenage, Date dateIdentification) {
+    public Menage(@NonNull String codeMenage, String nomResponsable, String sexeResponsable, int ageResponsable, int tailleMenage, Date dateIdentification, String codeSD, int nombreMild, double latitude, double longitude, String codeMacaron, boolean etatServi) {
         this.codeMenage = codeMenage;
         this.nomResponsable = nomResponsable;
         this.sexeResponsable = sexeResponsable;
         this.ageResponsable = ageResponsable;
         this.tailleMenage = tailleMenage;
         this.dateIdentification = dateIdentification;
+        this.codeSD = codeSD;
+        this.nombreMild = nombreMild;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.codeMacaron = codeMacaron;
+        this.etatServi = etatServi;
     }
 
     public String getCodeMenage() {
@@ -91,11 +114,11 @@ public class Menage {
         this.ageResponsable = ageResponsable;
     }
 
-    public String getTailleMenage() {
+    public int getTailleMenage() {
         return tailleMenage;
     }
 
-    public void setTailleMenage(String tailleMenage) {
+    public void setTailleMenage(int tailleMenage) {
         this.tailleMenage = tailleMenage;
     }
 
@@ -106,4 +129,6 @@ public class Menage {
     public void setDateIdentification(Date dateIdentification) {
         this.dateIdentification = dateIdentification;
     }
+
+
 }

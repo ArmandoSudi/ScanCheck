@@ -29,6 +29,15 @@ public interface IMacaronDao {
     @Query("SELECT * FROM MACARON")
     List<Macaron> all();
 
-    @Query("SELECT * FROM MACARON WHERE CODE_SECRET=:codeSecret")
-    Macaron check(String codeSecret);
+    @Query("SELECT * FROM MACARON WHERE CODE_MACARON=:codeMacaron")
+    Macaron get(String codeMacaron);
+
+    @Query("SELECT * FROM MACARON WHERE CODE_MACARON=:codeMacaron AND IS_AFFECTED=:state")
+    Macaron getByState(String codeMacaron, boolean state);
+
+    @Query("UPDATE MACARON SET IS_AFFECTED=:state WHERE CODE_MACARON=:codeMacaron")
+    int updateMacaron(boolean state, String codeMacaron);
+
+    @Query("SELECT COUNT(*) AS NBR FROM MACARON")
+    int getCount();
 }

@@ -2,6 +2,7 @@ package com.daawtec.scancheck.entites;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -9,7 +10,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-@Entity(tableName="MACARON")
+@Entity(tableName="MACARON", foreignKeys = {
+        @ForeignKey(entity=AgentDenombrement.class, childColumns = "CODE_AGENT_DENOMBREMENT", parentColumns = "CODE_AGENT_DENOMBREMENT")
+})
 public class Macaron {
 
     @PrimaryKey
@@ -18,23 +21,29 @@ public class Macaron {
     @SerializedName("codeMacaron")
     public String codeMacaron;
 
-    @ColumnInfo(name="CODE_SECRET")
-    @SerializedName("codeSecret")
-    public String codeSecret;
+    @ColumnInfo(name="CODE_AS")
+    @SerializedName("codeAs")
+    public String codeAs;
 
-    @ColumnInfo(name="DATE_FABRICATION")
-    @SerializedName("dateFabrication")
-    public Date dateFabrication;
+    @ColumnInfo(name="CODE_AGENT_DENOMBREMENT")
+    @SerializedName("codeAgentDenombrement")
+    public String codeAgentDenombrement;
 
-    @ColumnInfo(name="DATE_MISE_EN_SERVICE")
-    @SerializedName("dateMiseEnService")
-    public Date dateMiseEnService;
+    @ColumnInfo(name="DATE_ENREGISTREMENT")
+    @SerializedName("dateEnregistrement")
+    public Date dateEnregistrement;
 
-    public Macaron(String codeMacaron, String codeSecret, Date dateFabrication, Date dateMiseEnService) {
+    @ColumnInfo(name="IS_AFFECTED")
+    @SerializedName("isAffected")
+    public boolean isAffected;
+
+
+    public Macaron(@NonNull String codeMacaron, String codeAs, String codeAgentDenombrement, Date dateEnregistrement, boolean isAffected) {
         this.codeMacaron = codeMacaron;
-        this.codeSecret = codeSecret;
-        this.dateFabrication = dateFabrication;
-        this.dateMiseEnService = dateMiseEnService;
+        this.codeAs = codeAs;
+        this.codeAgentDenombrement = codeAgentDenombrement;
+        this.dateEnregistrement = dateEnregistrement;
+        this.isAffected = isAffected;
     }
 
     public String getCodeMacaron() {
@@ -45,27 +54,4 @@ public class Macaron {
         this.codeMacaron = codeMacaron;
     }
 
-    public String getCodeSecret() {
-        return codeSecret;
-    }
-
-    public void setCodeSecret(String codeSecret) {
-        this.codeSecret = codeSecret;
-    }
-
-    public Date getDateFabrication() {
-        return dateFabrication;
-    }
-
-    public void setDateFabrication(Date dateFabrication) {
-        this.dateFabrication = dateFabrication;
-    }
-
-    public Date getDateMiseEnService() {
-        return dateMiseEnService;
-    }
-
-    public void setDateMiseEnService(Date dateMiseEnService) {
-        this.dateMiseEnService = dateMiseEnService;
-    }
 }

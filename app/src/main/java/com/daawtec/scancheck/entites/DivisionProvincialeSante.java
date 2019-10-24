@@ -13,11 +13,11 @@ public class DivisionProvincialeSante {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_DPS")
-    @SerializedName("codeDps")
+    @SerializedName("CodeDps")
     public String codeDPS;
 
     @ColumnInfo(name="NOM")
-    @SerializedName("nom")
+    @SerializedName("Nom")
     public String nom;
 
     public DivisionProvincialeSante(String codeDPS, String nom) {

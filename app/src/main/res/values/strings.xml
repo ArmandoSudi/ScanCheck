@@ -75,6 +75,9 @@
         <item>3</item>
     </string-array>
 
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+
     <string-array name="multi_select_list_preference_default_value" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
@@ -88,4 +91,10 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string-array name="aire_santes">
+        <item>Air Sante 1</item>
+        <item>Air Sante 2</item>
+        <item>Air Sante 3</item>
+    </string-array>
 </resources>

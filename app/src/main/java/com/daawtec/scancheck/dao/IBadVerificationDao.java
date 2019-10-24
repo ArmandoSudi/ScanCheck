@@ -26,5 +26,7 @@ public interface IBadVerificationDao {
     @Query("SELECT * FROM BAD_VERIFICACTION")
     List<BadVerification> all();
 
+    @Query("SELECT COUNT(*) FROM BAD_VERIFICACTION")
+    int size();
 
 }

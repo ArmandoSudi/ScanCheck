@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.daawtec.scancheck.R;
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.DashboardStat;
+
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +47,7 @@ public class DashboardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
         db = ScanCheckDB.getDatabase(mActivity);
-        getMenageCount();
+
     }
 
     @Override
@@ -64,19 +67,41 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 
-    public void getMenageCount(){
-        (new AsyncTask<Void, Void, Integer>(){
-            @Override
-            protected void onPostExecute(Integer integer) {
-                super.onPostExecute(integer);
+    @Override
+    public void onStart() {
+        super.onStart();
+        getStats();
+    }
 
-                int count = integer;
-                mMenageCountTV.setText("" + count);
+    public void getStats(){
+
+        (new AsyncTask<Void, Void, DashboardStat>(){
+            @Override
+            protected void onPostExecute(DashboardStat stat) {
+                super.onPostExecute(stat);
+
+                if (stat != null){
+                    Log.e(TAG, "onPostExecute: " + stat );
+                    mMenageCountTV.setText("" + stat.getMenages());
+                    mMenageServiTV.setText("" + (int)stat.getTauxMenagesServis() + " %");
+                    mMildDistribueTV.setText("" + (int)stat.getTauxMILDdistribues()+ " %");
+                    mTauxEchecTV.setText("" + (int)stat.getTauxBadVerification() + " %");
+
+                    mMenageServiPB.setProgress((int)stat.getTauxMenagesServis());
+                    mMildDistribuePB.setProgress((int)stat.getTauxMILDdistribues());
+                    mTauxEchecPB.setProgress((int)stat.getTauxBadVerification());
+                }
             }
 
             @Override
-            protected Integer doInBackground(Void... voids) {
-                return db.getIMenageDao().size();
+            protected DashboardStat doInBackground(Void... voids) {
+                DashboardStat stat = new DashboardStat();
+                stat.setMenages(db.getIMenageDao().size());
+                stat.setMenagesServis(db.getIIAffectationMacaronASDao().getNombreMenagesServis());
+                stat.setMILD(db.getIIAffectationMacaronASDao().getNombreTotalMILD());
+                stat.setMILDdistribues(db.getIIAffectationMacaronASDao().getNombreMILDDistribues());
+                stat.setBadVerification(db.getIBadVerificationDao().size());
+                return stat;
             }
         }).execute();
     }

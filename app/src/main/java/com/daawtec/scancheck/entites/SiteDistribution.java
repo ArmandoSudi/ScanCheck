@@ -16,31 +16,24 @@ public class SiteDistribution {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_SD")
-    @SerializedName("codeSd")
+    @SerializedName("CodeSd")
     public String codeSD;
 
     @ColumnInfo(name="NOM")
-    @SerializedName("nom")
+    @SerializedName("Nom")
     public String nom;
 
     @ColumnInfo(name="CODE_AS")
-    @SerializedName("codeAs")
+    @SerializedName("CodeAs")
     public String codeAS;
 
-    @ColumnInfo(name="QUANTITE_LIVREE")
-    @SerializedName("quantiteLivrees")
-    public int quantiteLivree;
+    public SiteDistribution() {
+    }
 
-    @ColumnInfo(name="QUANTITE_SORTIE")
-    @SerializedName("quantiteSorties")
-    public int quantiteSortie;
-
-    public SiteDistribution(String codeSD, String nom, String codeAS, int quantiteLivree, int quantiteSortie) {
+    public SiteDistribution(String codeSD, String nom, String codeAS) {
         this.codeSD = codeSD;
         this.nom = nom;
         this.codeAS = codeAS;
-        this.quantiteLivree = quantiteLivree;
-        this.quantiteSortie = quantiteSortie;
     }
 
     @Override
@@ -70,21 +63,5 @@ public class SiteDistribution {
 
     public void setCodeAS(String codeAS) {
         this.codeAS = codeAS;
-    }
-
-    public int getQuantiteLivree() {
-        return quantiteLivree;
-    }
-
-    public void setQuantiteLivree(int quantiteLivree) {
-        this.quantiteLivree = quantiteLivree;
-    }
-
-    public int getQuantiteSortie() {
-        return quantiteSortie;
-    }
-
-    public void setQuantiteSortie(int quantiteSortie) {
-        this.quantiteSortie = quantiteSortie;
     }
 }

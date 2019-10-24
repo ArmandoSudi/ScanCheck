@@ -29,4 +29,7 @@ public interface ISiteDistributionDao {
     @Query("SELECT * FROM SITE_DISTRIBUTION")
     List<SiteDistribution> all();
 
+    @Query("SELECT * FROM SITE_DISTRIBUTION WHERE CODE_AS=:codeAS")
+    List<SiteDistribution> get(String codeAS);
+
 }

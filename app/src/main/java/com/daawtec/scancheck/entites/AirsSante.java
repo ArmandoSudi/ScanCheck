@@ -16,16 +16,19 @@ public class AirsSante {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_AS")
-    @SerializedName("codeAs")
+    @SerializedName("CodeAs")
     public String codeAS;
 
     @ColumnInfo(name="NOM_AS")
-    @SerializedName("nom")
+    @SerializedName("Nom")
     public String nomAS;
 
     @ColumnInfo(name="CODE_ZS")
-    @SerializedName("codeZs")
+    @SerializedName("CodeZs")
     public String codeZS;
+
+    public AirsSante() {
+    }
 
     public AirsSante(String codeAS, String nomAS, String codeZS) {
         this.codeAS = codeAS;

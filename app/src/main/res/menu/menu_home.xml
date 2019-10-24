@@ -8,11 +8,6 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_pref"
-        android:orderInCategory="101"
-        android:title="Check Pref"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_affectation"
@@ -24,5 +19,11 @@
         android:id="@+id/action_sync"
         android:orderInCategory="101"
         android:title="Synchroniser"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_hash"
+        android:orderInCategory="101"
+        android:title="Hash"
         app:showAsAction="never" />
 </menu>

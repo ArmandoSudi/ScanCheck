@@ -16,15 +16,15 @@ public class ZoneSante {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_ZS")
-    @SerializedName("codeZs")
+    @SerializedName("CodeZs")
     public String codeZS;
 
     @ColumnInfo(name="NOM_ZS")
-    @SerializedName("nom")
+    @SerializedName("Nom")
     public String nomZS;
 
     @ColumnInfo(name="CODE_DPS")
-    @SerializedName("codeDPS")
+    @SerializedName("CodeDPS")
     public String codeDPS;
 
     public ZoneSante(String codeZS, String nomZS, String codeDPS) {

@@ -2,6 +2,7 @@ package com.daawtec.scancheck.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,11 +11,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.daawtec.scancheck.HomeActivity;
 import com.daawtec.scancheck.R;
 import com.daawtec.scancheck.adapters.MenageAdapter;
 import com.daawtec.scancheck.database.ScanCheckDB;
@@ -31,6 +34,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class MenageFragment extends Fragment {
+    private static final String TAG = "MenageFragment";
 
     private OnFragmentInteractionListener mListener;
     MenageAdapter mMenageAdapter;
@@ -92,6 +96,23 @@ public class MenageFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == HomeActivity.REQUEST_CODE_QR_SCAN)
+        {
+            if(data==null)
+                return;
+            //Getting the passed result
+            String qrCode = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
+            Log.d(TAG,"Scan result : "+ qrCode);
+
+            //TODO lancer l'activite d'enregistrement du menage
+
+        }
     }
 
     public interface OnFragmentInteractionListener {

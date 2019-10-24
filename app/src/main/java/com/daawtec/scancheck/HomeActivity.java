@@ -1,18 +1,20 @@
 package com.daawtec.scancheck;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.drm.DrmStore;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -22,13 +24,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.AffectationMacaronAS;
@@ -43,18 +42,23 @@ import com.daawtec.scancheck.service.ScanCheckApiInterface;
 import com.daawtec.scancheck.ui.DashboardFragment;
 import com.daawtec.scancheck.ui.MenageFragment;
 
-import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.ui.RapportFragment;
+import com.daawtec.scancheck.ui.ScanQRFragment;
 import com.daawtec.scancheck.utils.Constant;
+import com.daawtec.scancheck.utils.CreateAgentActivity;
+import com.daawtec.scancheck.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity implements MenageFragment.OnFragmentInteractionListener {
+public class HomeActivity extends AppCompatActivity implements MenageFragment.OnFragmentInteractionListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "HomeActivity";
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -62,6 +66,10 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
     private ViewPager mViewPager;
     ProgressDialog mProgressDialog;
     FloatingActionButton mFab;
+
+    DrawerLayout mDrawer;
+    ActionBarDrawerToggle mToggle;
+    NavigationView mNavigationView;
 
     SharedPreferences mSharedPref;
     SharedPreferences.Editor mEditor;
@@ -73,10 +81,8 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
     List<ZoneSante> mZSs = new ArrayList<>();
     List<AirsSante> mASs = new ArrayList<>();
     List<SiteDistribution> mSDs = new ArrayList<>();
-    List<RelaisCommunautaire> mRecos = new ArrayList<>();
-    List<Macaron> mMacarons = new ArrayList<>();
 
-    private static final int REQUEST_CODE_QR_SCAN = 101;
+    public static final int REQUEST_CODE_QR_SCAN = 101;
 
     @Override
     protected void onStart() {
@@ -92,7 +98,13 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         boolean isInitialized = mSharedPref.getBoolean(Constant.KEY_IS_INITIALIZED, false);
         if(!isInitialized){
             getInitialData();
+            Log.e(TAG, "onStart: is not initialized");
+        } else {
+            Intent intent = new Intent(this, CreateAgentActivity.class);
+            startActivity(intent);
+            Log.e(TAG, "onStart: is initialized");
         }
+
     }
 
     @Override
@@ -104,6 +116,15 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         setSupportActionBar(toolbar);
 
         db = ScanCheckDB.getDatabase(this);
+
+        mDrawer = findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(mToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mNavigationView = findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         mFab = findViewById(R.id.fab);
         mFab.hide();
@@ -164,6 +185,18 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
     }
 
     @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
@@ -177,21 +210,14 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if(mToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, ParameterActivity.class);
             startActivity(intent);
-        }
-
-        if (id == R.id.action_affectation){
-            checkAffectation();
-        }
-
-        if (id == R.id.action_pref){
-            String username = mSharedPref.getString(Constant.KEY_USERNAME, "");
-            String password = mSharedPref.getString(Constant.KEY_PASSWORD, "");
-            Log.e(TAG, "USERNAME: " + username);
-            Log.e(TAG, "PASSWORD: " + password);
         }
 
         if(id == R.id.action_sync){
@@ -199,7 +225,46 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
             startActivity(intent);
         }
 
+        if (id == R.id.action_hash) {
+            String a = "Hello";
+            String b = "b";
+            String c = "asdf34vdsf3";
+
+            String aHash = Utils.hash(a);
+            String bHash = Utils.hash(b);
+            String cHash = Utils.hash(c);
+
+            Log.d(TAG, "hash a : " + aHash );
+            Log.d(TAG, "hash b : " + bHash);
+            Log.d(TAG, "hash c : " + cHash);
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch(menuItem.getItemId()){
+            case R.id.menu_scanner_macaron:
+                mViewPager.setCurrentItem(0);
+                mDrawer.closeDrawers();
+                break;
+            case R.id.menu_menages:
+                mViewPager.setCurrentItem(1);
+                mDrawer.closeDrawers();
+                break;
+            case R.id.menu_rapport:
+                mViewPager.setCurrentItem(2);
+                mDrawer.closeDrawers();
+                break;
+            case R.id.menu_dashboard:
+                mViewPager.setCurrentItem(3);
+                mDrawer.closeDrawers();
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -207,166 +272,10 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
 
     }
 
-    public static class ScanQRFragment extends Fragment {
-
-        private static final String TAG = "ScanQRFragment";
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        TextView numeroMacaronTV;
-
-        Activity mActivity;
-        ScanCheckDB db;
-
-        public ScanQRFragment() {
-        }
-
-        public static ScanQRFragment newInstance() {
-            ScanQRFragment fragment = new ScanQRFragment();
-            return fragment;
-        }
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            mActivity = getActivity();
-            db = ScanCheckDB.getDatabase(mActivity);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-            Button scanBT = rootView.findViewById(R.id.scanne_bt);
-            scanBT.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Start the qr scan activity
-                    Intent i = new Intent(getActivity(),QrCodeActivity.class);
-                    startActivityForResult( i,REQUEST_CODE_QR_SCAN);
-                }
-            });
-            numeroMacaronTV = rootView.findViewById(R.id.numero_macaron_tv);
-
-            return rootView;
-        }
-
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-
-            if(requestCode == REQUEST_CODE_QR_SCAN)
-            {
-                if(data==null)
-                    return;
-                //Getting the passed result
-                String qrCode = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
-                numeroMacaronTV.setText("" + qrCode);
-                Log.d(TAG,"Scan result : "+ qrCode);
-
-                checkMacaron(qrCode);
-
-            }
-        }
-
-        /**
-         * Verifie si un macaron avec le code secret passe en parametre existe dans la base des donnees.
-         * @param codeSecret
-         */
-        public void checkMacaron(final String codeSecret){
-            (new AsyncTask<Void, Void, Macaron>(){
-                @Override
-                protected void onPostExecute(Macaron macaron) {
-                    super.onPostExecute(macaron);
-
-                    if (macaron instanceof Macaron){
-                        Log.d(TAG, "onPostExecute: LE MACARON EXIST");
-                        showDialog("Le macaron existe", mActivity);
-                        //TODO Implementer la methode de mis a jour de la date_verification la table "MACARON_AS"
-                        updateDateVerification(macaron.codeMacaron);
-                    } else {
-                        Log.d(TAG, "onPostExecute: LE MACARON N'EXISTE PAS");
-                        showDialog("Le macaron n'existe pas", mActivity);
-                        //TODO Implementer la methode de creation d'une entree dans la table "BAD_VERIFICATION" pour dire que c'est un macaton frauduleux
-                        saveBadVerification(codeSecret);
-                    }
-                }
-
-                @Override
-                protected Macaron doInBackground(Void... voids) {
-                    return db.getIMacaronDao().check(codeSecret);
-                }
-            }).execute();
-        }
-
-        /**
-         * Mettre a jour la date_verification dans la table MACARON_AS dont le codeMacaron correspond
-         * @param codeMacaron
-         */
-        public void updateDateVerification(String codeMacaron){
-
-        }
-
-        /**
-         * Creer une entree dans la table BAD_VERIFICATION pour le codeSecret encode dans le macaron frauduleux
-         * @param codeSecret
-         */
-        public void saveBadVerification(String codeSecret){
-
-        }
-
-        void showDialog(String message, Context context){
-            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-            alertDialog.setTitle("Resultat");
-            alertDialog.setMessage(message);
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if(resultCode != Activity.RESULT_OK)
-//        {
-//            Log.d(TAG,"COULD NOT GET A GOOD RESULT.");
-//            if(data==null)
-//                return;
-//            //Getting the passed result
-//            String result = data.getStringExtra("com.blikoon.qrcodescanner.error_decoding_image");
-//            if( result!=null)
-//            {
-//                AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).create();
-//                alertDialog.setTitle("Scan Error");
-//                alertDialog.setMessage("QR Code could not be scanned");
-//                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                dialog.dismiss();
-//                            }
-//                        });
-//                alertDialog.show();
-//            }
-//            return;
-//
-//        }
-//
-//        if(requestCode == REQUEST_CODE_QR_SCAN)
-//        {
-//            if(data==null)
-//                return;
-//            //Getting the passed result
-//            String qrCode = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
-//            Log.d(TAG,"Scan result :"+ qrCode);
-//
-//            checkMacaron(qrCode);
-//
-//        }
     }
 
     /**
@@ -381,6 +290,8 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
             super(fm);
             this.mFab = fab;
         }
+
+
 
         @Override
         public Fragment getItem(int position) {
@@ -410,24 +321,22 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
     public void canInsert(){
         if (mDPSs.size() > 0 &&
                 mZSs.size() > 0 &&
-                mASs.size() > 0 &&
-                mMacarons.size() > 0 &&
-                mSDs.size() > 0 &&
-                mRecos.size() > 0){
+                mASs.size() > 0
+                && mSDs.size() > 0)
+        {
             Log.d(TAG, "canInsert: INSERTING VALUES IN THE DATABASE");
             new InitDB(db).execute();
         }
     }
 
-    public void getInitialData(){
+    public void getInitialData() {
+
         showProgressDiag(mProgressDialog);
 
         getDivisionSantes();
         getAiresSante();
         getZoneSante();
-        getMacarons();
         getSiteDistributions();
-        getRecos();
     }
 
     public class InitDB extends AsyncTask<Void, Void, Void>{
@@ -449,16 +358,20 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
             mEditor.putBoolean(Constant.KEY_IS_INITIALIZED, true);
             mEditor.commit();
             hideProgressDiag(mProgressDialog);
+
+            // Go to set the parameter of the user for the first initialization of the data of the app
+            Intent intent = new Intent(HomeActivity.this, CreateAgentActivity.class);
+            startActivity(intent);
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
+
             long[] dps_ids = db.getIDivisionProvincialSanteDao().insert(mDPSs);
             long[] zs_ids = db.getIZoneSanteDao().insert(mZSs);
             long[] as_ids = db.getIAirSanteDao().insert(mASs);
-            long[] reco_dis = db.getIRelaisCommunautaireDao().insert(mRecos);
-            long[] macaron_ids = db.getIMacaronDao().insert(mMacarons);
             long[] sd_ids = db.getISiteDistributionDao().insert(mSDs);
+
             return null;
         }
     }
@@ -479,6 +392,7 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
             @Override
             public void onFailure(Call<List<DivisionProvincialeSante>> call, Throwable t) {
                 Log.e(TAG, "getdivisionSante onFailure: NETWORK FAILURE");
+                Log.e(TAG, t.getMessage());
             }
         });
     }
@@ -523,29 +437,6 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         });
     }
 
-    public void getMacarons(){
-        scanCheckApiInterface.getMacarons().enqueue(new Callback<List<Macaron>>() {
-            @Override
-            public void onResponse(Call<List<Macaron>> call, Response<List<Macaron>> response) {
-                if (response.isSuccessful()){
-                    if(response.body() != null){
-                        mMacarons.addAll(response.body());
-                        Log.d(TAG, "onResponse: List of Macarons : " + mMacarons.size());
-//                        for (Macaron macaron: mMacarons ){
-//                            Log.e(TAG, "DISPLAY MACARON : " + macaron.codeMacaron );
-//                        }
-                        canInsert();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Macaron>> call, Throwable t) {
-                Log.e(TAG, "getMacarons onFailure: NETWORK FAILURE");
-            }
-        });
-    }
-
     public void getSiteDistributions(){
         scanCheckApiInterface.getSiteDistribution().enqueue(new Callback<List<SiteDistribution>>() {
             @Override
@@ -566,26 +457,6 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         });
     }
 
-    public void getRecos() {
-        scanCheckApiInterface.getReco().enqueue(new Callback<List<RelaisCommunautaire>>() {
-            @Override
-            public void onResponse(Call<List<RelaisCommunautaire>> call, Response<List<RelaisCommunautaire>> response) {
-                if (response.isSuccessful()){
-                    if (response.body() != null){
-                        mRecos.addAll(response.body());
-                        Log.d(TAG, "onResponse: Liste des Recos : " + mRecos.size());
-                        canInsert();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<RelaisCommunautaire>> call, Throwable t) {
-                Log.e(TAG, "getReco onFailure: NETWORK FAILURE");
-            }
-        });
-    }
-
     void showProgressDiag(ProgressDialog progressDiag){
         progressDiag.setMessage("Initialization des donnees. Rassurez vous que l'internet est active");
         progressDiag.setCancelable(false);
@@ -596,20 +467,5 @@ public class HomeActivity extends AppCompatActivity implements MenageFragment.On
         progressDiag.dismiss();
     }
 
-    public void checkAffectation(){
-        (new AsyncTask<Void, Void, List<AffectationMacaronAS>>(){
-            @Override
-            protected void onPostExecute(List<AffectationMacaronAS> affectationMacaronAS) {
-                super.onPostExecute(affectationMacaronAS);
-                if (affectationMacaronAS != null ) Log.e(TAG, "onPostExecute: SIZE AFFECTATION: " +
-                        affectationMacaronAS.size() );
-            }
-
-            @Override
-            protected List<AffectationMacaronAS> doInBackground(Void... voids) {
-                return db.getIIAffectationMacaronASDao().all();
-            }
-        }).execute();
-    }
 
 }

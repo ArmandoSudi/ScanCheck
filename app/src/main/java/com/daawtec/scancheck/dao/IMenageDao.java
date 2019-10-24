@@ -31,4 +31,16 @@ public interface IMenageDao {
 
     @Query("SELECT COUNT(*) FROM MENAGE")
     int size();
+
+    @Query("SELECT * FROM MENAGE WHERE CODE_MACARON=:codeMacaron")
+    Menage getByCodeMacaron(String codeMacaron);
+
+    @Query("UPDATE MENAGE SET ETAT_SERVI=:state WHERE CODE_MACARON=:codeMacaron")
+    int updateMenage(boolean state, String codeMacaron);
+
+    @Query("SELECT COUNT(*) AS NBR FROM MENAGE")
+    int getCount();
+
+    @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE ETAT_SERVI=:state")
+    int getCountMenageServi(boolean state);
 }
