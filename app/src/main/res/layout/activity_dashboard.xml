@@ -28,7 +28,7 @@
                     android:layout_height="100dp"
                     android:paddingLeft="8dp"
                     android:paddingStart="8dp"
-                    android:src="@drawable/circle_shape"/>
+                    app:srcCompat="@drawable/ic_macaron"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                     android:layout_height="100dp"
                     android:paddingLeft="8dp"
                     android:paddingStart="8dp"
-                    android:src="@drawable/circle_shape"/>
+                    app:srcCompat="@drawable/ic_home"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                     android:layout_height="100dp"
                     android:paddingLeft="8dp"
                     android:paddingStart="8dp"
-                    android:src="@drawable/circle_shape"/>
+                    app:srcCompat="@drawable/ic_distribution"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
                     android:layout_height="100dp"
                     android:paddingLeft="8dp"
                     android:paddingStart="8dp"
-                    android:src="@drawable/circle_shape"/>
+                    app:srcCompat="@drawable/ic_rapport"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

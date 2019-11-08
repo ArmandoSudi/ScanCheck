@@ -1,10 +1,14 @@
 package com.daawtec.scancheck;
 
-import android.app.DatePickerDialog;
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,39 +19,37 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
-import com.daawtec.scancheck.entites.AffectationMacaronAS;
 import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.utils.Constant;
+import com.daawtec.scancheck.utils.GPSTracker;
 import com.daawtec.scancheck.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class CreateMenageActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateMenageActivity";
 
-    TextView mDateIdentificationTV, mCodeMacaronTV;
-    EditText mNomResponsableET, mAgeResponsableET, mTailleMenageET, mNombreMildET;
+    TextView mDateIdentificationTV, mCodeMacaronTV, mLatitudeTV, mLongitudeTV;
+    EditText mNomResponsableET, mVillageET, mTailleMenageET, mNombreMildET;
     Spinner mSexeSP;
-    Button mSaveMenageBT;
+    Button mSaveMenageBT, mGpsBT;
     Spinner mSiteDistributionSP;
 
     String mSexe;
     Date mDateIdentification;
+    double mLatitude=0.0, mLongitude=0.0;
 
     SharedPreferences mSharedPref;
     AlertDialog checkMacaronDialogBuilder;
@@ -57,6 +59,7 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     ScanCheckDB db;
     String qrCode, mCodeSD;
+    GPSAsyncTask gpsAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,18 +88,42 @@ public class CreateMenageActivity extends AppCompatActivity {
     public void initView(String codeMacaron) {
         mDateIdentificationTV = findViewById(R.id.date_identification_tv);
         mNomResponsableET = findViewById(R.id.nom_responsable_et);
-        mAgeResponsableET = findViewById(R.id.age_responsable_et);
+        mVillageET = findViewById(R.id.age_responsable_et);
         mTailleMenageET = findViewById(R.id.taille_menage_et);
         mNombreMildET = findViewById(R.id.nombre_mild_et);
 
         mCodeMacaronTV = findViewById(R.id.code_macaron_tv);
         mCodeMacaronTV.setText(qrCode + "");
+        mLongitudeTV = findViewById(R.id.longitude_tv);
+        mLatitudeTV = findViewById(R.id.latitude_tv);
 
         mSaveMenageBT = findViewById(R.id.save_menage_bt);
         mSaveMenageBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 collectMenage();
+            }
+        });
+
+        mGpsBT = findViewById(R.id.coordonee_gps_bt);
+        mGpsBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (CreateMenageActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            || CreateMenageActivity.this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                        requestPermissions(
+                                new String[]{
+                                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                                        Manifest.permission.ACCESS_FINE_LOCATION,},
+                                Constant.REQUEST_CODE_ASK_PERMISSIONS
+                        );
+                    } else {
+                        gpsAsyncTask = new GPSAsyncTask(CreateMenageActivity.this);
+                        gpsAsyncTask.execute();
+                    }
+                }
             }
         });
 
@@ -134,13 +161,9 @@ public class CreateMenageActivity extends AppCompatActivity {
     public void collectMenage(){
 
         String nomResponsable = mNomResponsableET.getText().toString();
-        int ageResponsable = Utils.stringToInt(mAgeResponsableET.getText().toString());
+        String village = mVillageET.getText().toString();
         int nombreMILD = Utils.stringToInt(mNombreMildET.getText().toString());
         int tailleMenage = Utils.stringToInt(mTailleMenageET.getText().toString()) ;
-
-        //TODO implement the method to retrieve the geographic coordinate
-        double latitude = 0.0;
-        double longitude = 0.0;
 
         String codeMenage = Utils.getTimeStamp();
 
@@ -148,18 +171,20 @@ public class CreateMenageActivity extends AppCompatActivity {
 
         // Validation Menage
         if (nomResponsable.equals("")){ isValid = false;}
-        if (ageResponsable == 0 ) { isValid = false; }
+        if (village.equals("")) { isValid = false; }
         if (tailleMenage == 0){ isValid = false;}
         if (nombreMILD == 0) { isValid = false;}
         if (mCodeSD == null) isValid = false;
+        if (mLatitude == 0.0) isValid = false;
+        if (mLongitude == 0.0) isValid = false;
 
         if (isValid){
 
             mDateIdentification = mCalendar.getTime();
 
             String codeMacaron = qrCode;
-            Menage menage = new Menage(codeMenage, nomResponsable, mSexe, ageResponsable, tailleMenage,
-                    mDateIdentification, mCodeSD, nombreMILD, latitude, longitude, codeMacaron, false);
+            Menage menage = new Menage(codeMenage, nomResponsable, mSexe, village, tailleMenage,
+                    mDateIdentification, mCodeSD, nombreMILD, mLatitude, mLongitude, codeMacaron, false);
 
             saveMenage(menage);
 
@@ -277,7 +302,88 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     }
 
-    public void updateMacaronState(){
+    class GPSAsyncTask extends AsyncTask<Void, Object, Object> {
 
+        private Context context;
+        private ProgressDialog progressDialog;
+        private double latitude;
+        private double longitude;
+
+        private GPSTracker gps;
+
+        public GPSAsyncTask(Context context) {
+            this.context = context;
+            this.gps = new GPSTracker(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(
+                    context,
+                    "Rechercher des coordonnées GPS",
+                    "Veuillez patientez pendant la recherche...",
+                    true,
+                    true,
+                    new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            cancel(true);
+                        }
+                    }
+            );
+
+            if (!gps.canGetLocation()) {
+                gps.showSettingsAlert();
+            }
+        }
+
+        @Override
+        protected Object doInBackground(Void... voids) {
+            if (gps.canGetLocation()) {
+                gps.getLocation();
+                latitude = gps.getLatitude();
+                longitude = gps.getLongitude();
+                publishProgress("Longitude: " + longitude + " et Latitude: " + latitude);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            progressDialog.dismiss();
+
+            Log.e(TAG, "onPostExecute : " + "LATITUDE : " + latitude + " LONGITUDE : " + longitude  );
+            mLatitude = latitude;
+            mLongitude = longitude;
+
+            mLatitudeTV.setText(Utils.getDecimalFormat().format(latitude) + " degré");
+            mLongitudeTV.setText(Utils.getDecimalFormat().format(longitude) + " degré");
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Object... values) {
+            super.onProgressUpdate(values);
+
+            progressDialog.setMessage(String.valueOf(values[0]));
+        }
+
+        @Override
+        protected void onCancelled(Object o) {
+            super.onCancelled(o);
+
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
+            Log.e(TAG, "onCancelled: " + "LATITUDE : " + latitude + " LONGITUDE : " + longitude  );
+        }
     }
 }

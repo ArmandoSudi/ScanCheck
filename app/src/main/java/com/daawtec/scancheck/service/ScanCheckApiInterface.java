@@ -1,6 +1,7 @@
 package com.daawtec.scancheck.service;
 
 import com.daawtec.scancheck.entites.AffectationMacaronAS;
+import com.daawtec.scancheck.entites.AgentDenombrement;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.BadVerification;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
@@ -32,6 +33,10 @@ public interface ScanCheckApiInterface {
     Call<List<AirsSante>> getAirSantes();
     @GET("sd/")
     Call<List<SiteDistribution>> getSiteDistribution();
+    @GET("agents/")
+    Call<List<AgentDenombrement>> getAgents();
+    @GET("macarons/")
+    Call<List<Macaron>> getMacarons();
 
     @POST("saveMenages/")
     Call<String> postMenage(@Body List<Menage> menages);

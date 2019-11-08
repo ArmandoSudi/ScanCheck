@@ -24,7 +24,7 @@ public class ZoneSante {
     public String nomZS;
 
     @ColumnInfo(name="CODE_DPS")
-    @SerializedName("CodeDPS")
+    @SerializedName("CodeDps")
     public String codeDPS;
 
     public ZoneSante(String codeZS, String nomZS, String codeDPS) {

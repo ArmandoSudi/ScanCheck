@@ -10,6 +10,7 @@ import com.daawtec.scancheck.entites.ZoneSante;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +35,7 @@ public class Utils {
     private static SecretKey key;
 
     private static final String TAG = "Utils";
+    private static DecimalFormat _decimalFormat = null;
 
     public static List<AffectationMacaronAS> getAffectations(){
         Date date = new Date();
@@ -58,6 +60,13 @@ public class Utils {
         }else {
             return Integer.parseInt(value);
         }
+    }
+
+    public static DecimalFormat getDecimalFormat(){
+        if (_decimalFormat == null) {
+            _decimalFormat = new DecimalFormat("###.###");
+        }
+        return _decimalFormat;
     }
 
     // TODO : implement the algorithm to compute the number of mild

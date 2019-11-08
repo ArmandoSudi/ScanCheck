@@ -150,7 +150,7 @@ public class AffectationMacaronAS {
         return "AffectationMacaronAS{" +
                 "codeAffectation='" + codeAffectation + '\'' +
                 ", codeMacaron='" + codeMacaron + '\'' +
-                ", codeAS='" + codeAS + '\'' +
+                ", CodeAS='" + codeAS + '\'' +
                 ", codeReco='" + codeReco + '\'' +
                 ", dateAffectationAS='" + dateAffectationAS + '\'' +
                 ", dateAffectationReco='" + dateAffectationReco + '\'' +

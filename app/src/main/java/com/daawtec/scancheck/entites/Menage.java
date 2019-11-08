@@ -30,9 +30,9 @@ public class Menage {
     @SerializedName("sexeResponsable")
     public String sexeResponsable;
 
-    @ColumnInfo(name="AGE_RESPONSABLE")
-    @SerializedName("ageResponsable")
-    public int ageResponsable;
+    @ColumnInfo(name="VILLAGE")
+    @SerializedName("Village")
+    public String village;
 
     @ColumnInfo(name="TAILLE_MENAGE")
     @SerializedName("tailleMenage")
@@ -67,11 +67,11 @@ public class Menage {
     public boolean etatServi;
 
 
-    public Menage(@NonNull String codeMenage, String nomResponsable, String sexeResponsable, int ageResponsable, int tailleMenage, Date dateIdentification, String codeSD, int nombreMild, double latitude, double longitude, String codeMacaron, boolean etatServi) {
+    public Menage(@NonNull String codeMenage, String nomResponsable, String sexeResponsable, String village, int tailleMenage, Date dateIdentification, String codeSD, int nombreMild, double latitude, double longitude, String codeMacaron, boolean etatServi) {
         this.codeMenage = codeMenage;
         this.nomResponsable = nomResponsable;
         this.sexeResponsable = sexeResponsable;
-        this.ageResponsable = ageResponsable;
+        this.village = village;
         this.tailleMenage = tailleMenage;
         this.dateIdentification = dateIdentification;
         this.codeSD = codeSD;
@@ -106,12 +106,12 @@ public class Menage {
         this.sexeResponsable = sexeResponsable;
     }
 
-    public int getAgeResponsable() {
-        return ageResponsable;
+    public String getVillage() {
+        return village;
     }
 
-    public void setAgeResponsable(int ageResponsable) {
-        this.ageResponsable = ageResponsable;
+    public void setAgeResponsable(String village) {
+        this.village = village;
     }
 
     public int getTailleMenage() {
@@ -129,6 +129,5 @@ public class Menage {
     public void setDateIdentification(Date dateIdentification) {
         this.dateIdentification = dateIdentification;
     }
-
 
 }

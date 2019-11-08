@@ -12,6 +12,8 @@ public class Constant {
     public static String KEY_IS_AGENT_REGISTERED = "isAgentRegistered";
     public static String KEY_CODE_AGENT_DENOMBREMENT = "codeAgentDenombrement";
     public static String KEY_CODE_AGENT_AS = "agentCodeAs";
+    public static String KEY_CODE_AGENT_SUPERVISEUR = "agentSuperviseur";
+    public static String KEY_CODE_AGENT_ENQUETEUR = "agentEnqueteur";
 
     public static String ACTION = "action";
     public static final String ACTION_MENAGE_ACTIVITY = "startMenageActivity";
@@ -25,5 +27,8 @@ public class Constant {
     public static int REQUEST_CODE_QR_SCAN_MACARON = 101;
     public static int REQUEST_CODE_QR_SCAN_MENAGE = 102;
     public static int REQUEST_CODE_QR_SCAN_DISTRIBUTION = 103;
+    public static int REQUEST_CODE_ASK_PERMISSIONS = 104;
+    public static int REQUEST_CODE_LOGIN = 105;
+    public static int REQUEST_CODE_CHECK_AGENT = 106;
 
 }

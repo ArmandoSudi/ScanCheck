@@ -17,51 +17,51 @@ public class AirsSante {
     @NonNull
     @ColumnInfo(name="CODE_AS")
     @SerializedName("CodeAs")
-    public String codeAS;
+    public String CodeAS;
 
     @ColumnInfo(name="NOM_AS")
     @SerializedName("Nom")
-    public String nomAS;
+    public String Nom;
 
     @ColumnInfo(name="CODE_ZS")
     @SerializedName("CodeZs")
-    public String codeZS;
+    public String CodeZS;
 
     public AirsSante() {
     }
 
-    public AirsSante(String codeAS, String nomAS, String codeZS) {
-        this.codeAS = codeAS;
-        this.nomAS = nomAS;
-        this.codeZS = codeZS;
+    public AirsSante(String codeAS, String nom, String codeZS) {
+        this.CodeAS = codeAS;
+        this.Nom = nom;
+        this.CodeZS = codeZS;
     }
 
     @Override
     public String toString() {
-        return nomAS ;
+        return Nom;
     }
 
     public String getCodeAS() {
-        return codeAS;
+        return CodeAS;
     }
 
     public void setCodeAS(String codeAS) {
-        this.codeAS = codeAS;
+        this.CodeAS = codeAS;
     }
 
-    public String getNomAS() {
-        return nomAS;
+    public String getNom() {
+        return Nom;
     }
 
-    public void setNomAS(String nomAS) {
-        this.nomAS = nomAS;
+    public void setNom(String nom) {
+        this.Nom = nom;
     }
 
     public String getCodeZS() {
-        return codeZS;
+        return CodeZS;
     }
 
     public void setCodeZS(String codeZS) {
-        this.codeZS = codeZS;
+        this.CodeZS = codeZS;
     }
 }

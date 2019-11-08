@@ -25,7 +25,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemSelected;
 
 public class CreateAgentActivity extends AppCompatActivity {
     private static final String TAG = "CreateAgentActivity";
@@ -62,8 +61,7 @@ public class CreateAgentActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 AirsSante airSante = (AirsSante) parent.getItemAtPosition(position);
-                mCodeAs = airSante.codeAS;
-                Log.e(TAG, "onItemSelected: " + mCodeAs );
+                mCodeAs = airSante.CodeAS;
             }
 
             @Override
@@ -84,11 +82,11 @@ public class CreateAgentActivity extends AppCompatActivity {
         }
 
         if (nom != null || mCodeAs != null) {
-            AgentDenombrement agent = new AgentDenombrement();
-            agent.nom = nom;
-            agent.codeAs = mCodeAs;
-            agent.codeAgentDenombrement = Utils.getTimeStamp();
-            saveAgent(agent);
+//            AgentDenombrement agent = new AgentDenombrement();
+//            agent.nom = nom;
+//            agent.codeAs = mCodeAs;
+//            agent.codeAgentDenombrement = Utils.getTimeStamp();
+//            saveAgent(agent);
         }
     }
 
@@ -114,6 +112,7 @@ public class CreateAgentActivity extends AppCompatActivity {
                     Toast.makeText(CreateAgentActivity.this, "Agent crée", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(CreateAgentActivity.this, DashboardActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
             }
@@ -125,8 +124,7 @@ public class CreateAgentActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<AirsSante> airsSantes) {
                 super.onPostExecute(airsSantes);
-
-
+                Log.e(TAG, "onPostExecute: AIR SANTE: " + airsSantes.size() );
                 if (airsSantes != null ){
                     if (airsSantes.size() > 0){
                         airsSantes.add(0, new AirsSante());

@@ -6,31 +6,32 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/scancheck_colored_icon"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/scancheck_icon"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".utils.CreateAgentActivity"
-            android:label="Enregistrer Agent Denombrement">
-
-        </activity>
+        android:theme="@style/AppThemePurple"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".SupervisionActivity"
+            android:label="Formulaire de supervision"
+            ></activity>
+        <activity android:name=".CheckActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".utils.CreateAgentActivity"
+            android:label="Enregistrer Agent Denombrement" />
         <activity
             android:name=".BaseActivity"
             android:label="@string/title_activity_base"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppThemePurple.NoActionBar" />
         <activity
             android:name=".DashboardActivity"
-            android:label="SANRU Digital">
-
-        </activity>
-        <activity android:name=".MainActivity" >
-        </activity>
-        <activity android:name=".ScanActivity" />
+            android:label="SANRU Digital" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -38,7 +39,7 @@
 
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppThemePurple.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -47,7 +48,6 @@
         <activity android:name=".CreateMenageActivity" />
         <activity android:name=".CreateRapportActivity" />
         <activity android:name=".SyncActivity" />
-        <activity android:name=".AutheticationActivity" />
         <activity
             android:name=".ParameterActivity"
             android:label="Parametres" />

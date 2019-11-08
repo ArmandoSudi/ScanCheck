@@ -16,6 +16,8 @@ import com.daawtec.scancheck.dao.IMacaronDao;
 import com.daawtec.scancheck.dao.IMenageDao;
 import com.daawtec.scancheck.dao.IRelaisCommunautaireDao;
 import com.daawtec.scancheck.dao.ISiteDistributionDao;
+import com.daawtec.scancheck.dao.ITypeAgentDao;
+import com.daawtec.scancheck.dao.IValiditeRoleDao;
 import com.daawtec.scancheck.dao.IZoneSanteDao;
 import com.daawtec.scancheck.entites.AffectationMacaronAS;
 import com.daawtec.scancheck.entites.AgentDenombrement;
@@ -27,6 +29,8 @@ import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.RelaisCommunautaire;
 import com.daawtec.scancheck.entites.SiteDistribution;
+import com.daawtec.scancheck.entites.TypeAgent;
+import com.daawtec.scancheck.entites.ValiditeRole;
 import com.daawtec.scancheck.entites.Verification;
 import com.daawtec.scancheck.entites.ZoneSante;
 import com.daawtec.scancheck.utils.Converter;
@@ -44,8 +48,10 @@ import com.daawtec.scancheck.utils.DateConverts;
         RelaisCommunautaire.class,
         SiteDistribution.class,
         Verification.class,
-        ZoneSante.class},
-        version = 8
+        ZoneSante.class,
+        TypeAgent.class,
+        ValiditeRole.class},
+        version = 9
 )
 @TypeConverters(DateConverts.class)
 public abstract class ScanCheckDB extends RoomDatabase {
@@ -63,6 +69,8 @@ public abstract class ScanCheckDB extends RoomDatabase {
     public abstract IRelaisCommunautaireDao  getIRelaisCommunautaireDao();
     public abstract ISiteDistributionDao getISiteDistributionDao();
     public abstract IZoneSanteDao getIZoneSanteDao();
+    public abstract ITypeAgentDao getITypeAgentDao();
+    public abstract IValiditeRoleDao getIValiditeRoleDao();
 
     private static ScanCheckDB INSTANCE;
 

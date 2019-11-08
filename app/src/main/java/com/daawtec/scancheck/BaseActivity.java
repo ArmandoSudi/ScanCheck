@@ -1,9 +1,12 @@
 package com.daawtec.scancheck;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -46,6 +49,8 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+        checkCameraPermission();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -201,5 +206,18 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                 return db.getIMacaronDao().get(codeMacaron);
             }
         }).execute();
+    }
+
+    public void checkCameraPermission(){
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (BaseActivity.this.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(
+                        new String[]{
+                                Manifest.permission.CAMERA},
+                        Constant.REQUEST_CODE_ASK_PERMISSIONS
+                );
+            }
+        }
     }
 }

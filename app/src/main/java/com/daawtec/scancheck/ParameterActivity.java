@@ -56,7 +56,7 @@ public class ParameterActivity extends AppCompatActivity {
                 AirsSante AS = (AirsSante) parent.getItemAtPosition(position);
                 mEditor.putString(Constant.KEY_USER_AS, AS.getCodeAS());
                 mEditor.commit();
-                Log.i(TAG, "onItemSelected: AS parameter updated to -> AS: code_as: " + AS.codeAS);
+                Log.i(TAG, "onItemSelected: AS parameter updated to -> AS: code_as: " + AS.CodeAS);
                 loadReco(AS.getCodeAS());
             }
             @Override
