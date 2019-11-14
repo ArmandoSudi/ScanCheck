@@ -45,9 +45,21 @@ public class MenageFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static MenageFragment newInstance() {
+    public static MenageFragment newInstance(String codeAgent) {
         MenageFragment fragment = new MenageFragment();
         return fragment;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mMenageAdapter != null) {
+            mMenageAdapter.clear();
+            if (db != null) {
+                new LoadMenageAsync(db).execute();
+            }
+        }
     }
 
     @Override
@@ -132,6 +144,7 @@ public class MenageFragment extends Fragment {
         protected void onPostExecute(List<Menage> menages) {
             super.onPostExecute(menages);
             if(menages != null && menages.size() > 0){
+                mMenageAdapter.clear();
                 mMenageAdapter.addAll(menages);
                 mMenageAdapter.notifyDataSetChanged();
             }

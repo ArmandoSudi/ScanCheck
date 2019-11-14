@@ -38,19 +38,30 @@ public class MacaronFragment extends Fragment {
 
     SharedPreferences mSharedPref;
     ScanCheckDB db;
+    String mCodeAs, mCodeAgentDenombrement;
 
     public MacaronFragment() {
         // Required empty public constructor
     }
 
-    public static MacaronFragment newInstance() {
+    public static MacaronFragment newInstance(String codeAgentDenombrement, String codeAs) {
         MacaronFragment fragment = new MacaronFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.KEY_CODE_AGENT_DENOMBREMENT, codeAgentDenombrement);
+        bundle.putString(Constant.KEY_CODE_AGENT_AS, codeAs);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            mCodeAs = bundle.getString(Constant.KEY_CODE_AGENT_AS);
+            mCodeAgentDenombrement = bundle.getString(Constant.KEY_CODE_AGENT_DENOMBREMENT);
+        }
 
         mActivity = getActivity();
         mMacaronAdapter = new MacaronAdapter(mActivity);

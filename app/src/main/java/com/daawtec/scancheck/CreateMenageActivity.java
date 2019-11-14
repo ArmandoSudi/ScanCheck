@@ -1,6 +1,7 @@
 package com.daawtec.scancheck;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,8 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +44,8 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateMenageActivity";
 
-    TextView mDateIdentificationTV, mCodeMacaronTV, mLatitudeTV, mLongitudeTV;
-    EditText mNomResponsableET, mVillageET, mTailleMenageET, mNombreMildET;
+    TextView mDateIdentificationTV, mCodeMacaronTV, mLatitudeTV, mLongitudeTV, mNombreMildTV;
+    EditText mNomResponsableET, mPrenomResponsableET, mVillageET, mTailleMenageET, mRecoPrenomET, mRecoNomET, mNombreCouchetteET;
     Spinner mSexeSP;
     Button mSaveMenageBT, mGpsBT;
     Spinner mSiteDistributionSP;
@@ -58,8 +61,10 @@ public class CreateMenageActivity extends AppCompatActivity {
     SimpleDateFormat mDateFormat = new SimpleDateFormat("DD/MM/YYYY");
 
     ScanCheckDB db;
-    String qrCode, mCodeSD;
+    String qrCode, mCodeSD, mCodeAgentIT;
     GPSAsyncTask gpsAsyncTask;
+
+    boolean isAgentIT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,10 @@ public class CreateMenageActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         qrCode = intent.getStringExtra(Constant.CODE_QR);
+        mCodeAgentIT = intent.getStringExtra(Constant.KEY_CODE_AGENT_IT);
+
+        if (mCodeAgentIT != null) isAgentIT = true;
+
         //Return if the macaron is already affected to another menage
         checkMacaron(qrCode);
 
@@ -80,17 +89,27 @@ public class CreateMenageActivity extends AppCompatActivity {
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-//        showDialog();
+        if(isAgentIT) initViewAgentIt(qrCode);
+        else initView(qrCode);
+    }
 
-        initView(qrCode);
+    public void initViewAgentIt(String codeMacaron){
+        initView(codeMacaron);
+        mVillageET.setVisibility(View.GONE);
+        mRecoNomET.setVisibility(View.GONE);
+        mRecoPrenomET.setVisibility(View.GONE);
+        mTailleMenageET.setVisibility(View.GONE);
     }
 
     public void initView(String codeMacaron) {
         mDateIdentificationTV = findViewById(R.id.date_identification_tv);
         mNomResponsableET = findViewById(R.id.nom_responsable_et);
+        mPrenomResponsableET = findViewById(R.id.prenom_responsable_et);
         mVillageET = findViewById(R.id.age_responsable_et);
+        mRecoNomET = findViewById(R.id.reco_nom_et);
+        mRecoPrenomET = findViewById(R.id.reco_prenom_et);
         mTailleMenageET = findViewById(R.id.taille_menage_et);
-        mNombreMildET = findViewById(R.id.nombre_mild_et);
+        mNombreCouchetteET = findViewById(R.id.nombre_couchete_et);
 
         mCodeMacaronTV = findViewById(R.id.code_macaron_tv);
         mCodeMacaronTV.setText(qrCode + "");
@@ -161,9 +180,12 @@ public class CreateMenageActivity extends AppCompatActivity {
     public void collectMenage(){
 
         String nomResponsable = mNomResponsableET.getText().toString();
+        String prenomResponsable = mPrenomResponsableET.getText().toString();
         String village = mVillageET.getText().toString();
-        int nombreMILD = Utils.stringToInt(mNombreMildET.getText().toString());
+        String recoNom = mRecoNomET.getText().toString();
+        String recoPrenom = mRecoPrenomET.getText().toString();
         int tailleMenage = Utils.stringToInt(mTailleMenageET.getText().toString()) ;
+        int nombreCouchette = Utils.stringToInt(mNombreCouchetteET.getText().toString());
 
         String codeMenage = Utils.getTimeStamp();
 
@@ -171,20 +193,30 @@ public class CreateMenageActivity extends AppCompatActivity {
 
         // Validation Menage
         if (nomResponsable.equals("")){ isValid = false;}
-        if (village.equals("")) { isValid = false; }
+
         if (tailleMenage == 0){ isValid = false;}
-        if (nombreMILD == 0) { isValid = false;}
         if (mCodeSD == null) isValid = false;
         if (mLatitude == 0.0) isValid = false;
         if (mLongitude == 0.0) isValid = false;
+
+        if (!isAgentIT) {
+            if (village.equals("")) { isValid = false; }
+            if (recoNom.equals("")) isValid = false;
+            if (recoPrenom.equals("")) isValid = false;
+        }
+
 
         if (isValid){
 
             mDateIdentification = mCalendar.getTime();
 
+            int nombreMILD = Utils.computeMildNumber(tailleMenage);
             String codeMacaron = qrCode;
-            Menage menage = new Menage(codeMenage, nomResponsable, mSexe, village, tailleMenage,
+            Menage menage = new Menage(codeMenage, nomResponsable + " " + prenomResponsable, mSexe, village, tailleMenage,
                     mDateIdentification, mCodeSD, nombreMILD, mLatitude, mLongitude, codeMacaron, false);
+            menage.recoNom = recoNom;
+            menage.recoPrenom = recoPrenom;
+            menage.nombreCouchette = nombreCouchette;
 
             saveMenage(menage);
 
@@ -200,8 +232,9 @@ public class CreateMenageActivity extends AppCompatActivity {
                 super.onPostExecute(results);
                 if (results[0] > 0) {
                     Toast.makeText(CreateMenageActivity.this, "Menage enregistré", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(CreateMenageActivity.this, HomeActivity.class);
-                    startActivity(intent);
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK,returnIntent);
+                    finish();
                 } else {
                     Toast.makeText(CreateMenageActivity.this, "Erreur lors de l'enregistrement de Macaron", Toast.LENGTH_SHORT).show();
                 }

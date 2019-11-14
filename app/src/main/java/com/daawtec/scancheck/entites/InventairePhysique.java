@@ -55,6 +55,8 @@ public class InventairePhysique {
         this.nombreMacaron = nombreMacaron;
     }
 
+    public InventairePhysique(){}
+
     public String getCodeInventaire() {
         return codeInventaire;
     }

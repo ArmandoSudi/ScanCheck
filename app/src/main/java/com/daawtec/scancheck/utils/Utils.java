@@ -69,9 +69,19 @@ public class Utils {
         return _decimalFormat;
     }
 
-    // TODO : implement the algorithm to compute the number of mild
-    public static int computeMildNumber(int tailleMenage){
-        return 2;
+    public static int computeMildNumber(int nombrePersonne){
+        if (nombrePersonne > 0 && nombrePersonne < 3){
+            return 1;
+        } else if (nombrePersonne > 2 && nombrePersonne < 5) {
+            return 2;
+        } else if (nombrePersonne > 4 && nombrePersonne < 7){
+            return 3;
+        } else if (nombrePersonne > 6 && nombrePersonne < 9) {
+            return 4;
+        } else if (nombrePersonne >= 9) {
+            return 5;
+        }
+        return 0;
     }
 
     public static String hash(String plainTextPassword){

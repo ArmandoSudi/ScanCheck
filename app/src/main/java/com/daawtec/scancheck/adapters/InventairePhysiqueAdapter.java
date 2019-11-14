@@ -25,15 +25,12 @@ public class InventairePhysiqueAdapter extends RecyclerView.Adapter<InventairePh
     SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(mDateFormat, Locale.FRANCE);
 
     public static class VH extends RecyclerView.ViewHolder{
-        TextView dateTV, quantitePhysiqueTV, quantiteTheoriqueTV, ecartTV, nbreMacaronTV;
+        TextView dateTV, quantitePhysiqueTV, quantiteTheoriqueTV;
 
         public VH(@NonNull View itemView) {
             super(itemView);
             dateTV = itemView.findViewById(R.id.date_tv);
             quantitePhysiqueTV = itemView.findViewById(R.id.quantite_physique_tv);
-            quantiteTheoriqueTV = itemView.findViewById(R.id.quantite_theorique_tv);
-            ecartTV = itemView.findViewById(R.id.ecart_tv);
-            nbreMacaronTV = itemView.findViewById(R.id.nbre_macaron_tv);
         }
     }
 
@@ -44,11 +41,8 @@ public class InventairePhysiqueAdapter extends RecyclerView.Adapter<InventairePh
     @Override
     public void onBindViewHolder(@NonNull VH vh, int position) {
         final InventairePhysique inventaire = mInvetaires.get(position);
-        vh.dateTV.setText("Rapport du : " + mSimpleDateFormat.format(inventaire.date));
+        vh.dateTV.setText("Approvisionement du : " + mSimpleDateFormat.format(inventaire.date));
         vh.quantitePhysiqueTV.setText("" + inventaire.getQuantitePhysique());
-        vh.quantiteTheoriqueTV.setText("" + inventaire.getQuantiteTheorique());
-        vh.ecartTV.setText("" + inventaire.getEcart());
-        vh.nbreMacaronTV.setText("" + inventaire.getNombreMacaron());
     }
 
     @NonNull

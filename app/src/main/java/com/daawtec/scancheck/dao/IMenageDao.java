@@ -41,6 +41,18 @@ public interface IMenageDao {
     @Query("SELECT COUNT(*) AS NBR FROM MENAGE")
     int getCount();
 
+    @Query("SELECT SUM(NOMBRE_MILD) AS NBR FROM MENAGE WHERE CODE_SD=:codeSd")
+    int getNbreMildAttenduByCodeSd(String codeSd);
+
+    @Query("SELECT SUM(NOMBRE_MILD_SERVI) AS NBR FROM MENAGE WHERE CODE_SD=:codeSd")
+    int getNbreMildServiByCodeSd(String codeSd);
+
+    @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE TAILLE_MENAGE=:tailleMenage")
+    int getCountByTailleMenage(int tailleMenage);
+
+    @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE TAILLE_MENAGE > 9")
+    int getCountZBigMenage();
+
     @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE ETAT_SERVI=:state")
     int getCountMenageServi(boolean state);
 }

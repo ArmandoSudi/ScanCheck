@@ -5,58 +5,31 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.drm.DrmStore;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
-import com.daawtec.scancheck.entites.AffectationMacaronAS;
 import com.daawtec.scancheck.entites.AgentDenombrement;
+import com.daawtec.scancheck.entites.AgentDistribution;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
 import com.daawtec.scancheck.entites.Macaron;
-import com.daawtec.scancheck.entites.RelaisCommunautaire;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.entites.TypeAgent;
 import com.daawtec.scancheck.entites.ZoneSante;
 import com.daawtec.scancheck.service.ScanCheckApi;
 import com.daawtec.scancheck.service.ScanCheckApiInterface;
-import com.daawtec.scancheck.ui.DashboardFragment;
-import com.daawtec.scancheck.ui.MenageFragment;
 
-import com.daawtec.scancheck.ui.RapportFragment;
-import com.daawtec.scancheck.ui.ScanQRFragment;
 import com.daawtec.scancheck.utils.Constant;
-import com.daawtec.scancheck.utils.CreateAgentActivity;
-import com.daawtec.scancheck.utils.Utils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -80,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
     List<AirsSante> mASs = new ArrayList<>();
     List<SiteDistribution> mSDs = new ArrayList<>();
     List<AgentDenombrement> mAgents = new ArrayList<>();
+    List<AgentDistribution> mAgentDistDemos = new ArrayList<>();
     List<AgentDenombrement> mAgentDemos = new ArrayList<>();
     List<Macaron> mMacarons = new ArrayList<>();
     List<TypeAgent> mTypeAgents = new ArrayList<>();
@@ -169,7 +143,8 @@ public class HomeActivity extends AppCompatActivity {
                 mASs.size() > 0 &&
                 mSDs.size() > 0 &&
                 mTypeAgents.size() > 0 &&
-                mAgentDemos.size() > 0)
+                mAgentDemos.size() > 0 &&
+                mAgentDistDemos.size() > 0)
         {
             Log.i(TAG, "canInsert: INSERTING VALUES IN THE DATABASE");
             new InitDB(db).execute();
@@ -188,6 +163,7 @@ public class HomeActivity extends AppCompatActivity {
         getSiteDistributions();
         getTypeAgent();
         getAgentDemos();
+        getAgenDistributionsDemo();
 
     }
 
@@ -236,6 +212,7 @@ public class HomeActivity extends AppCompatActivity {
             long[] sd_ids = db.getISiteDistributionDao().insert(mSDs);
             long[] typeAgents = db.getITypeAgentDao().insert(mTypeAgents);
             long[] agents = db.getIAgentDenombrementDao().insert(mAgentDemos);
+            long [] agentDist = db.getIAgentDistributionDao().insert(mAgentDistDemos);
 
             return null;
         }
@@ -370,6 +347,12 @@ public class HomeActivity extends AppCompatActivity {
         mAgentDemos.add(new AgentDenombrement("150000000000001", "David","ADR1001", "1001"));
         mAgentDemos.add(new AgentDenombrement("150000000000002", "Alain", "ADR1001", "1002"));
         mAgentDemos.add(new AgentDenombrement("150000000000003", "Willy", "ADR1001", "1003"));
+    }
+
+    public void getAgenDistributionsDemo() {
+        mAgentDistDemos.add(new AgentDistribution("100001", "Agent Dist 1", "role 1", "000001", "1001"));
+        mAgentDistDemos.add(new AgentDistribution("100002", "Agent Dist 2", "role 2", "000001", "1002"));
+        mAgentDistDemos.add(new AgentDistribution("100002", "Agent Dist 2", "role 2", "000001", "1003"));
     }
 
     void showProgressDiag(ProgressDialog progressDiag){

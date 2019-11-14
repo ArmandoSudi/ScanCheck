@@ -28,4 +28,11 @@ public interface IIventairePhysiqueDao {
 
     @Query("SELECT * FROM INVENTAIRE_PHYSIQUE")
     List<InventairePhysique> all();
+
+    @Query("SELECT * FROM INVENTAIRE_PHYSIQUE WHERE CODE_SD=:codeSd")
+    List<InventairePhysique> getByCodeSd(String codeSd);
+
+    @Query("SELECT SUM(QUANTITE_PHYSIQUE) FROM INVENTAIRE_PHYSIQUE WHERE CODE_SD=:codeSd")
+    int getNbrMildByCodeSd(String codeSd);
+
 }

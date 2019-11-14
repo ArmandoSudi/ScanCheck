@@ -10,17 +10,21 @@ public class Constant {
     public static String KEY_USERNAME = "username";
     public static String KEY_PASSWORD = "password";
     public static String KEY_IS_AGENT_REGISTERED = "isAgentRegistered";
+    public static String KEY_IS_AGENT_DENOMBREMENT = "isAgentDenombrement";
     public static String KEY_CODE_AGENT_DENOMBREMENT = "codeAgentDenombrement";
+    public static String KEY_CODE_AGENT_DIST = "codeAgentDist";
     public static String KEY_CODE_AGENT_AS = "agentCodeAs";
+    public static String KEY_CODE_AGENT_SD = "agentCodeSd";
     public static String KEY_CODE_AGENT_SUPERVISEUR = "agentSuperviseur";
     public static String KEY_CODE_AGENT_ENQUETEUR = "agentEnqueteur";
+    public static String KEY_CODE_AGENT_IT = "agentIT";
 
     public static String ACTION = "action";
     public static final String ACTION_MENAGE_ACTIVITY = "startMenageActivity";
     public static final String ACTION_MACARON_ACTIVITY = "startMacaronActivity";
     public static final String ACTION_DISTRIBUTION_ACTIVITY = "startDistributionActivity";
     public static final String ACTION_RAPPORT_ACTIVITY = "startRapportActivity";
-    public static final String ACTION_ADD_MENAGE = "addMenage";
+    public static final int CODE_ACTION_ADD_MENAGE = 4543;
     public static final String ACTION_ADD_MACARON = "addMacaron";
     public static final String CODE_QR = "codeQr";
 
@@ -30,5 +34,9 @@ public class Constant {
     public static int REQUEST_CODE_ASK_PERMISSIONS = 104;
     public static int REQUEST_CODE_LOGIN = 105;
     public static int REQUEST_CODE_CHECK_AGENT = 106;
+
+    public static final String AGENT_DENOMBREMENT = "AGENT DENOMBREMENT";
+    public static final String AGENT_SUPERVISEUR = "agent_superviseur";
+    public static final String AGENT_DISTRIBUTION = "AGENT DISTRIBUTION";
 
 }

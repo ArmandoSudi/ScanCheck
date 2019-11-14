@@ -29,4 +29,7 @@ public interface IAgentDenombrement {
 
     @Query("SELECT * FROM AGENT_DENOMBREMENT WHERE CODE_AGENT_DENOMBREMENT=:codeDenombrement")
     AgentDenombrement get(String codeDenombrement);
+
+    @Query("SELECT * FROM AGENT_DENOMBREMENT WHERE CODE_AUTHENTIFICATION=:codeAuth")
+    AgentDenombrement getAgentByCodeAuth(String codeAuth);
 }

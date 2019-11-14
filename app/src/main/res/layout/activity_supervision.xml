@@ -26,14 +26,14 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/ouiEstSurTerrain"
+                    android:id="@+id/radio_oui_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="OUI"
                     android:checked="true" />
 
                 <RadioButton
-                    android:id="@+id/nonEstSurTerrain"
+                    android:id="@+id/radio_non_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="NON" />
@@ -67,14 +67,14 @@
                 android:orientation="horizontal" >
 
                 <RadioButton
-                    android:id="@+id/ouiEstForme"
+                    android:id="@+id/radio_oui_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="OUI"
                     android:checked="true" />
 
                 <RadioButton
-                    android:id="@+id/nonEstForme"
+                    android:id="@+id/radio_non_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="NON" />
@@ -107,14 +107,14 @@
             android:orientation="horizontal" >
 
             <RadioButton
-                android:id="@+id/oui_three_radio"
+                android:id="@+id/radio_oui_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OUI"
                 android:checked="true" />
 
             <RadioButton
-                android:id="@+id/non_three_radio"
+                android:id="@+id/radio_non_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="NON" />
@@ -147,14 +147,14 @@
                 android:orientation="horizontal" >
 
                 <RadioButton
-                    android:id="@+id/oui_four_radio"
+                    android:id="@+id/radio_oui_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="OUI"
                     android:checked="true" />
 
                 <RadioButton
-                    android:id="@+id/non_four_radio"
+                    android:id="@+id/radio_non_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="NON" />
@@ -187,14 +187,14 @@
                 android:orientation="horizontal" >
 
                 <RadioButton
-                    android:id="@+id/oui_five_radio"
+                    android:id="@+id/radio_oui_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="OUI"
                     android:checked="true" />
 
                 <RadioButton
-                    android:id="@+id/non_five_radio"
+                    android:id="@+id/radio_non_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="NON" />
@@ -219,7 +219,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="7. Les mobilisateurs de l’AS utilisent-ils les mégaphones pour la sensibilisation ?"/>
+                android:text="6. Les RDV  pour les ménages absents sont –ils  notés pour le deuxième passage ? "/>
             <RadioGroup
                 android:id="@+id/radio_group_6"
                 android:layout_width="wrap_content"
@@ -227,14 +227,14 @@
                 android:orientation="horizontal" >
 
                 <RadioButton
-                    android:id="@+id/oui_six_radio"
+                    android:id="@+id/radio_oui_6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="OUI"
                     android:checked="true" />
 
                 <RadioButton
-                    android:id="@+id/non_six_radio"
+                    android:id="@+id/radio_non_6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="NON" />
@@ -259,7 +259,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="6. Les RDV  pour les ménages absents sont –ils  notés pour le deuxième passage ?"/>
+                android:text="7. Les mobilisateurs de l’AS utilisent-ils les mégaphones pour la sensibilisation ?"/>
             <RadioGroup
                 android:id="@+id/radio_group_7"
                 android:layout_width="wrap_content"
@@ -286,6 +286,286 @@
                 android:hint="Commentaires/Actions prises">
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/commentaire_07_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="8. L’agent du dénombrement  distribue t-il  les dépliants aux ménages visités ?"/>
+            <RadioGroup
+                android:id="@+id/radio_group_8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_oui_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OUI"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radio_non_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NON" />
+
+            </RadioGroup>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Commentaires/Actions prises">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/commentaire_08_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="9.  Les mobilisateurs disposent-ils les messages de dénombrement et communiquent  à la population ? "/>
+            <RadioGroup
+                android:id="@+id/radio_group_9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_oui_9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OUI"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radio_non_9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NON" />
+
+            </RadioGroup>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Commentaires/Actions prises">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/commentaire_09_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="10. Le message délivré par le mobilisateur de l’AS est il conforme (action, cible, bénéfice, période) ? "/>
+            <RadioGroup
+                android:id="@+id/radio_group_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_oui_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OUI"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radio_non_10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NON" />
+
+            </RadioGroup>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Commentaires/Actions prises">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/commentaire_10_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="11. Les messages-clés en rapport avec la prévention,   sont-ils délivrés aux ménages par l’agent de dénombrement : Objectifs, Cibles,  Site (lieux de distribution), utilisation de la MILD… "/>
+            <RadioGroup
+                android:id="@+id/radio_group_11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_oui_11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OUI"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radio_non_11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NON" />
+
+            </RadioGroup>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Commentaires/Actions prises">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/commentaire_11_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="12. Les macarons et les fiches de dénombrement sont –ils en quantité suffisante ? si rupture, notez le nombre des ménages enquêtés sans macarons" />
+            <RadioGroup
+                android:id="@+id/radio_group_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_oui_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OUI"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radio_non_12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NON" />
+
+            </RadioGroup>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Commentaires/Actions prises">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/commentaire_12_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="13. Les, cahiers, bics, crayon et, craies  sont –ils en quantité suffisante ? si rupture, notez l’action entreprise"/>
+            <RadioGroup
+                android:id="@+id/radio_group_13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_oui_13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OUI"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radio_non_13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NON" />
+
+            </RadioGroup>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Commentaires/Actions prises">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/commentaire_13_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="14.  L’agent du dénombrement  possède t-il les dépliants de la campagne en quantité suffisante? si rupture, notez le nombre des ménages enquêtés sans dépliants"/>
+            <RadioGroup
+                android:id="@+id/radio_group_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/radio_oui_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OUI"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radio_non_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NON" />
+
+            </RadioGroup>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Commentaires/Actions prises">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/commentaire_14_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>

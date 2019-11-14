@@ -9,20 +9,33 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.BoringLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.AgentDenombrement;
+import com.daawtec.scancheck.entites.AgentDistribution;
 import com.daawtec.scancheck.utils.Constant;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnItemSelected;
 
 public class LoginActivity extends AppCompatActivity {
 
     ScanCheckDB db;
     private static final String TAG = "LoginActivity";
+
+    @BindView(R.id.code_et)
+    EditText mCodeET;
+
+    String mTypeAgent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +59,26 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+        ButterKnife.bind(this);
+
         db = ScanCheckDB.getDatabase(this);
 
         Button scanBT = findViewById(R.id.scan_bt);
         scanBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, QrCodeActivity.class);
-                startActivityForResult( intent, Constant.REQUEST_CODE_LOGIN);
+//                Intent intent = new Intent(LoginActivity.this, QrCodeActivity.class);
+//                startActivityForResult( intent, Constant.REQUEST_CODE_LOGIN);
+            String code = mCodeET.getText().toString();
+            login(code);
+
             }
         });
+    }
+
+    @OnItemSelected(R.id.type_agent_sp)
+    public void spinnerItemSelected(Spinner spinner, int position) {
+        mTypeAgent = (String) spinner.getItemAtPosition(position);
     }
 
     @Override
@@ -69,68 +92,72 @@ public class LoginActivity extends AppCompatActivity {
             String qrCode = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
             Log.i(TAG, "onActivityResult: codeQR: " + qrCode );
 
-            login(qrCode);
+//            login(qrCode);
         }
     }
 
-    public void login(final String codeQR){
-        (new AsyncTask<Void, Void, String>(){
-            private final String AGENT_ENQUETEUR = "agent_enqueteur";
-            private final String AGENT_SUPERVISEUR = "agent_superviseur";
-            private final String AGENT_DISTRIBUTEUR = "agent_distributeur";
+    public void loginWithCode(final String code){
+
+    }
+
+    public void login(final String codeAuthentification){
+
+        Log.e(TAG, "login: TYPE AGENT: " + mTypeAgent );
+        (new AsyncTask<Void, Void, Boolean>(){
             AgentDenombrement agent;
+            AgentDistribution agentDist;
             Intent intent;
             @Override
-            protected void onPostExecute(String value) {
+            protected void onPostExecute(Boolean value) {
                 super.onPostExecute(value);
 
-                if (value != null) {
-                    switch (value){
-                        case AGENT_ENQUETEUR:
-                            intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                            intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
-                            intent.putExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT, agent.codeAgentDenombrement);
-                            startActivity(intent);
-                            break;
-                        case AGENT_SUPERVISEUR:
-                            intent = new Intent(LoginActivity.this, CheckActivity.class);
-                            intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
-                            intent.putExtra(Constant.KEY_CODE_AGENT_SUPERVISEUR, agent.codeAgentDenombrement);
-                            startActivity(intent);
-                            break;
-                        case AGENT_DISTRIBUTEUR:
-                            intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                            intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
-                            intent.putExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT, agent.codeAgentDenombrement);
-                            startActivity(intent);
-                            break;
-                    }
-                } else {
-                    Toast.makeText(LoginActivity.this, "Code de l'agent n'est pas retrouvé", Toast.LENGTH_SHORT).show();
-                }
+                if (value) startActivity(intent);
+                else
+                    Toast.makeText(LoginActivity.this, "Cet agent n'existe pas", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            protected String doInBackground(Void... voids) {
-                agent = db.getIAgentDenombrementDao().get(codeQR);
-                if (agent instanceof AgentDenombrement){
-                    if (agent.codeTypeAgent.equals("1001")){
-                       // L'agent est un enqueteur
-                        Log.d(TAG, "doInBackground: AGENT EST ENQUETEUR: " + agent.codeTypeAgent);
-                       return AGENT_ENQUETEUR;
-                    } else if (agent.codeTypeAgent.equals("1002")){
-                        // L;agent est un distributeur
-                        Log.d(TAG, "doInBackground: AGENT EST DISTRIBUTEUR: " + agent.codeTypeAgent);
-                        return AGENT_DISTRIBUTEUR;
-                    } else if (agent.codeTypeAgent.equals("1003")){
-                        // L'agent est un superviseur
-                        Log.d(TAG, "doInBackground: AGENT EST SUPERVISEUR: " + agent.codeTypeAgent);
-                        return AGENT_SUPERVISEUR;
+            protected Boolean doInBackground(Void... voids) {
+                if (mTypeAgent.equals(Constant.AGENT_DENOMBREMENT)) {
+                    agent = db.getIAgentDenombrementDao().getAgentByCodeAuth(codeAuthentification);
+                    if (agent != null) {
+                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                        intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
+                        intent.putExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT, agent.codeAgentDenombrement);
+                        intent.putExtra(Constant.KEY_IS_AGENT_DENOMBREMENT, true);
+                        return true;
+                    } else {
+                        return false;
                     }
-                } else {
-                    return null;
+
+                } else if (mTypeAgent.equals("SITE DISTRIBUTION")) {
+                    agentDist = db.getIAgentDistributionDao().getAgentByCodeAuth(codeAuthentification);
+                    if (agentDist != null) {
+                        agentDist = db.getIAgentDistributionDao().getAgentByCodeAuth(codeAuthentification);
+                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                        intent.putExtra(Constant.KEY_CODE_AGENT_SD, agentDist.codeSd);
+                        intent.putExtra(Constant.KEY_CODE_AGENT_DIST, agentDist.codeAgentDistribution);
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                } else if (mTypeAgent.equals("IT DENOMBREMENT")){
+                    agent = db.getIAgentDenombrementDao().getAgentByCodeAuth(codeAuthentification);
+                    if (agent != null) {
+                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                        intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
+                        intent.putExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT, agent.codeAgentDenombrement);
+                        intent.putExtra(Constant.KEY_IS_AGENT_DENOMBREMENT, true);
+                        intent.putExtra(Constant.KEY_CODE_AGENT_IT, agent.codeAgentDenombrement);
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
-                return null;
+                //todo implementer la navigation vers le dashboard comme un agent superviseur
+
+                return false;
             }
         }).execute();
     }

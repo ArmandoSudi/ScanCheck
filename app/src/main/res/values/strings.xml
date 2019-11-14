@@ -15,9 +15,15 @@
         <item>M</item>
         <item>F</item>
     </string-array>
-    <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
+    <string-array name="type_agent">
+        <item>AGENT DENOMBREMENT</item>
+        <item>IT DENOMBREMENT</item>
+        <item>IT DISTRIBUTION</item>
+        <item>SITE DISTRIBUTION</item>
+
+    </string-array>
+    <string name="title_activity_settings">Settings</string>
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
@@ -97,4 +103,5 @@
         <item>Air Sante 2</item>
         <item>Air Sante 3</item>
     </string-array>
+    <string name="title_activity_gestion_mild">GestionMildActivity</string>
 </resources>

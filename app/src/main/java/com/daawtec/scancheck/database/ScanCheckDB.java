@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.daawtec.scancheck.dao.IAffectationMacaronASDao;
 import com.daawtec.scancheck.dao.IAgentDenombrement;
+import com.daawtec.scancheck.dao.IAgentDistributionDao;
 import com.daawtec.scancheck.dao.IAirSanteDao;
 import com.daawtec.scancheck.dao.IBadVerificationDao;
 import com.daawtec.scancheck.dao.IDivisionProvincialSanteDao;
@@ -21,6 +22,7 @@ import com.daawtec.scancheck.dao.IValiditeRoleDao;
 import com.daawtec.scancheck.dao.IZoneSanteDao;
 import com.daawtec.scancheck.entites.AffectationMacaronAS;
 import com.daawtec.scancheck.entites.AgentDenombrement;
+import com.daawtec.scancheck.entites.AgentDistribution;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.BadVerification;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
@@ -40,6 +42,7 @@ import com.daawtec.scancheck.utils.DateConverts;
         AffectationMacaronAS.class,
         AirsSante.class,
         AgentDenombrement.class,
+        AgentDistribution.class,
         BadVerification.class,
         DivisionProvincialeSante.class,
         InventairePhysique.class,
@@ -51,7 +54,7 @@ import com.daawtec.scancheck.utils.DateConverts;
         ZoneSante.class,
         TypeAgent.class,
         ValiditeRole.class},
-        version = 9
+        version = 12
 )
 @TypeConverters(DateConverts.class)
 public abstract class ScanCheckDB extends RoomDatabase {
@@ -61,6 +64,7 @@ public abstract class ScanCheckDB extends RoomDatabase {
     public abstract IAffectationMacaronASDao getIIAffectationMacaronASDao();
     public abstract IAirSanteDao getIAirSanteDao();
     public abstract IAgentDenombrement getIAgentDenombrementDao();
+    public abstract IAgentDistributionDao getIAgentDistributionDao();
     public abstract IBadVerificationDao getIBadVerificationDao();
     public abstract IDivisionProvincialSanteDao getIDivisionProvincialSanteDao();
     public abstract IIventairePhysiqueDao getIIventairePhysiqueDao();

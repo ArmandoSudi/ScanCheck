@@ -10,9 +10,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
 @Entity(tableName="MENAGE", foreignKeys = {
-        @ForeignKey(entity = SiteDistribution.class, parentColumns = "CODE_SD", childColumns = "CODE_SD"),
-        @ForeignKey(entity = Macaron.class, parentColumns = "CODE_MACARON", childColumns = "CODE_MACARON")
+        @ForeignKey(entity = SiteDistribution.class, parentColumns = "CODE_SD", childColumns = "CODE_SD", onDelete = CASCADE),
+        @ForeignKey(entity = Macaron.class, parentColumns = "CODE_MACARON", childColumns = "CODE_MACARON", onDelete = CASCADE)
 })
 public class Menage {
 
@@ -61,6 +63,34 @@ public class Menage {
     @ColumnInfo(name="CODE_MACARON")
     @SerializedName("codeMacaron")
     public String codeMacaron;
+
+    @ColumnInfo(name="CODE_AGENT_DENOMBREMENT")
+    @SerializedName("CodeAgentDenombrement")
+    public String codeAgentDenombrement;
+
+    @ColumnInfo(name="CODE_AGENT_DISTRIBUTION")
+    @SerializedName("CodeAgentDistribution")
+    public String codeAgentDistribution;
+
+    @ColumnInfo(name="RECO_NOM")
+    @SerializedName("RecoNom")
+    public String recoNom;
+
+    @ColumnInfo(name="RECO_PRENOM")
+    @SerializedName("RecoPrenom")
+    public String recoPrenom;
+
+    @ColumnInfo(name="COMMENTAIRE")
+    @SerializedName("Commentaire")
+    public String commentaire;
+
+    @ColumnInfo(name="NOMBRE_MILD_SERVI")
+    @SerializedName("NombreMildServi")
+    public int nombreMildServi;
+
+    @ColumnInfo(name="NOMBRE_COUCHETTE")
+    @SerializedName("NombreCouchette")
+    public int nombreCouchette;
 
     @ColumnInfo(name="ETAT_SERVI")
     @SerializedName("etatServi")

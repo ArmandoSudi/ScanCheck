@@ -40,4 +40,5 @@ public interface IMacaronDao {
 
     @Query("SELECT COUNT(*) AS NBR FROM MACARON")
     int getCount();
+
 }

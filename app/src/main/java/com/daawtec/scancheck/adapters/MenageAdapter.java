@@ -62,4 +62,8 @@ public class MenageAdapter extends RecyclerView.Adapter<MenageAdapter.VH> {
     public void addAll(List<Menage> menages){
         this.mMenages.addAll(menages);
     }
+
+    public void clear(){
+        mMenages.clear();
+    }
 }

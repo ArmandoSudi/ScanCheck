@@ -17,9 +17,12 @@
         android:theme="@style/AppThemePurple"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".GestionMildActivity"
+            android:label="@string/title_activity_gestion_mild"
+            android:theme="@style/AppThemePurple.NoActionBar"></activity>
+        <activity
             android:name=".SupervisionActivity"
-            android:label="Formulaire de supervision"
-            ></activity>
+            android:label="Formulaire de supervision" />
         <activity android:name=".CheckActivity" />
         <activity android:name=".LoginActivity" />
         <activity
@@ -42,6 +45,7 @@
             android:theme="@style/AppThemePurple.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

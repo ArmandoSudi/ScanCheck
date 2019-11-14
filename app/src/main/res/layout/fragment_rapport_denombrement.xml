@@ -24,11 +24,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nombre des macarons"
+                    android:text="Menage comprenant 1 à 2 individus"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/nombre_macaron_tv"
+                    android:id="@+id/menage_one_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="120"
@@ -50,11 +50,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nombre de mild"
+                    android:text="Menage comprenant 3 à 4 individus"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/nombre_mild_tv"
+                    android:id="@+id/menage_two_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="345"
@@ -76,11 +76,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nombre des menages"
+                    android:text="Menage comprenant 5 à 6 individus"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/nombre_menage_tv"
+                    android:id="@+id/menage_three_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="654"
@@ -102,11 +102,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Nombre des menages servis"
+                    android:text="Menage comprenant 8 à 9 individus"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/nombre_menage_servi_tv"
+                    android:id="@+id/menage_four_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="234"
@@ -128,11 +128,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Stock des milds"
+                    android:text="Menage comprenant 10 individus et plus"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/stock_mild_tv"
+                    android:id="@+id/menage_five_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="234"
@@ -141,31 +141,7 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Nombre des tentatives frauduleuses"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/nombre_bad_verification_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="234"
-                    android:textColor="#000000"
-                    android:textSize="24sp" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 </ScrollView>

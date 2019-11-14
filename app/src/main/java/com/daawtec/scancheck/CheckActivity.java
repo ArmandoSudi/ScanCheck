@@ -81,12 +81,10 @@ public class CheckActivity extends AppCompatActivity {
             protected Boolean doInBackground(Void... voids) {
                 agent = db.getIAgentDenombrementDao().get(codeQR);
                 if (agent instanceof AgentDenombrement){
-                    if (agent.codeTypeAgent.equals("1001"))
                         return true;
                 } else {
                     return false;
                 }
-                return false;
             }
         }).execute();
     }

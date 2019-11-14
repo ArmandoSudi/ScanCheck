@@ -23,13 +23,11 @@ import android.widget.Toast;
 import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.Macaron;
+import com.daawtec.scancheck.ui.DistributionFragment;
 import com.daawtec.scancheck.ui.MacaronFragment;
 import com.daawtec.scancheck.ui.MenageFragment;
 import com.daawtec.scancheck.ui.RapportFragment;
-import com.daawtec.scancheck.ui.ScanQRFragment;
 import com.daawtec.scancheck.utils.Constant;
-import com.daawtec.scancheck.utils.Utils;
-import com.google.zxing.qrcode.encoder.QRCode;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +42,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
     SharedPreferences mSharedPref;
     Calendar mCalendar = Calendar.getInstance();
     ScanCheckDB db;
+    String mCodeAs, mCodeSd, mCodeAgentDenombrement, mCodeAgentDist, mCodeAgentIT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +56,12 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
         Intent intent = getIntent();
         String value = intent.getStringExtra(Constant.ACTION);
+
+        mCodeAs = intent.getStringExtra(Constant.KEY_CODE_AGENT_AS);
+        mCodeSd = intent.getStringExtra(Constant.KEY_CODE_AGENT_SD);
+        mCodeAgentDenombrement = intent.getStringExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT);
+        mCodeAgentDist = intent.getStringExtra(Constant.KEY_CODE_AGENT_DIST);
+        mCodeAgentIT = intent.getStringExtra(Constant.KEY_CODE_AGENT_IT);
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         db = ScanCheckDB.getDatabase(this);
@@ -103,23 +108,24 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
             if(data==null)
                 return;
-            String agentCodeAS = mSharedPref.getString(Constant.KEY_CODE_AGENT_AS, null);
-            String codeAgentDenombrement = mSharedPref.getString(Constant.KEY_CODE_AGENT_DENOMBREMENT, null);
             Date dateEnregistrement = mCalendar.getTime();
 
-            Log.e(TAG, "agentCodeAS " + agentCodeAS );
-            Log.e(TAG, "codeAgentDenombrement " + codeAgentDenombrement );
-            Log.e(TAG, "dateEnregistrement " + dateEnregistrement );
-
-            if (agentCodeAS != null && codeAgentDenombrement != null) {
+            if (mCodeAs != null && mCodeAgentDenombrement != null) {
                 //Getting the passed result
                 String qrCode = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
                 Log.e(TAG, "onActivityResult: code macaron: " + qrCode );
-                Macaron macaron = new Macaron(qrCode, agentCodeAS, codeAgentDenombrement,
+                Macaron macaron = new Macaron(qrCode, mCodeAs, mCodeAgentDenombrement,
                         dateEnregistrement, false );
                 saveMacaron(macaron);
             }
 
+        }
+
+        if (requestCode == Constant.CODE_ACTION_ADD_MENAGE){
+            Log.e(TAG, "onActivityResult: MENAGE ENREGISTRE 1");
+            if (resultCode == RESULT_OK) {
+                Log.e(TAG, "onActivityResult: MENAGE ENREGISTRE 2");
+            }
         }
     }
 
@@ -134,28 +140,28 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
         switch(action){
             case Constant.ACTION_MACARON_ACTIVITY :
                 setTitle("Macarons");
-                mCurrentFragment = MacaronFragment.newInstance();
+                mCurrentFragment = MacaronFragment.newInstance(mCodeAgentDenombrement, mCodeAs);
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mCurrentFragment)
                         .commit();
                 break;
             case Constant.ACTION_MENAGE_ACTIVITY:
                 setTitle("Ménage");
-                mCurrentFragment = MenageFragment.newInstance();
+                mCurrentFragment = MenageFragment.newInstance(mCodeAgentDenombrement);
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mCurrentFragment)
                         .commit();
                 break;
                 case Constant.ACTION_DISTRIBUTION_ACTIVITY:
                     setTitle("Distribution");
-                    mCurrentFragment = ScanQRFragment.newInstance();
+                    mCurrentFragment = DistributionFragment.newInstance(mCodeAgentDist);
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mCurrentFragment)
                         .commit();
                 break;
                 case Constant.ACTION_RAPPORT_ACTIVITY:
                     setTitle("Rapport");
-                    mCurrentFragment = RapportFragment.newInstance();
+                    mCurrentFragment = RapportFragment.newInstance(mCodeAs, mCodeSd);
                     fab.hide();
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mCurrentFragment)
@@ -194,7 +200,8 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                     } else {
                         Intent intent = new Intent(BaseActivity.this, CreateMenageActivity.class);
                         intent.putExtra(Constant.CODE_QR, macaron.codeMacaron);
-                        startActivity(intent);
+                        if (mCodeAgentIT != null) intent.putExtra(Constant.KEY_CODE_AGENT_IT, mCodeAgentIT);
+                        startActivityForResult(intent, Constant.CODE_ACTION_ADD_MENAGE);
                     }
                 } else {
                     Toast.makeText(BaseActivity.this, "Ce Macaron n'existe pas", Toast.LENGTH_SHORT).show();
