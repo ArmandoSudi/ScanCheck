@@ -6,18 +6,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,7 +29,6 @@ import com.daawtec.scancheck.utils.Constant;
 import com.daawtec.scancheck.utils.GPSTracker;
 import com.daawtec.scancheck.utils.Utils;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +37,7 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateMenageActivity";
 
-    TextView mDateIdentificationTV, mCodeMacaronTV, mLatitudeTV, mLongitudeTV, mNombreMildTV;
+    TextView mDateIdentificationTV, mCodeMacaronTV, mLatitudeTV, mLongitudeTV;
     EditText mNomResponsableET, mPrenomResponsableET, mVillageET, mTailleMenageET, mRecoPrenomET, mRecoNomET, mNombreCouchetteET;
     Spinner mSexeSP;
     Button mSaveMenageBT, mGpsBT;
@@ -54,11 +47,7 @@ public class CreateMenageActivity extends AppCompatActivity {
     Date mDateIdentification;
     double mLatitude=0.0, mLongitude=0.0;
 
-    SharedPreferences mSharedPref;
-    AlertDialog checkMacaronDialogBuilder;
-
     private Calendar mCalendar = Calendar.getInstance();
-    SimpleDateFormat mDateFormat = new SimpleDateFormat("DD/MM/YYYY");
 
     ScanCheckDB db;
     String qrCode, mCodeSD, mCodeAgentIT;
@@ -87,18 +76,8 @@ public class CreateMenageActivity extends AppCompatActivity {
             finish();
         }
 
-        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        initView(qrCode);
 
-        if(isAgentIT) initViewAgentIt(qrCode);
-        else initView(qrCode);
-    }
-
-    public void initViewAgentIt(String codeMacaron){
-        initView(codeMacaron);
-        mVillageET.setVisibility(View.GONE);
-        mRecoNomET.setVisibility(View.GONE);
-        mRecoPrenomET.setVisibility(View.GONE);
-        mTailleMenageET.setVisibility(View.GONE);
     }
 
     public void initView(String codeMacaron) {
@@ -115,6 +94,13 @@ public class CreateMenageActivity extends AppCompatActivity {
         mCodeMacaronTV.setText(qrCode + "");
         mLongitudeTV = findViewById(R.id.longitude_tv);
         mLatitudeTV = findViewById(R.id.latitude_tv);
+
+        if (isAgentIT){
+            mVillageET.setVisibility(View.GONE);
+            mRecoNomET.setVisibility(View.GONE);
+            mRecoPrenomET.setVisibility(View.GONE);
+            mTailleMenageET.setVisibility(View.GONE);
+        }
 
         mSaveMenageBT = findViewById(R.id.save_menage_bt);
         mSaveMenageBT.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +191,6 @@ public class CreateMenageActivity extends AppCompatActivity {
             if (recoPrenom.equals("")) isValid = false;
         }
 
-
         if (isValid){
 
             mDateIdentification = mCalendar.getTime();
@@ -245,41 +230,11 @@ public class CreateMenageActivity extends AppCompatActivity {
             protected long[] doInBackground(Void... voids) {
                 long[] results = db.getIMenageDao().insert(menage);
                 if (results[0] > 0) {
-                    db.getIMacaronDao().updateMacaron(true, menage.codeMacaron);
+                    db.getIMacaronDao().updateMacaronState(true, menage.codeMacaron);
                 }
                 return results;
             }
         }).execute();
-    }
-
-    public void showDialog(){
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        final View checkMacaronView = inflater.inflate(R.layout.check_macaron_dialog, null);
-        final EditText codeMacaronET = checkMacaronView.findViewById(R.id.macaron_et);
-
-//        checkMacaronDialogBuilder = new AlertDialog.Builder(this)
-//                .setTitle("Verifier macaron")
-//                .setNegativeButton("Annuler",
-//                        new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                dialog.dismiss();
-//                                CreateMenageActivity.this.finish();
-//                            }
-//                        })
-//                .setPositiveButton("Verifier",
-//                        new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                checkMacaron(codeMacaronET.getText().toString());
-//                            }
-//                        })
-//                .create();
-
-        checkMacaronDialogBuilder.setView(checkMacaronView);
-        checkMacaronDialogBuilder.show();
-        checkMacaronDialogBuilder.setCanceledOnTouchOutside(false);
     }
 
     /**

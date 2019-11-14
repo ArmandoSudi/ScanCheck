@@ -111,7 +111,7 @@ public class MacaronAdapter extends RecyclerView.Adapter<MacaronAdapter.VH> {
                 super.onPostExecute(integer);
                 
                 if (integer > 0) {
-                    Toast.makeText(mActivity, "Macaron supprimé", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "Macaron supprimé", Toast.LENGTH_LONG).show();
                     macarons.remove(macaron);
                     notifyDataSetChanged();
                 }

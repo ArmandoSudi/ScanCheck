@@ -155,6 +155,7 @@ public class RapportFragment extends Fragment {
             }
         }).execute();
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

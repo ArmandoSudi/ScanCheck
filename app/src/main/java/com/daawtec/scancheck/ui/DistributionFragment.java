@@ -154,7 +154,7 @@ public class DistributionFragment extends Fragment {
      * Mettre a jour la date_verification dans la table MACARON_AS dont le codeMacaron correspond
      * @param codeMacaron
      */
-    public void updateMenage(final String codeMacaron, final int nombreMildServi){
+    public void updateMenage(final String codeMacaron){
         (new AsyncTask<Void, Void, Integer>(){
             @Override
             protected void onPostExecute(Integer row) {
@@ -170,7 +170,7 @@ public class DistributionFragment extends Fragment {
                 Menage menage = db.getIMenageDao().getByCodeMacaron(codeMacaron);
 
                 if (menage instanceof Menage){
-                    menage.nombreMildServi = nombreMildServi;
+                    menage.nombreMildServi = Utils.computeMildNumber(menage.tailleMenage);
                     menage.etatServi = true;
                     return db.getIMenageDao().update(menage);
                 } else {
@@ -205,7 +205,6 @@ public class DistributionFragment extends Fragment {
                 return db.getIBadVerificationDao().insert(badVerification);
             }
         }).execute();
-
     }
 
     void showAffectationDialog(String message, Context context, final String codeMacaron){
@@ -215,7 +214,7 @@ public class DistributionFragment extends Fragment {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                updateMenage(codeMacaron, 0);
+                updateMenage(codeMacaron);
             }
         });
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "ANNULER",
@@ -245,39 +244,4 @@ public class DistributionFragment extends Fragment {
                 });
         alertDialog.show();
     }
-
-    public void showAlertDialogButtonClicked(String message, Context context, final String codeMacaron) {
-        // create an alert builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Confirmation");
-        // set the custom layout
-        final View customLayout = getLayoutInflater().inflate(R.layout.dialog_confirmation_mild, null);
-        builder.setView(customLayout);
-        final EditText nombreMildET = customLayout.findViewById(R.id.nombre_mild_et);
-//        final TextView messageTV = customLayout.findViewById(R.id.message_tv);
-//        messageTV.setText(message);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int nombreMildServi = Utils.stringToInt(nombreMildET.getText().toString());
-                updateMenage(codeMacaron, nombreMildServi);
-            }
-        });
-
-        builder.setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        // create and show the alert dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-    // do something with the data coming from the AlertDialog
-    private void sendDialogDataToActivity(String data) {
-        Toast.makeText(mActivity, data, Toast.LENGTH_SHORT).show();
-    }
-
 }

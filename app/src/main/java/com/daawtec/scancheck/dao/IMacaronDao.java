@@ -36,7 +36,7 @@ public interface IMacaronDao {
     Macaron getByState(String codeMacaron, boolean state);
 
     @Query("UPDATE MACARON SET IS_AFFECTED=:state WHERE CODE_MACARON=:codeMacaron")
-    int updateMacaron(boolean state, String codeMacaron);
+    int updateMacaronState(boolean state, String codeMacaron);
 
     @Query("SELECT COUNT(*) AS NBR FROM MACARON")
     int getCount();

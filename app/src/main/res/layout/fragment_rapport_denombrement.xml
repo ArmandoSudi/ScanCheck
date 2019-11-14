@@ -24,7 +24,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Menage comprenant 1 à 2 individus"
+                    android:text="Menage comprenant 1 à 2 personnes"
                     android:textStyle="bold" />
 
                 <TextView
@@ -50,7 +50,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Menage comprenant 3 à 4 individus"
+                    android:text="Menage comprenant 3 à 4 personnes"
                     android:textStyle="bold" />
 
                 <TextView
@@ -76,7 +76,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Menage comprenant 5 à 6 individus"
+                    android:text="Menage comprenant 5 à 6 personnes"
                     android:textStyle="bold" />
 
                 <TextView
@@ -102,7 +102,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Menage comprenant 8 à 9 individus"
+                    android:text="Menage comprenant 8 à 9 personnes"
                     android:textStyle="bold" />
 
                 <TextView
@@ -128,7 +128,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Menage comprenant 10 individus et plus"
+                    android:text="Menage comprenant 10 personnes et plus"
                     android:textStyle="bold" />
 
                 <TextView
