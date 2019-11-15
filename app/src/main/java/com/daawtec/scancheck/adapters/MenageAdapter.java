@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class MenageAdapter extends RecyclerView.Adapter<MenageAdapter.VH> {
+
+    private static final String TAG = "MenageAdapter";
 
     Activity mActivity;
     List<Menage> mMenages = new ArrayList<>();
@@ -52,13 +55,20 @@ public class MenageAdapter extends RecyclerView.Adapter<MenageAdapter.VH> {
         final Menage menage = mMenages.get(i);
         vh.nomResponsableTV.setText(menage.nomResponsable);
         vh.tailleMenageTV.setText("" + menage.tailleMenage);
-        vh.dateIdentificationTV.setText(mSimpleDateFormat.format(menage.dateIdentification));
+        vh.dateIdentificationTV.setText(menage.dateIdentification);
 
         vh.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 showDeleteDialog("Etes-vous sur de vouloir supprimer ce MENAGE ?", mActivity, menage);
                 return true;
+            }
+        });
+
+        vh.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "onClick: " + menage );
             }
         });
     }

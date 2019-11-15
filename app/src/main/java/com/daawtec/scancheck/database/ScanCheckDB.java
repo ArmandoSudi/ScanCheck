@@ -54,7 +54,7 @@ import com.daawtec.scancheck.utils.DateConverts;
         ZoneSante.class,
         TypeAgent.class,
         ValiditeRole.class},
-        version = 12
+        version = 13
 )
 @TypeConverters(DateConverts.class)
 public abstract class ScanCheckDB extends RoomDatabase {

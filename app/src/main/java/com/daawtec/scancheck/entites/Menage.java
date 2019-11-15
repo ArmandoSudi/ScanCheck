@@ -42,7 +42,7 @@ public class Menage {
 
     @ColumnInfo(name="DATE_IDENTIFICATION")
     @SerializedName("dateIdentification")
-    public Date dateIdentification;
+    public String dateIdentification;
 
     @ColumnInfo(name="CODE_SD")
     @SerializedName("codeSD")
@@ -97,7 +97,7 @@ public class Menage {
     public boolean etatServi;
 
 
-    public Menage(@NonNull String codeMenage, String nomResponsable, String sexeResponsable, String village, int tailleMenage, Date dateIdentification, String codeSD, int nombreMild, double latitude, double longitude, String codeMacaron, boolean etatServi) {
+    public Menage(@NonNull String codeMenage, String nomResponsable, String sexeResponsable, String village, int tailleMenage, String dateIdentification, String codeSD, int nombreMild, double latitude, double longitude, String codeMacaron, boolean etatServi) {
         this.codeMenage = codeMenage;
         this.nomResponsable = nomResponsable;
         this.sexeResponsable = sexeResponsable;
@@ -152,12 +152,39 @@ public class Menage {
         this.tailleMenage = tailleMenage;
     }
 
-    public Date getDateIdentification() {
+    public String getDateIdentification() {
         return dateIdentification;
     }
 
-    public void setDateIdentification(Date dateIdentification) {
+    @Override
+    public String toString() {
+        return "Menage{" +
+                "codeMenage='" + codeMenage + '\'' +
+                ", nomResponsable='" + nomResponsable + '\'' +
+                ", sexeResponsable='" + sexeResponsable + '\'' +
+                ", village='" + village + '\'' +
+                ", tailleMenage=" + tailleMenage +
+                ", dateIdentification='" + dateIdentification + '\'' +
+                ", codeSD='" + codeSD + '\'' +
+                ", nombreMild=" + nombreMild +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", codeMacaron='" + codeMacaron + '\'' +
+                ", codeAgentDenombrement='" + codeAgentDenombrement + '\'' +
+                ", codeAgentDistribution='" + codeAgentDistribution + '\'' +
+                ", recoNom='" + recoNom + '\'' +
+                ", recoPrenom='" + recoPrenom + '\'' +
+                ", commentaire='" + commentaire + '\'' +
+                ", nombreMildServi=" + nombreMildServi +
+                ", nombreCouchette=" + nombreCouchette +
+                ", etatServi=" + etatServi +
+                '}';
+    }
+
+    public void setDateIdentification(String dateIdentification) {
         this.dateIdentification = dateIdentification;
+
+
     }
 
 }

@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.SimpleCursorTreeAdapter;
 import android.widget.Toast;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
@@ -27,10 +28,14 @@ import com.daawtec.scancheck.ui.DistributionFragment;
 import com.daawtec.scancheck.ui.MacaronFragment;
 import com.daawtec.scancheck.ui.MenageFragment;
 import com.daawtec.scancheck.ui.RapportFragment;
+import com.daawtec.scancheck.ui.SiteDistributionFragment;
 import com.daawtec.scancheck.utils.Constant;
+import com.daawtec.scancheck.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity implements MenageFragment.OnFragmentInteractionListener {
     private static final String TAG = "BaseActivity";
@@ -40,9 +45,13 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
     FloatingActionButton fab;
     SharedPreferences mSharedPref;
+    SharedPreferences.Editor mEditor;
     Calendar mCalendar = Calendar.getInstance();
+    String mDateFormat = "dd/MM/yyyy";
+    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(mDateFormat, Locale.FRANCE);
     ScanCheckDB db;
     String mCodeAs, mCodeSd, mCodeAgentDenombrement, mCodeAgentDist, mCodeAgentIT;
+    boolean isAgentIT = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +72,12 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
         mCodeAgentDist = intent.getStringExtra(Constant.KEY_CODE_AGENT_DIST);
         mCodeAgentIT = intent.getStringExtra(Constant.KEY_CODE_AGENT_IT);
 
+        if (mCodeAgentIT != null) {
+            isAgentIT = true;
+        }
+
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPref.edit();
         db = ScanCheckDB.getDatabase(this);
 
         fab = findViewById(R.id.fab);
@@ -79,6 +93,10 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                 } else if (mCurrentFragment instanceof RapportFragment) {
                     Snackbar.make(view, "Rapport Fragment", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                } else if (mCurrentFragment instanceof SiteDistributionFragment){
+                    Snackbar.make(view, "Ajouter site de distribution", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+
                 }
             }
         });
@@ -108,7 +126,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
             if(data==null)
                 return;
-            Date dateEnregistrement = mCalendar.getTime();
+            String dateEnregistrement = Utils.formatDate(mCalendar.getTime());
 
             if (mCodeAs != null && mCodeAgentDenombrement != null) {
                 //Getting the passed result
@@ -146,7 +164,8 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                         .commit();
                 break;
             case Constant.ACTION_MENAGE_ACTIVITY:
-                setTitle("Ménage");
+                if (isAgentIT) setTitle("Ménages speciaux");
+                else setTitle("Ménages");
                 mCurrentFragment = MenageFragment.newInstance(mCodeAgentDenombrement);
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mCurrentFragment)
@@ -167,6 +186,13 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                         .replace(R.id.container, mCurrentFragment)
                         .commit();
                 break;
+            case Constant.ACTION_SITEDIST_ACTIVITY:
+                setTitle("Sites de distribution");
+                mCurrentFragment = SiteDistributionFragment.newInstance();
+                mFragmentManager.beginTransaction()
+                        .replace(R.id.container, mCurrentFragment)
+                        .commit();
+                break;
 
         }
     }
@@ -179,6 +205,15 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
                 if(longs[0] > 0){
                     Toast.makeText(BaseActivity.this, "Macaron enregistré", Toast.LENGTH_SHORT).show();
+                    String jourOne = mSharedPref.getString(Constant.KEY_JOUR_ONE, null);
+                    if (jourOne == null){
+                        // C'est le premier jour de denombrement
+                        Date date = mCalendar.getTime();
+                        String jour = mSimpleDateFormat.format(date);
+                        mEditor.putString(Constant.KEY_JOUR_ONE, jour);
+                    } else {
+
+                    }
                 }
             }
 

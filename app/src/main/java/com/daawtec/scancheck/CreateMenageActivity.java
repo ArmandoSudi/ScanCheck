@@ -44,7 +44,7 @@ public class CreateMenageActivity extends AppCompatActivity {
     Spinner mSiteDistributionSP;
 
     String mSexe;
-    Date mDateIdentification;
+    String  mDateIdentification;
     double mLatitude=0.0, mLongitude=0.0;
 
     private Calendar mCalendar = Calendar.getInstance();
@@ -66,7 +66,12 @@ public class CreateMenageActivity extends AppCompatActivity {
         qrCode = intent.getStringExtra(Constant.CODE_QR);
         mCodeAgentIT = intent.getStringExtra(Constant.KEY_CODE_AGENT_IT);
 
-        if (mCodeAgentIT != null) isAgentIT = true;
+        if (mCodeAgentIT != null) {
+            isAgentIT = true;
+            setTitle("Enregistrer ménage spécial");
+        } else {
+            setTitle("Enregistrer ménage");
+        }
 
         //Return if the macaron is already affected to another menage
         checkMacaron(qrCode);
@@ -76,15 +81,15 @@ public class CreateMenageActivity extends AppCompatActivity {
             finish();
         }
 
-        initView(qrCode);
+        initView(isAgentIT);
 
     }
 
-    public void initView(String codeMacaron) {
+    public void initView(boolean isAgentIt) {
         mDateIdentificationTV = findViewById(R.id.date_identification_tv);
         mNomResponsableET = findViewById(R.id.nom_responsable_et);
         mPrenomResponsableET = findViewById(R.id.prenom_responsable_et);
-        mVillageET = findViewById(R.id.age_responsable_et);
+        mVillageET = findViewById(R.id.village_et);
         mRecoNomET = findViewById(R.id.reco_nom_et);
         mRecoPrenomET = findViewById(R.id.reco_prenom_et);
         mTailleMenageET = findViewById(R.id.taille_menage_et);
@@ -95,8 +100,7 @@ public class CreateMenageActivity extends AppCompatActivity {
         mLongitudeTV = findViewById(R.id.longitude_tv);
         mLatitudeTV = findViewById(R.id.latitude_tv);
 
-        if (isAgentIT){
-            mVillageET.setVisibility(View.GONE);
+        if (isAgentIt){
             mRecoNomET.setVisibility(View.GONE);
             mRecoPrenomET.setVisibility(View.GONE);
             mTailleMenageET.setVisibility(View.GONE);
@@ -193,7 +197,7 @@ public class CreateMenageActivity extends AppCompatActivity {
 
         if (isValid){
 
-            mDateIdentification = mCalendar.getTime();
+            mDateIdentification = Utils.formatDate(mCalendar.getTime());
 
             int nombreMILD = Utils.computeMildNumber(tailleMenage);
             String codeMacaron = qrCode;

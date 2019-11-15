@@ -27,6 +27,8 @@ public class DashboardActivity extends AppCompatActivity {
     CardView mRapportCD;
     @BindView(R.id.gestion_mild_card)
     CardView mGestionMildCD;
+    @BindView(R.id.microplan_card)
+    CardView mMicroplanCD;
 
     Intent mIntent;
     String mCodeAs, mCodeSd, mCodeAgentDenombrement, mCodeAgentDist, mCodeAgentIT;
@@ -109,5 +111,12 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(mIntent);
         }
 
+    }
+
+    @OnClick(R.id.microplan_card)
+    public void startMicroPlanActivity() {
+        mIntent = new Intent(DashboardActivity.this, BaseActivity.class);
+        mIntent.putExtra(Constant.ACTION, Constant.ACTION_SITEDIST_ACTIVITY);
+        startActivity(mIntent);
     }
 }

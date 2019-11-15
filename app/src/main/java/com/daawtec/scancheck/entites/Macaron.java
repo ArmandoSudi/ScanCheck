@@ -31,14 +31,14 @@ public class Macaron {
 
     @ColumnInfo(name="DATE_ENREGISTREMENT")
     @SerializedName("dateEnregistrement")
-    public Date dateEnregistrement;
+    public String dateEnregistrement;
 
     @ColumnInfo(name="IS_AFFECTED")
     @SerializedName("isAffected")
     public boolean isAffected;
 
 
-    public Macaron(@NonNull String codeMacaron, String codeAs, String codeAgentDenombrement, Date dateEnregistrement, boolean isAffected) {
+    public Macaron(@NonNull String codeMacaron, String codeAs, String codeAgentDenombrement, String dateEnregistrement, boolean isAffected) {
         this.codeMacaron = codeMacaron;
         this.codeAs = codeAs;
         this.codeAgentDenombrement = codeAgentDenombrement;
@@ -54,4 +54,14 @@ public class Macaron {
         this.codeMacaron = codeMacaron;
     }
 
+    @Override
+    public String toString() {
+        return "Macaron{" +
+                "codeMacaron='" + codeMacaron + '\'' +
+                ", codeAs='" + codeAs + '\'' +
+                ", codeAgentDenombrement='" + codeAgentDenombrement + '\'' +
+                ", dateEnregistrement='" + dateEnregistrement + '\'' +
+                ", isAffected=" + isAffected +
+                '}';
+    }
 }

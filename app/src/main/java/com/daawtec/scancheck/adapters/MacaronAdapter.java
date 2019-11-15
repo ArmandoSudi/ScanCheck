@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class MacaronAdapter extends RecyclerView.Adapter<MacaronAdapter.VH> {
+
+    private static final String TAG = "MacaronAdapter";
 
     Activity mActivity;
     public List<Macaron> macarons = new ArrayList<>();
@@ -51,7 +54,7 @@ public class MacaronAdapter extends RecyclerView.Adapter<MacaronAdapter.VH> {
     public void onBindViewHolder(@NonNull VH vh, int i) {
         final Macaron macaron = macarons.get(i);
         vh.codeMacaronTV.setText(macaron.codeMacaron + "");
-        vh.dateEnregistrementTV.setText(mSimpleDateFormat.format(macaron.dateEnregistrement));
+        vh.dateEnregistrementTV.setText(macaron.dateEnregistrement);
         if (macaron.isAffected) vh.stateIV.setImageResource(R.drawable.green_circle);
         else vh.stateIV.setImageResource(R.drawable.red_circle);
 
@@ -60,6 +63,13 @@ public class MacaronAdapter extends RecyclerView.Adapter<MacaronAdapter.VH> {
             public boolean onLongClick(View v) {
                 showDeleteDialog("Etes-vous sur de vouloir supprimer ce MACARON ?", mActivity, macaron);
                 return true;
+            }
+        });
+
+        vh.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "onClick: " + macaron );
             }
         });
     }

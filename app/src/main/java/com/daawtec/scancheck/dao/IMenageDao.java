@@ -47,12 +47,22 @@ public interface IMenageDao {
     @Query("SELECT SUM(NOMBRE_MILD_SERVI) AS NBR FROM MENAGE WHERE CODE_SD=:codeSd")
     int getNbreMildServiByCodeSd(String codeSd);
 
-    @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE TAILLE_MENAGE=:tailleMenage")
-    int getCountByTailleMenage(int tailleMenage);
+    @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE TAILLE_MENAGE=:tailleMenage AND DATE_IDENTIFICATION=:date")
+    int getCountByTailleMenage(int tailleMenage, String date);
 
     @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE TAILLE_MENAGE > 9")
     int getCountZBigMenage();
 
     @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE ETAT_SERVI=:state")
     int getCountMenageServi(boolean state);
+
+
+    @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE DATE_IDENTIFICATION=:day")
+    int getNombreMenageByDay(String day);
+
+    @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE DATE_IDENTIFICATION=:date")
+    int getCountByDate(String date);
+
+    @Query("SELECT * FROM MENAGE WHERE DATE_IDENTIFICATION=:date")
+    List<Menage> getListMenageByDate(String date);
 }

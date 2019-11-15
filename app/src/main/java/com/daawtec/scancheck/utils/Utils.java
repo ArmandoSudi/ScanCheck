@@ -54,6 +54,30 @@ public class Utils {
         return new SimpleDateFormat("yyMMddHHmmss").format(new Date());
     }
 
+    public static String formatDate(Date date){
+        return new SimpleDateFormat("dd/MM/YYYY").format(date);
+    }
+
+    public static boolean isSessionValid(Date date, String dayOne) throws Exception {
+        Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(dayOne);
+        long deltaMilli = date.getTime() - date1.getTime();
+        long deltaJour = deltaMilli / (24*60*60*1000);
+        if (deltaJour > 7) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static String addDayToDate(String date, int days) throws Exception {
+        Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+        long day = 24*60*60*1000*days;
+        long dateValue = date1.getTime();
+        dateValue += day;
+        return new SimpleDateFormat("dd/MM/yyyy").format(dateValue);
+    }
+
+
     public static int stringToInt(String value){
         if (value .equals("")){
             return 0;

@@ -41,4 +41,11 @@ public interface IMacaronDao {
     @Query("SELECT COUNT(*) AS NBR FROM MACARON")
     int getCount();
 
+    @Query("SELECT COUNT(*) AS NBR FROM MACARON WHERE DATE_ENREGISTREMENT=:day")
+    int getNombreMacaronRecusFromDay(String day);
+
+    @Query("SELECT COUNT(*) AS NBR FROM MACARON WHERE DATE_ENREGISTREMENT=:day AND IS_AFFECTED=:isAffected ")
+    int getNombreMacaronUtilisesFromDay(String day, boolean isAffected);
+
+
 }
