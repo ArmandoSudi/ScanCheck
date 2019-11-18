@@ -344,9 +344,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void getAgentDemos(){
-        mAgentDemos.add(new AgentDenombrement("150000000000001", "David","ADR1001", "1001"));
-        mAgentDemos.add(new AgentDenombrement("150000000000002", "Alain", "ADR1001", "1002"));
-        mAgentDemos.add(new AgentDenombrement("150000000000003", "Willy", "ADR1001", "1003"));
+        mAgentDemos.add(new AgentDenombrement("1501", "David","ADR1001", "1001"));
+        mAgentDemos.add(new AgentDenombrement("1502", "Alain", "ADR1001", "1002"));
+        mAgentDemos.add(new AgentDenombrement("1503", "Willy", "ADR1001", "1003"));
+        mAgentDemos.add(new AgentDenombrement("1504", "Willy", "ADR1001", "1004"));
     }
 
     public void getAgenDistributionsDemo() {

@@ -135,7 +135,7 @@ public class DistributionFragment extends Fragment {
                         codeMacaron = macaron.codeMacaron;
                         Menage menage = db.getIMenageDao().getByCodeMacaron(codeMacaron);
                         if (!menage.etatServi){
-                            nombreMild = menage.nombreMild;
+                            nombreMild = menage.nombreCouchette;
                             return MACARON_EXIST;
                         } else {
                             return MENAGE_SERVI;

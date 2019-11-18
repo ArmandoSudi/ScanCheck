@@ -76,6 +76,7 @@ public class RapportFragment extends Fragment {
         mActivity = getActivity();
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
         db = ScanCheckDB.getDatabase(mActivity);
+        mRapportDenombrementAdapter = new RapportDenombrementAdapter(mActivity);
 
     }
 
@@ -138,6 +139,7 @@ public class RapportFragment extends Fragment {
             @Override
             protected Boolean doInBackground(Void... voids) {
                 for (int i=0; i <= 7; i++) {
+
                     RapportDenombrement rapportDenombrement = new RapportDenombrement();
 
                     try {
@@ -161,7 +163,7 @@ public class RapportFragment extends Fragment {
 
                     // Macaron recu cumule aussi le solde des macarons precedent
                     if ( i > 0 && rapportDenombrements.size() > 1) {
-                        macaronRecu += rapportDenombrements.get(i).soldeMacaron;
+//                        macaronRecu += rapportDenombrements.get(i).soldeMacaron;
                     }
                     rapportDenombrement.macaronRecu = macaronRecu;
 

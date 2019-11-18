@@ -182,18 +182,18 @@ public class CreateMenageActivity extends AppCompatActivity {
         boolean isValid = true;
 
         // Validation Menage
-        if (nomResponsable.equals("")){ isValid = false;}
+//        if (nomResponsable.equals("")){ isValid = false;}
+//
+//        if (tailleMenage == 0){ isValid = false;}
+//        if (mCodeSD == null) isValid = false;
+//        if (mLatitude == 0.0) isValid = false;
+//        if (mLongitude == 0.0) isValid = false;
 
-        if (tailleMenage == 0){ isValid = false;}
-        if (mCodeSD == null) isValid = false;
-        if (mLatitude == 0.0) isValid = false;
-        if (mLongitude == 0.0) isValid = false;
-
-        if (!isAgentIT) {
-            if (village.equals("")) { isValid = false; }
-            if (recoNom.equals("")) isValid = false;
-            if (recoPrenom.equals("")) isValid = false;
-        }
+//        if (!isAgentIT) {
+//            if (village.equals("")) { isValid = false; }
+//            if (recoNom.equals("")) isValid = false;
+//            if (recoPrenom.equals("")) isValid = false;
+//        }
 
         if (isValid){
 

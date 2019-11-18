@@ -29,9 +29,11 @@ public class DashboardActivity extends AppCompatActivity {
     CardView mGestionMildCD;
     @BindView(R.id.microplan_card)
     CardView mMicroplanCD;
+    @BindView(R.id.denombrement_card)
+    CardView mDenombrementCD;
 
     Intent mIntent;
-    String mCodeAs, mCodeSd, mCodeAgentDenombrement, mCodeAgentDist, mCodeAgentIT;
+    String mCodeAs, mCodeAgentDenombrement, mCodeSd, mCodeItDenombrement, mCodeItDistribution, mCodeBureauCentralZone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,17 +45,37 @@ public class DashboardActivity extends AppCompatActivity {
         Intent intent = getIntent();
         boolean isAgentDenombrement = intent.getBooleanExtra(Constant.KEY_IS_AGENT_DENOMBREMENT, false);
         mCodeAs = intent.getStringExtra(Constant.KEY_CODE_AGENT_AS);
-        mCodeSd = intent.getStringExtra(Constant.KEY_CODE_AGENT_SD);
-        mCodeAgentDenombrement = intent.getStringExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT);
-        mCodeAgentDist = intent.getStringExtra(Constant.KEY_CODE_AGENT_DIST);
-        mCodeAgentIT = intent.getStringExtra(Constant.KEY_CODE_AGENT_IT);
 
-        if (isAgentDenombrement){
+        mCodeAgentDenombrement = intent.getStringExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT);
+        mCodeSd = intent.getStringExtra(Constant.KEY_CODE_AGENT_SD);
+        mCodeItDenombrement = intent.getStringExtra(Constant.KEY_CODE_IT_DENOMBREMENT);
+        mCodeItDistribution = intent.getStringExtra(Constant.KEY_CODE_IT_DISTRIBUTION);
+        mCodeBureauCentralZone = intent.getStringExtra(Constant.KEY_CODE_BUREAU_CENTRAL_ZONE);
+
+        if (mCodeAgentDenombrement != null){
+            mMicroplanCD.setVisibility(View.GONE);
+            mGestionMildCD.setVisibility(View.GONE);
+            mDistributionCD.setVisibility(View.GONE);
+            mDenombrementCD.setVisibility(View.GONE);
+        } else if (mCodeSd != null) {
+            mMicroplanCD.setVisibility(View.GONE);
+            mMacaronCD.setVisibility(View.GONE);
+            mDistributionCD.setVisibility(View.GONE);
+            mDenombrementCD.setVisibility(View.GONE);
+        } else if (mCodeItDenombrement != null){
             mDistributionCD.setVisibility(View.GONE);
             mGestionMildCD.setVisibility(View.GONE);
-        } else {
+            mDenombrementCD.setVisibility(View.GONE);
+        } else if (mCodeItDistribution != null) {
             mMacaronCD.setVisibility(View.GONE);
+            mMicroplanCD.setVisibility(View.GONE);
             mMenageCD.setVisibility(View.GONE);
+            mDenombrementCD.setVisibility(View.GONE);
+        } else if (mCodeBureauCentralZone != null){
+            mMacaronCD.setVisibility(View.GONE);
+            mMicroplanCD.setVisibility(View.GONE);
+            mMenageCD.setVisibility(View.GONE);
+            mGestionMildCD.setVisibility(View.GONE);
         }
 
         ButterKnife.bind(this);
@@ -79,7 +101,7 @@ public class DashboardActivity extends AppCompatActivity {
         mIntent = new Intent(DashboardActivity.this, BaseActivity.class);
         mIntent.putExtra(Constant.ACTION, Constant.ACTION_MENAGE_ACTIVITY);
         mIntent.putExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT, mCodeAgentDenombrement);
-        mIntent.putExtra(Constant.KEY_CODE_AGENT_IT, mCodeAgentIT);
+        mIntent.putExtra(Constant.KEY_CODE_AGENT_IT, mCodeItDenombrement);
         startActivity(mIntent);
     }
 
@@ -92,9 +114,15 @@ public class DashboardActivity extends AppCompatActivity {
 
     @OnClick(R.id.gestion_mild_card)
     public void startGestionMildActivity(){
-        mIntent = new Intent(DashboardActivity.this, GestionMildActivity.class);
+        if (mCodeSd != null){
+            mIntent = new Intent(DashboardActivity.this, GestionMildSiteDistActivity.class);
+            mIntent.putExtra(Constant.KEY_CODE_AGENT_SD, mCodeSd);
+        } else if (mCodeItDistribution != null){
+            mIntent = new Intent(DashboardActivity.this, GestionMildActivity.class);
+            mIntent.putExtra(Constant.KEY_CODE_IT_DISTRIBUTION, mCodeItDistribution);
+        }
+
         mIntent.putExtra(Constant.ACTION, Constant.ACTION_DISTRIBUTION_ACTIVITY);
-        mIntent.putExtra(Constant.KEY_CODE_AGENT_SD, mCodeSd);
         startActivity(mIntent);
     }
 

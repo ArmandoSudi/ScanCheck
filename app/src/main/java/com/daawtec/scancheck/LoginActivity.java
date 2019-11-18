@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                         agentDist = db.getIAgentDistributionDao().getAgentByCodeAuth(codeAuthentification);
                         intent = new Intent(LoginActivity.this, DashboardActivity.class);
                         intent.putExtra(Constant.KEY_CODE_AGENT_SD, agentDist.codeSd);
-                        intent.putExtra(Constant.KEY_CODE_AGENT_DIST, agentDist.codeAgentDistribution);
+                        intent.putExtra(Constant.KEY_CODE_SITE_DISTRIBUTION, agentDist.codeSd);
                         return true;
                     } else {
                         return false;
@@ -147,15 +147,33 @@ public class LoginActivity extends AppCompatActivity {
                     if (agent != null) {
                         intent = new Intent(LoginActivity.this, DashboardActivity.class);
                         intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
-                        intent.putExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT, agent.codeAgentDenombrement);
-                        intent.putExtra(Constant.KEY_IS_AGENT_DENOMBREMENT, true);
-                        intent.putExtra(Constant.KEY_CODE_AGENT_IT, agent.codeAgentDenombrement);
+                        intent.putExtra(Constant.KEY_CODE_IT_DENOMBREMENT, agent.codeAgentDenombrement);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (mTypeAgent.equals("IT DISTRIBUTION")){
+                    agent = db.getIAgentDenombrementDao().getAgentByCodeAuth(codeAuthentification);
+                    if (agent != null) {
+                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                        intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
+                        intent.putExtra(Constant.KEY_CODE_IT_DISTRIBUTION, agent.codeAgentDenombrement);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (mTypeAgent.equals("BUREAU CENTRAL ZONE")){
+                    agent = db.getIAgentDenombrementDao().getAgentByCodeAuth(codeAuthentification);
+                    if (agent != null) {
+                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                        intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
+                        intent.putExtra(Constant.KEY_CODE_BUREAU_CENTRAL_ZONE, agent.codeAgentDenombrement);
                         return true;
                     } else {
                         return false;
                     }
                 }
-                //todo implementer la navigation vers le dashboard comme un agent superviseur
+
 
                 return false;
             }

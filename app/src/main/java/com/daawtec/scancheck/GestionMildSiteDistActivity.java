@@ -28,19 +28,18 @@ import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class GestionMildActivity extends AppCompatActivity {
+public class GestionMildSiteDistActivity extends AppCompatActivity {
 
-    private static final String TAG = "GestionMildActivity";
+    private static final String TAG = "GestionMildSiteDistActi";
 
     String mCodeSd;
     Calendar mCalendar = Calendar.getInstance();
     ScanCheckDB db;
 
-    @BindView(R.id.inventaire_rv)
+    @BindView(R.id.dist_inventaire_rv)
     RecyclerView mInventaireRV;
-    @BindView(R.id.empty_msg_tv)
+    @BindView(R.id.dist_empty_msg_tv)
     TextView mEmptyMsgTV;
 
     InventairePhysiqueAdapter mInventaireAdapter;
@@ -48,14 +47,13 @@ public class GestionMildActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gestion_mild);
+        setContentView(R.layout.activity_gestion_mild_site_dist);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ButterKnife.bind(this);
-
         Intent intent = getIntent();
         mCodeSd = intent.getStringExtra(Constant.KEY_CODE_SITE_DISTRIBUTION);
+        mCodeSd = intent.getStringExtra(Constant.KEY_CODE_AGENT_SD);
         db = ScanCheckDB.getDatabase(this);
 
         mInventaireAdapter = new InventairePhysiqueAdapter(this);
@@ -70,14 +68,14 @@ public class GestionMildActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAlertDialogButtonClicked("Entrer le nombre des milds recu", GestionMildActivity.this, "njn");
+                showCreateMildStockDialog("Enregistrement du stock", GestionMildSiteDistActivity.this, "");
             }
         });
 
         loadInventaire(mCodeSd);
     }
 
-    public void showAlertDialogButtonClicked(String message, Context context, final String codeMacaron) {
+    public void showCreateMildStockDialog(String message, Context context, final String codeMacaron) {
         // create an alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(message);
@@ -113,10 +111,10 @@ public class GestionMildActivity extends AppCompatActivity {
                 super.onPostExecute(longs);
 
                 if (longs[0] > 0){
-                    Toast.makeText(GestionMildActivity.this, "Inventaire enregistre", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GestionMildSiteDistActivity.this, "Inventaire enregistre", Toast.LENGTH_SHORT).show();
                     loadInventaire(mCodeSd);
                 } else {
-                    Toast.makeText(GestionMildActivity.this, "Impossible d'enregistrer l'inventaire", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GestionMildSiteDistActivity.this, "Impossible d'enregistrer l'inventaire", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -151,7 +149,24 @@ public class GestionMildActivity extends AppCompatActivity {
 
             @Override
             protected List<InventairePhysique> doInBackground(Void... voids) {
-                return db.getIIventairePhysiqueDao().all();
+                return db.getIIventairePhysiqueDao().getByCodeSd(codeSd);
+            }
+        }).execute();
+    }
+
+    public void loadStock(final String codeSd) {
+        (new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                //TODO display the stock related to this SD;
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                //TODO load all the stock related to this SD
+                return null;
             }
         }).execute();
     }

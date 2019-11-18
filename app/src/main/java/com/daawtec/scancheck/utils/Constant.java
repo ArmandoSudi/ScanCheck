@@ -18,6 +18,10 @@ public class Constant {
     public static String KEY_CODE_AGENT_SUPERVISEUR = "agentSuperviseur";
     public static String KEY_CODE_AGENT_ENQUETEUR = "agentEnqueteur";
     public static String KEY_CODE_AGENT_IT = "agentIT";
+    public static String KEY_CODE_IT_DENOMBREMENT = "itDenombrement";
+    public static String KEY_CODE_IT_DISTRIBUTION = "itDistribution";
+    public static String KEY_CODE_SITE_DISTRIBUTION = "codeSiteDistribution";
+    public static String KEY_CODE_BUREAU_CENTRAL_ZONE = "codeBureauCentralZone";
     public static String KEY_JOUR_ONE = "jourOne";
 
     public static String ACTION = "action";

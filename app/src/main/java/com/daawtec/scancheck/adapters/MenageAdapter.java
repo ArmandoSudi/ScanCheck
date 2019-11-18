@@ -54,7 +54,7 @@ public class MenageAdapter extends RecyclerView.Adapter<MenageAdapter.VH> {
     public void onBindViewHolder(@NonNull VH vh, int i) {
         final Menage menage = mMenages.get(i);
         vh.nomResponsableTV.setText(menage.nomResponsable);
-        vh.tailleMenageTV.setText("" + menage.tailleMenage);
+        vh.tailleMenageTV.setText("" + menage.nombreCouchette);
         vh.dateIdentificationTV.setText(menage.dateIdentification);
 
         vh.itemView.setOnLongClickListener(new View.OnLongClickListener() {

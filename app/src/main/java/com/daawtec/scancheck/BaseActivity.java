@@ -1,6 +1,8 @@
 package com.daawtec.scancheck;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,16 +16,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.SimpleCursorTreeAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.Macaron;
+import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.ui.DistributionFragment;
 import com.daawtec.scancheck.ui.MacaronFragment;
 import com.daawtec.scancheck.ui.MenageFragment;
@@ -35,6 +44,7 @@ import com.daawtec.scancheck.utils.Utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity implements MenageFragment.OnFragmentInteractionListener {
@@ -52,6 +62,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
     ScanCheckDB db;
     String mCodeAs, mCodeSd, mCodeAgentDenombrement, mCodeAgentDist, mCodeAgentIT;
     boolean isAgentIT = false;
+    String mCodeAsSD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +107,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                 } else if (mCurrentFragment instanceof SiteDistributionFragment){
                     Snackbar.make(view, "Ajouter site de distribution", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
-
+                    showCreateSdDialog("", BaseActivity.this, "QW");
                 }
             }
         });
@@ -124,11 +135,13 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
         if(requestCode == Constant.REQUEST_CODE_QR_SCAN_MACARON) {
 
+            Log.e(TAG, "onActivityResult: SCAN: code as : " + mCodeAs );
+
             if(data==null)
                 return;
             String dateEnregistrement = Utils.formatDate(mCalendar.getTime());
 
-            if (mCodeAs != null && mCodeAgentDenombrement != null) {
+            if (mCodeAs != null) {
                 //Getting the passed result
                 String qrCode = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
                 Log.e(TAG, "onActivityResult: code macaron: " + qrCode );
@@ -145,6 +158,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                 Log.e(TAG, "onActivityResult: MENAGE ENREGISTRE 2");
             }
         }
+
     }
 
     @Override
@@ -246,6 +260,103 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
             @Override
             protected Macaron doInBackground(Void... voids) {
                 return db.getIMacaronDao().get(codeMacaron);
+            }
+        }).execute();
+    }
+
+    public void showCreateSdDialog(String message, Context context, final String codeMacaron) {
+
+        // create an alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Creation de Site de Distribution");
+
+        // set the custom layout
+        final View customLayout = getLayoutInflater().inflate(R.layout.dialog_confirmation_mild, null);
+        builder.setView(customLayout);
+        final EditText nomET = customLayout.findViewById(R.id.nombre_mild_et);
+        final Spinner asSP = customLayout.findViewById(R.id.as_sp);
+        loadAs(asSP);
+
+        asSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                AirsSante as = (AirsSante) parent.getItemAtPosition(position);
+                mCodeAsSD = as.getCodeAS();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String nom = nomET.getText().toString();
+                saveSD(nom);
+            }
+        });
+
+        builder.setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void saveSD(final String nom){
+        (new AsyncTask<Void, Void, long[]>(){
+            @Override
+            protected void onPostExecute(long[] longs) {
+                super.onPostExecute(longs);
+
+                if (longs[0] > 0) {
+                    Toast.makeText(BaseActivity.this, "Site de distribution créée", Toast.LENGTH_SHORT).show();
+                    if (mCurrentFragment instanceof SiteDistributionFragment) {
+                        ((SiteDistributionFragment) mCurrentFragment).loadSD();
+                    }
+                }
+            }
+
+            @Override
+            protected long[] doInBackground(Void... voids) {
+                SiteDistribution site = new SiteDistribution();
+                site.codeSD = Utils.getTimeStamp();
+                site.codeAS = mCodeAsSD;
+                site.nom = nom;
+                return db.getISiteDistributionDao().insert(site);
+            }
+        }).execute();
+
+    }
+
+    public void loadAs(final Spinner sp){
+        (new AsyncTask<Void, Void, List<AirsSante>>(){
+            @Override
+            protected void onPostExecute(List<AirsSante> airsSantes) {
+                super.onPostExecute(airsSantes);
+
+                if (airsSantes != null) {
+                    if (airsSantes.size() > 0) {
+                        airsSantes.add(0, new AirsSante());
+                        sp.setAdapter(new ArrayAdapter<>(
+                                BaseActivity.this,
+                                android.R.layout.simple_spinner_dropdown_item,
+                                airsSantes
+                        ));
+                    }
+                }
+            }
+
+            @Override
+            protected List<AirsSante> doInBackground(Void... voids) {
+                return db.getIAirSanteDao().all();
             }
         }).execute();
     }

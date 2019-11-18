@@ -16,12 +16,22 @@
         <item>F</item>
     </string-array>
 
+    <string-array name="type_menage_choice">
+        <item>ORPHELINAT</item>
+        <item>COUVENT</item>
+        <item>INTERNAT</item>
+        <item>FOSA</item>
+        <item>HOTEL</item>
+        <item>MILITAIRE EN DEPLACEMENT</item>
+        <item>DEPLACES</item>
+        <item>REFUGIE</item>
+        <item>PRISON</item>
+    </string-array>
+
     <string-array name="type_agent">
-        <item>AGENT DENOMBREMENT</item>
         <item>IT DENOMBREMENT</item>
         <item>IT DISTRIBUTION</item>
-        <item>SITE DISTRIBUTION</item>
-
+        <item>BUREAU CENTRAL ZONE</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
@@ -103,5 +113,6 @@
         <item>Air Sante 2</item>
         <item>Air Sante 3</item>
     </string-array>
-    <string name="title_activity_gestion_mild">GestionMildActivity</string>
+    <string name="title_activity_gestion_mild">Gestion des MILDs</string>
+    <string name="title_activity_gestion_mild_site_dist">Gestion des MILDs au SD</string>
 </resources>

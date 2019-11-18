@@ -49,10 +49,23 @@ public class SiteDistributionFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Log.e(TAG, "onStart: MIROPLAN" );
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.e(TAG, "onResume: MIROPLAN" );
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
 
         View view =  inflater.inflate(R.layout.fragment_site_distribution, container, false);
 
