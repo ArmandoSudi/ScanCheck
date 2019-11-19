@@ -55,7 +55,7 @@ public class Utils {
     }
 
     public static String formatDate(Date date){
-        return new SimpleDateFormat("dd/MM/YYYY").format(date);
+        return new SimpleDateFormat("dd/MM/yyyy").format(date);
     }
 
     public static boolean isSessionValid(Date date, String dayOne) throws Exception {
