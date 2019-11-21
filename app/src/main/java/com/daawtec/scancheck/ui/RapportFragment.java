@@ -128,6 +128,8 @@ public class RapportFragment extends Fragment {
             protected void onPostExecute(Boolean value) {
                 super.onPostExecute(value);
 
+                Log.e(TAG, "onPostExecute: VALUE: " + value );
+
                 if (value){
                     if (rapportDenombrements.size() > 0){
                         mRapportDenombrementAdapter.addAll(rapportDenombrements);

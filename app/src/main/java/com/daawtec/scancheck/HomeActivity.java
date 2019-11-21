@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.widget.ProgressBar;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.Affectation;
+import com.daawtec.scancheck.entites.Agent;
 import com.daawtec.scancheck.entites.AgentDenombrement;
 import com.daawtec.scancheck.entites.AgentDistribution;
 import com.daawtec.scancheck.entites.AirsSante;
@@ -54,9 +56,11 @@ public class HomeActivity extends AppCompatActivity {
     List<SiteDistribution> mSDs = new ArrayList<>();
     List<AgentDenombrement> mAgents = new ArrayList<>();
     List<AgentDistribution> mAgentDistDemos = new ArrayList<>();
-    List<AgentDenombrement> mAgentDemos = new ArrayList<>();
-    List<Macaron> mMacarons = new ArrayList<>();
+    List<AgentDenombrement> mAgentDenombrementDemos = new ArrayList<>();
     List<TypeAgent> mTypeAgents = new ArrayList<>();
+    List<Agent> mAgentDemos = new ArrayList<>();
+    List<Affectation> mAffectationDemos = new ArrayList<>();
+    List<TypeAgent> mTypeAgentDemos = new ArrayList<>();
 
     public static final int REQUEST_CODE_QR_SCAN = 101;
     boolean isAgentRegistered;
@@ -143,8 +147,10 @@ public class HomeActivity extends AppCompatActivity {
                 mASs.size() > 0 &&
                 mSDs.size() > 0 &&
                 mTypeAgents.size() > 0 &&
-                mAgentDemos.size() > 0 &&
-                mAgentDistDemos.size() > 0)
+                mAgentDenombrementDemos.size() > 0 &&
+                mAgentDistDemos.size() > 0 &&
+                mAffectationDemos.size() > 0 &&
+                mAgentDemos.size() > 0)
         {
             Log.i(TAG, "canInsert: INSERTING VALUES IN THE DATABASE");
             new InitDB(db).execute();
@@ -161,9 +167,13 @@ public class HomeActivity extends AppCompatActivity {
         getAiresSante();
         getZoneSante();
         getSiteDistributions();
-        getTypeAgent();
-        getAgentDemos();
+        getAgentDenombrementDemos();
         getAgenDistributionsDemo();
+
+        // Pour la demo de jeudi 21/11/2019
+        getAffectationsDemos();
+        getAgentDemos();
+        getTypeAgent();
 
     }
 
@@ -211,8 +221,10 @@ public class HomeActivity extends AppCompatActivity {
             long[] as_ids = db.getIAirSanteDao().insert(mASs);
             long[] sd_ids = db.getISiteDistributionDao().insert(mSDs);
             long[] typeAgents = db.getITypeAgentDao().insert(mTypeAgents);
-            long[] agents = db.getIAgentDenombrementDao().insert(mAgentDemos);
+            long[] agents = db.getIAgentDenombrementDao().insert(mAgentDenombrementDemos);
             long [] agentDist = db.getIAgentDistributionDao().insert(mAgentDistDemos);
+            long[] agent_ids = db.getIAgentDao().insert(mAgentDemos);
+            long[] affecation_ids = db.getIAffectation().insert(mAffectationDemos);
 
             return null;
         }
@@ -299,55 +311,26 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void getAgents(){
-        scanCheckApiInterface.getAgents().enqueue(new Callback<List<AgentDenombrement>>() {
-            @Override
-            public void onResponse(Call<List<AgentDenombrement>> call, Response<List<AgentDenombrement>> response) {
-                if (response.isSuccessful()){
-                    if (response.body() != null) {
-                        mAgents.addAll(response.body());
-                        Log.d(TAG, "onResponse: Liste des agents : " + mAgents);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<AgentDenombrement>> call, Throwable t) {
-                Log.e(TAG, "getAgent onFailure: " + t.getMessage());
-            }
-        });
-    }
-
-    public void getMacarons() {
-        scanCheckApiInterface.getMacarons().enqueue(new Callback<List<Macaron>>() {
-            @Override
-            public void onResponse(Call<List<Macaron>> call, Response<List<Macaron>> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        mMacarons.addAll(response.body());
-                        Log.d(TAG, "onResponse: Liste des macarons : " + mMacarons);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Macaron>> call, Throwable t) {
-                Log.e(TAG, "getMacarons onFailure : " + t.getMessage());
-            }
-        });
-    }
-
     public void getTypeAgent() {
-        mTypeAgents.add(new TypeAgent("1001", "Enqueteur"));
-        mTypeAgents.add(new TypeAgent("1002", "Distributeur"));
-        mTypeAgents.add(new TypeAgent("1003", "Superviseur"));
+        mTypeAgents.add(new TypeAgent("1001", "AGENT DENOMBREMENT"));
+        mTypeAgents.add(new TypeAgent("1002", "IT DENOMBREMENT"));
+    }
+
+    public void getAgentDenombrementDemos(){
+        mAgentDenombrementDemos.add(new AgentDenombrement("1501", "David","ADR1001", "1001"));
+        mAgentDenombrementDemos.add(new AgentDenombrement("1502", "Alain", "ADR1001", "1002"));
+        mAgentDenombrementDemos.add(new AgentDenombrement("1503", "Willy", "ADR1001", "1003"));
+        mAgentDenombrementDemos.add(new AgentDenombrement("1504", "Willy", "ADR1001", "1004"));
     }
 
     public void getAgentDemos(){
-        mAgentDemos.add(new AgentDenombrement("1501", "David","ADR1001", "1001"));
-        mAgentDemos.add(new AgentDenombrement("1502", "Alain", "ADR1001", "1002"));
-        mAgentDemos.add(new AgentDenombrement("1503", "Willy", "ADR1001", "1003"));
-        mAgentDemos.add(new AgentDenombrement("1504", "Willy", "ADR1001", "1004"));
+        mAgentDemos.add(new Agent("1", "David", "1111"));
+        mAgentDemos.add(new Agent("2", "Willy", "0000"));
+    }
+
+    public void getAffectationsDemos() {
+        mAffectationDemos.add(new Affectation("1", "1", "1001", "ADR1001", "20/11/2019"));
+        mAffectationDemos.add(new Affectation("2", "2", "1002", "ADR1001", "20/11/2019"));
     }
 
     public void getAgenDistributionsDemo() {

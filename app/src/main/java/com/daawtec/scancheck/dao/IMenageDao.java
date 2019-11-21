@@ -56,7 +56,6 @@ public interface IMenageDao {
     @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE ETAT_SERVI=:state")
     int getCountMenageServi(boolean state);
 
-
     @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE DATE_IDENTIFICATION=:day")
     int getNombreMenageByDay(String day);
 

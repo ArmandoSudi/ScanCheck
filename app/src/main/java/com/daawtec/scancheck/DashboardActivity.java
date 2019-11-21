@@ -1,6 +1,8 @@
 package com.daawtec.scancheck;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -35,23 +37,37 @@ public class DashboardActivity extends AppCompatActivity {
     Intent mIntent;
     String mCodeAs, mCodeAgentDenombrement, mCodeSd, mCodeItDenombrement, mCodeItDistribution, mCodeBureauCentralZone;
 
+    SharedPreferences mSharedPref;
+    String mCodeAgent, mCodeTypeAgent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
+        mCodeTypeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, null);
+
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        boolean isAgentDenombrement = intent.getBooleanExtra(Constant.KEY_IS_AGENT_DENOMBREMENT, false);
-        mCodeAs = intent.getStringExtra(Constant.KEY_CODE_AGENT_AS);
+        if (mCodeTypeAgent != null && mCodeTypeAgent.equals("1000")){
+            mMicroplanCD.setVisibility(View.GONE);
+            mGestionMildCD.setVisibility(View.GONE);
+            mDistributionCD.setVisibility(View.GONE);
+            mDenombrementCD.setVisibility(View.GONE);
+        } else if (mCodeTypeAgent != null && mCodeTypeAgent.equals("2000")) {
+            mDistributionCD.setVisibility(View.GONE);
+            mGestionMildCD.setVisibility(View.GONE);
+            mDenombrementCD.setVisibility(View.GONE);
+        }
 
-        mCodeAgentDenombrement = intent.getStringExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT);
-        mCodeSd = intent.getStringExtra(Constant.KEY_CODE_AGENT_SD);
-        mCodeItDenombrement = intent.getStringExtra(Constant.KEY_CODE_IT_DENOMBREMENT);
-        mCodeItDistribution = intent.getStringExtra(Constant.KEY_CODE_IT_DISTRIBUTION);
-        mCodeBureauCentralZone = intent.getStringExtra(Constant.KEY_CODE_BUREAU_CENTRAL_ZONE);
 
+        ButterKnife.bind(this);
+    }
+
+    public void initView(){
         if (mCodeAgentDenombrement != null){
             mMicroplanCD.setVisibility(View.GONE);
             mGestionMildCD.setVisibility(View.GONE);
@@ -77,8 +93,6 @@ public class DashboardActivity extends AppCompatActivity {
             mMenageCD.setVisibility(View.GONE);
             mGestionMildCD.setVisibility(View.GONE);
         }
-
-        ButterKnife.bind(this);
     }
 
     @Override

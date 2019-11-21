@@ -27,14 +27,19 @@ public interface ScanCheckApiInterface {
 
     @GET("dps/")
     Call<List<DivisionProvincialeSante>> getDPS();
+
     @GET("zs/")
     Call<List<ZoneSante>> getZoneSante();
+
     @GET("as/")
     Call<List<AirsSante>> getAirSantes();
+
     @GET("sd/")
     Call<List<SiteDistribution>> getSiteDistribution();
+
     @GET("agents/")
     Call<List<AgentDenombrement>> getAgents();
+
     @GET("macarons/")
     Call<List<Macaron>> getMacarons();
 

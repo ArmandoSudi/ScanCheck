@@ -6,7 +6,9 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
+import com.daawtec.scancheck.dao.IAffectationDao;
 import com.daawtec.scancheck.dao.IAffectationMacaronASDao;
+import com.daawtec.scancheck.dao.IAgentDao;
 import com.daawtec.scancheck.dao.IAgentDenombrement;
 import com.daawtec.scancheck.dao.IAgentDistributionDao;
 import com.daawtec.scancheck.dao.IAirSanteDao;
@@ -20,7 +22,9 @@ import com.daawtec.scancheck.dao.ISiteDistributionDao;
 import com.daawtec.scancheck.dao.ITypeAgentDao;
 import com.daawtec.scancheck.dao.IValiditeRoleDao;
 import com.daawtec.scancheck.dao.IZoneSanteDao;
+import com.daawtec.scancheck.entites.Affectation;
 import com.daawtec.scancheck.entites.AffectationMacaronAS;
+import com.daawtec.scancheck.entites.Agent;
 import com.daawtec.scancheck.entites.AgentDenombrement;
 import com.daawtec.scancheck.entites.AgentDistribution;
 import com.daawtec.scancheck.entites.AirsSante;
@@ -53,8 +57,10 @@ import com.daawtec.scancheck.utils.DateConverts;
         Verification.class,
         ZoneSante.class,
         TypeAgent.class,
-        ValiditeRole.class},
-        version = 13
+        ValiditeRole.class,
+        Agent.class,
+        Affectation.class},
+        version = 14
 )
 @TypeConverters(DateConverts.class)
 public abstract class ScanCheckDB extends RoomDatabase {
@@ -75,6 +81,9 @@ public abstract class ScanCheckDB extends RoomDatabase {
     public abstract IZoneSanteDao getIZoneSanteDao();
     public abstract ITypeAgentDao getITypeAgentDao();
     public abstract IValiditeRoleDao getIValiditeRoleDao();
+    public abstract IAffectationDao getIAffectation();
+    public abstract IAgentDao getIAgentDao();
+
 
     private static ScanCheckDB INSTANCE;
 

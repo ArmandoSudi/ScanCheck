@@ -23,6 +23,8 @@ public class Constant {
     public static String KEY_CODE_SITE_DISTRIBUTION = "codeSiteDistribution";
     public static String KEY_CODE_BUREAU_CENTRAL_ZONE = "codeBureauCentralZone";
     public static String KEY_JOUR_ONE = "jourOne";
+    public static String KEY_CURRENT_CODE_AGENT;
+    public static String KEY_CURRENT_CODE_TYPE_AGENT;
 
     public static String ACTION = "action";
     public static final String ACTION_MENAGE_ACTIVITY = "startMenageActivity";
