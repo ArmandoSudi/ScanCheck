@@ -253,6 +253,34 @@
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Membres du menage"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/membre_menage_rv"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"/>
+            <Button
+                android:id="@+id/add_membre_menage_bt"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ajouter membre menage"/>
+
+        </LinearLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -264,6 +292,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Entrez le nombre des couchettes"
                 android:inputType="number" />
+
+
         </android.support.design.widget.TextInputLayout>
 
         <Button

@@ -38,12 +38,10 @@ public class RapportFragment extends Fragment {
 
     Activity mActivity;
     ScanCheckDB db;
-    String mCodeAs, mCodeSd;
+    String mCodeAs, mCodeSd, mCodeAgent, mCodeTypeAgent;
     RapportDenombrementAdapter mRapportDenombrementAdapter;
-    boolean isDenombrement;
+    boolean isItDenombrement;
     SharedPreferences mSharedPref;
-
-    int nbrMenageOne, nbrMenageTwo, nbrMenageThree, nbrMenageFour, nbrMenageFive;
 
     public RapportFragment() {
         // Required empty public constructor
@@ -67,14 +65,17 @@ public class RapportFragment extends Fragment {
             mCodeSd = getArguments().getString(Constant.KEY_CODE_AGENT_SD);
         }
 
-        if (mCodeAs != null) {
-            isDenombrement = true;
-        } else {
-            isDenombrement = false;
-        }
-
         mActivity = getActivity();
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
+        mCodeTypeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, null);
+
+        if (mCodeTypeAgent.equals("1002")){
+            isItDenombrement = true;
+        } else {
+            isItDenombrement = false;
+        }
+
         db = ScanCheckDB.getDatabase(mActivity);
         mRapportDenombrementAdapter = new RapportDenombrementAdapter(mActivity);
 
@@ -86,17 +87,10 @@ public class RapportFragment extends Fragment {
 
         loadRapportDenombrement();
 
-        if (isDenombrement){
-            View view = inflater.inflate(R.layout.fragment_rapport_denombrement, container, false);
-            initViewDenombrement(view);
-//            loadDataDenombrement();
-            return view;
-        } else {
-            View view = inflater.inflate(R.layout.fragment_rapport_distribution, container, false);
-            initViewDistribution(view);
-            loadDataDistribution();
-            return view;
-        }
+        View view = inflater.inflate(R.layout.fragment_rapport_denombrement, container, false);
+        initViewDenombrement(view);
+        return view;
+
     }
 
     public void initViewDenombrement(View view){
@@ -122,13 +116,14 @@ public class RapportFragment extends Fragment {
             // TODO set this up for the first macaron used
 //            String dayOne = mSharedPref.getString(Constant.KEY_JOUR_ONE, null);
 
-            String dayOne = "12/11/2019";
+            String dayOne = "20/11/2019";
             int macaronUtilise, menage, menageOneTwo, menageThreeFour, menageFiveSix, menageSevenEight, macaronRecu;
             @Override
             protected void onPostExecute(Boolean value) {
                 super.onPostExecute(value);
 
                 Log.e(TAG, "onPostExecute: VALUE: " + value );
+                Log.e(TAG, "onPostExecute: SIZE:  " + rapportDenombrements.size() );
 
                 if (value){
                     if (rapportDenombrements.size() > 0){
@@ -167,6 +162,7 @@ public class RapportFragment extends Fragment {
                     if ( i > 0 && rapportDenombrements.size() > 1) {
 //                        macaronRecu += rapportDenombrements.get(i).soldeMacaron;
                     }
+
                     rapportDenombrement.macaronRecu = macaronRecu;
 
                     rapportDenombrement.macaronUtilise = macaronUtilise;
@@ -186,62 +182,15 @@ public class RapportFragment extends Fragment {
         }).execute();
     }
 
-    public void loadDataDenombrement() {
+    public void loadRapportDenombrementIT(){
         (new AsyncTask<Void, Void, Void>(){
-
-            int nbrMenageOne, nbrMenageTwo, nbrMenageThree, nbrMenageFour, nbrMenageFive;
-
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
-                mMenageOneTV.setText(Integer.toString(nbrMenageOne));
-                mMenageTwoTV.setText(Integer.toString(nbrMenageTwo));
-                mMenageThreeTV.setText(Integer.toString(nbrMenageThree));
-                mMenageFourTV.setText(Integer.toString(nbrMenageFour));
-                mMenageFiveTV.setText(Integer.toString(nbrMenageFive));
-
             }
 
             @Override
             protected Void doInBackground(Void... voids) {
-                nbrMenageOne = db.getIMenageDao().getCountByTailleMenage(1, "") + db.getIMenageDao().getCountByTailleMenage(2, "");
-                nbrMenageTwo = db.getIMenageDao().getCountByTailleMenage(3, "") + db.getIMenageDao().getCountByTailleMenage(4, "");
-                nbrMenageThree = db.getIMenageDao().getCountByTailleMenage(5,"") + db.getIMenageDao().getCountByTailleMenage(6, "");
-                nbrMenageFour = db.getIMenageDao().getCountByTailleMenage(7, "") + db.getIMenageDao().getCountByTailleMenage(8, "");
-                nbrMenageFive = db.getIMenageDao().getCountByTailleMenage(9, "") + db.getIMenageDao().getCountZBigMenage();
-                return null;
-            }
-        }).execute();
-    }
-
-    public void loadDataDistribution(){
-        (new AsyncTask<Void, Void, Void>(){
-            int nbrMildRecu, nbrMildAttendu, nbrMildServi, solde;
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                mMildAttenduTv.setText("Nombre des MILDs attendus : " + nbrMildAttendu);
-                mMildRecuTV.setText("Nombre des MILDs recus : " + nbrMildRecu);
-                mMildServiTV.setText("Nombre des MILDs servis : " + nbrMildServi);
-                mSoldeTV.setText("Solde (MILDs restant dans le stock) : " + solde);
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                // Nbre des milds recu est le total des milds recu en stock
-                nbrMildRecu = db.getIIventairePhysiqueDao().getNbrMildByCodeSd(mCodeSd);
-
-                // Nbre des milds attendus est le total des milds a remettre tel que enregistre dans les menages
-                nbrMildAttendu = db.getIMenageDao().getNbreMildAttenduByCodeSd(mCodeSd);
-
-                // Nbre des milds servis est le total des milds servis tel que enregistre dans les menages
-                nbrMildServi = db.getIMenageDao().getNbreMildServiByCodeSd(mCodeSd);
-
-                // Solde est la difference entre les milds en stock et les milds servis
-                solde = nbrMildRecu - nbrMildServi;
-
                 return null;
             }
         }).execute();

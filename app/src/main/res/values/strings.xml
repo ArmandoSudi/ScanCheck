@@ -117,4 +117,5 @@
     </string-array>
     <string name="title_activity_gestion_mild">Gestion des MILDs</string>
     <string name="title_activity_gestion_mild_site_dist">Gestion des MILDs au SD</string>
+    <string name="title_activity_create_membre_menage">CreateMembreMenageActivity</string>
 </resources>

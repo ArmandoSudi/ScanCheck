@@ -36,6 +36,10 @@ public class Affectation {
     @SerializedName("DateAffectation")
     public String dateAffectation;
 
+    @ColumnInfo(name="POPULATION_MACROPLAN")
+    @SerializedName("PopulationMacronPlan")
+    public int populationMacroPlan;
+
     public Affectation() {
     }
 

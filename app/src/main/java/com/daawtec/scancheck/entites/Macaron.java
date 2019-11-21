@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 @Entity(tableName="MACARON", foreignKeys = {
-        @ForeignKey(entity=AgentDenombrement.class, childColumns = "CODE_AGENT_DENOMBREMENT", parentColumns = "CODE_AGENT_DENOMBREMENT")
+        @ForeignKey(entity=Agent.class, childColumns = "CODE_AGENT", parentColumns = "CODE_AGENT")
 })
 public class Macaron {
 
@@ -25,9 +25,9 @@ public class Macaron {
     @SerializedName("codeAs")
     public String codeAs;
 
-    @ColumnInfo(name="CODE_AGENT_DENOMBREMENT")
-    @SerializedName("codeAgentDenombrement")
-    public String codeAgentDenombrement;
+    @ColumnInfo(name="CODE_AGENT")
+    @SerializedName("codeAgent")
+    public String codeAgent;
 
     @ColumnInfo(name="DATE_ENREGISTREMENT")
     @SerializedName("dateEnregistrement")
@@ -38,10 +38,10 @@ public class Macaron {
     public boolean isAffected;
 
 
-    public Macaron(@NonNull String codeMacaron, String codeAs, String codeAgentDenombrement, String dateEnregistrement, boolean isAffected) {
+    public Macaron(@NonNull String codeMacaron, String codeAs, String codeAgent, String dateEnregistrement, boolean isAffected) {
         this.codeMacaron = codeMacaron;
         this.codeAs = codeAs;
-        this.codeAgentDenombrement = codeAgentDenombrement;
+        this.codeAgent = codeAgent;
         this.dateEnregistrement = dateEnregistrement;
         this.isAffected = isAffected;
     }
@@ -59,7 +59,7 @@ public class Macaron {
         return "Macaron{" +
                 "codeMacaron='" + codeMacaron + '\'' +
                 ", codeAs='" + codeAs + '\'' +
-                ", codeAgentDenombrement='" + codeAgentDenombrement + '\'' +
+                ", codeAgent='" + codeAgent + '\'' +
                 ", dateEnregistrement='" + dateEnregistrement + '\'' +
                 ", isAffected=" + isAffected +
                 '}';

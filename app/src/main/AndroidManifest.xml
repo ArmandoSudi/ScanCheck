@@ -16,11 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemePurple"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".CreateMembreMenageActivity"
+            android:label="@string/title_activity_create_membre_menage"
+            android:theme="@style/AppThemePurple.NoActionBar"></activity>
         <activity
             android:name=".GestionMildSiteDistActivity"
             android:label="@string/title_activity_gestion_mild_site_dist"
-            android:theme="@style/AppThemePurple.NoActionBar"/>
+            android:theme="@style/AppThemePurple.NoActionBar" />
         <activity
             android:name=".GestionMildActivity"
             android:label="@string/title_activity_gestion_mild"
@@ -50,6 +53,7 @@
             android:theme="@style/AppThemePurple.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

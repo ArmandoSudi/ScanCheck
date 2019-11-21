@@ -75,8 +75,6 @@ public class LoginActivity extends AppCompatActivity {
         scanBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(LoginActivity.this, QrCodeActivity.class);
-//                startActivityForResult( intent, Constant.REQUEST_CODE_LOGIN);
             String code = mCodeET.getText().toString();
             login(code);
 
@@ -123,12 +121,11 @@ public class LoginActivity extends AppCompatActivity {
             protected Boolean doInBackground(Void... voids) {
                 if (mTypeAgent.equals(Constant.AGENT_DENOMBREMENT)) {
 
-                    // C'est un agent de denombrement qui vas utiliser l'application
-                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, "1000");
-
                     agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
 
                     if (agent != null) {
+                        // C'est un agent de denombrement qui vas utiliser l'application
+                        mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, "1000");
                         mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
                         mEditor.commit();
                         intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -141,12 +138,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 else if (mTypeAgent.equals("IT DENOMBREMENT")){
 
-                    // C'est un IT denombrement qui va utiliser l'application
-                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, "1002");
-
                     agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
 
                     if (agent != null) {
+                        // C'est un IT denombrement qui va utiliser l'application
+                        mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, "1002");
                         mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
                         mEditor.commit();
                         intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -155,43 +151,6 @@ public class LoginActivity extends AppCompatActivity {
                         return false;
                     }
                 }
-
-//                else if (mTypeAgent.equals("SITE DISTRIBUTION")) {
-//                    agentDist = db.getIAgentDistributionDao().getAgentByCodeAuth(codeAuthentification);
-//                    if (agentDist != null) {
-//                        agentDist = db.getIAgentDistributionDao().getAgentByCodeAuth(codeAuthentification);
-//                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
-//                        intent.putExtra(Constant.KEY_CODE_AGENT_SD, agentDist.codeSd);
-//                        intent.putExtra(Constant.KEY_CODE_SITE_DISTRIBUTION, agentDist.codeSd);
-//                        return true;
-//                    } else {
-//                        return false;
-//                    }
-//
-//                }
-
-//                else if (mTypeAgent.equals("IT DISTRIBUTION")){
-//                    agent = db.getIAgentDenombrementDao().getAgentByCodeAuth(codeAuthentification);
-//                    if (agent != null) {
-//                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
-//                        intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
-//                        intent.putExtra(Constant.KEY_CODE_IT_DISTRIBUTION, agent.codeAgentDenombrement);
-//                        return true;
-//                    } else {
-//                        return false;
-//                    }
-//                }
-//                else if (mTypeAgent.equals("BUREAU CENTRAL ZONE")){
-//                    agent = db.getIAgentDenombrementDao().getAgentByCodeAuth(codeAuthentification);
-//                    if (agent != null) {
-//                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
-//                        intent.putExtra(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
-//                        intent.putExtra(Constant.KEY_CODE_BUREAU_CENTRAL_ZONE, agent.codeAgentDenombrement);
-//                        return true;
-//                    } else {
-//                        return false;
-//                    }
-//                }
 
                 return false;
             }

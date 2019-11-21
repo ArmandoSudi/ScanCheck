@@ -25,6 +25,7 @@ import com.daawtec.scancheck.entites.DivisionProvincialeSante;
 import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.entites.TypeAgent;
+import com.daawtec.scancheck.entites.TypeMenage;
 import com.daawtec.scancheck.entites.ZoneSante;
 import com.daawtec.scancheck.service.ScanCheckApi;
 import com.daawtec.scancheck.service.ScanCheckApiInterface;
@@ -61,6 +62,7 @@ public class HomeActivity extends AppCompatActivity {
     List<Agent> mAgentDemos = new ArrayList<>();
     List<Affectation> mAffectationDemos = new ArrayList<>();
     List<TypeAgent> mTypeAgentDemos = new ArrayList<>();
+    List<TypeMenage> mTypeMenageDemos = new ArrayList<>();
 
     public static final int REQUEST_CODE_QR_SCAN = 101;
     boolean isAgentRegistered;
@@ -68,7 +70,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 
     @Override
@@ -150,7 +151,8 @@ public class HomeActivity extends AppCompatActivity {
                 mAgentDenombrementDemos.size() > 0 &&
                 mAgentDistDemos.size() > 0 &&
                 mAffectationDemos.size() > 0 &&
-                mAgentDemos.size() > 0)
+                mAgentDemos.size() > 0 &&
+                mTypeMenageDemos.size() > 0)
         {
             Log.i(TAG, "canInsert: INSERTING VALUES IN THE DATABASE");
             new InitDB(db).execute();
@@ -174,6 +176,7 @@ public class HomeActivity extends AppCompatActivity {
         getAffectationsDemos();
         getAgentDemos();
         getTypeAgent();
+        getTypemenageDemo();
 
     }
 
@@ -225,6 +228,7 @@ public class HomeActivity extends AppCompatActivity {
             long [] agentDist = db.getIAgentDistributionDao().insert(mAgentDistDemos);
             long[] agent_ids = db.getIAgentDao().insert(mAgentDemos);
             long[] affecation_ids = db.getIAffectation().insert(mAffectationDemos);
+            long[] typeMenage_ids = db.getITypeMenageDao().insert(mTypeMenageDemos);
 
             return null;
         }
@@ -337,6 +341,23 @@ public class HomeActivity extends AppCompatActivity {
         mAgentDistDemos.add(new AgentDistribution("100001", "Agent Dist 1", "role 1", "000001", "1001"));
         mAgentDistDemos.add(new AgentDistribution("100002", "Agent Dist 2", "role 2", "000001", "1002"));
         mAgentDistDemos.add(new AgentDistribution("100002", "Agent Dist 2", "role 2", "000001", "1003"));
+    }
+
+    public void getTypemenageDemo(){
+        mTypeMenageDemos.add(new TypeMenage("1", "Ménage 1-2", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("2", "Ménage 3-4", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("3", "Ménage 4-6", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("4", "Ménage 7-8", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("5", "Ménage 9 ou plus", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("6", "ORPHELINAT", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("7", "COUVENT", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("8", "INTERNAT", "MENAGE SPECIALSPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("9", "FOSA", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("10", "HOTEL", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("11", "MILITAIRE EN DEPLACEMENT", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("12", "DEPLACES", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("13", "REFUGIE", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("14", "PRISON", "MENAGE SPECIAL"));
     }
 
     void showProgressDiag(ProgressDialog progressDiag){

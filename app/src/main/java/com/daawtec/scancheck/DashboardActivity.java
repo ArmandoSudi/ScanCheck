@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -18,6 +19,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DashboardActivity extends AppCompatActivity {
+
+    private static final String TAG = "DashboardActivity";
 
     @BindView(R.id.macaron_card)
     CardView mMacaronCD;
@@ -50,6 +53,9 @@ public class DashboardActivity extends AppCompatActivity {
         mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
         mCodeTypeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, null);
 
+        Log.e(TAG, "onCreate: CODE AGENT: " + mCodeAgent);
+        Log.e(TAG, "onCreate: CODE TYPE-AGENT: " + mCodeTypeAgent);
+
         ButterKnife.bind(this);
 
         if (mCodeTypeAgent != null && mCodeTypeAgent.equals("1000")){
@@ -57,12 +63,11 @@ public class DashboardActivity extends AppCompatActivity {
             mGestionMildCD.setVisibility(View.GONE);
             mDistributionCD.setVisibility(View.GONE);
             mDenombrementCD.setVisibility(View.GONE);
-        } else if (mCodeTypeAgent != null && mCodeTypeAgent.equals("2000")) {
+        } else if (mCodeTypeAgent != null && mCodeTypeAgent.equals("1002")) {
             mDistributionCD.setVisibility(View.GONE);
             mGestionMildCD.setVisibility(View.GONE);
             mDenombrementCD.setVisibility(View.GONE);
         }
-
 
         ButterKnife.bind(this);
     }
@@ -143,15 +148,17 @@ public class DashboardActivity extends AppCompatActivity {
     @OnClick(R.id.rapport_card)
     public void startRapportActivity(){
         mIntent = new Intent(DashboardActivity.this, BaseActivity.class);
-        if (mCodeSd != null) {
-            mIntent.putExtra(Constant.KEY_CODE_AGENT_SD, mCodeSd);
-            mIntent.putExtra(Constant.ACTION, Constant.ACTION_RAPPORT_ACTIVITY);
-            startActivity(mIntent);
-        } else if (mCodeAs != null) {
-            mIntent.putExtra(Constant.KEY_CODE_AGENT_AS, mCodeAs);
-            mIntent.putExtra(Constant.ACTION, Constant.ACTION_RAPPORT_ACTIVITY);
-            startActivity(mIntent);
-        }
+        mIntent.putExtra(Constant.ACTION, Constant.ACTION_RAPPORT_ACTIVITY);
+        startActivity(mIntent);
+//        if (mCodeSd != null) {
+//            mIntent.putExtra(Constant.KEY_CODE_AGENT_SD, mCodeSd);
+//            mIntent.putExtra(Constant.ACTION, Constant.ACTION_RAPPORT_ACTIVITY);
+//            startActivity(mIntent);
+//        } else if (mCodeAs != null) {
+//            mIntent.putExtra(Constant.KEY_CODE_AGENT_AS, mCodeAs);
+//            mIntent.putExtra(Constant.ACTION, Constant.ACTION_RAPPORT_ACTIVITY);
+//            startActivity(mIntent);
+//        }
 
     }
 

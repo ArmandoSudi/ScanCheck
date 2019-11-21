@@ -29,6 +29,9 @@ public interface IMenageDao {
     @Query("SELECT * FROM MENAGE")
     List<Menage> all();
 
+    @Query("SELECT * FROM MENAGE WHERE CODE_AGENT_DENOMBREMENT=:codeAgent")
+    List<Menage> getByCodeAgentDenombrement(String codeAgent);
+
     @Query("SELECT COUNT(*) FROM MENAGE")
     int size();
 

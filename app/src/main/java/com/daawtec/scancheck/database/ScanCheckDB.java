@@ -13,13 +13,16 @@ import com.daawtec.scancheck.dao.IAgentDenombrement;
 import com.daawtec.scancheck.dao.IAgentDistributionDao;
 import com.daawtec.scancheck.dao.IAirSanteDao;
 import com.daawtec.scancheck.dao.IBadVerificationDao;
+import com.daawtec.scancheck.dao.ICampagneDao;
 import com.daawtec.scancheck.dao.IDivisionProvincialSanteDao;
 import com.daawtec.scancheck.dao.IIventairePhysiqueDao;
 import com.daawtec.scancheck.dao.IMacaronDao;
+import com.daawtec.scancheck.dao.IMembreMenageDao;
 import com.daawtec.scancheck.dao.IMenageDao;
 import com.daawtec.scancheck.dao.IRelaisCommunautaireDao;
 import com.daawtec.scancheck.dao.ISiteDistributionDao;
 import com.daawtec.scancheck.dao.ITypeAgentDao;
+import com.daawtec.scancheck.dao.ITypeMenageDao;
 import com.daawtec.scancheck.dao.IValiditeRoleDao;
 import com.daawtec.scancheck.dao.IZoneSanteDao;
 import com.daawtec.scancheck.entites.Affectation;
@@ -29,13 +32,16 @@ import com.daawtec.scancheck.entites.AgentDenombrement;
 import com.daawtec.scancheck.entites.AgentDistribution;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.BadVerification;
+import com.daawtec.scancheck.entites.Campagne;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
 import com.daawtec.scancheck.entites.InventairePhysique;
 import com.daawtec.scancheck.entites.Macaron;
+import com.daawtec.scancheck.entites.MembreMenage;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.RelaisCommunautaire;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.entites.TypeAgent;
+import com.daawtec.scancheck.entites.TypeMenage;
 import com.daawtec.scancheck.entites.ValiditeRole;
 import com.daawtec.scancheck.entites.Verification;
 import com.daawtec.scancheck.entites.ZoneSante;
@@ -59,8 +65,11 @@ import com.daawtec.scancheck.utils.DateConverts;
         TypeAgent.class,
         ValiditeRole.class,
         Agent.class,
-        Affectation.class},
-        version = 14
+        Affectation.class,
+        TypeMenage.class,
+        MembreMenage.class,
+        Campagne.class},
+        version = 19
 )
 @TypeConverters(DateConverts.class)
 public abstract class ScanCheckDB extends RoomDatabase {
@@ -83,6 +92,9 @@ public abstract class ScanCheckDB extends RoomDatabase {
     public abstract IValiditeRoleDao getIValiditeRoleDao();
     public abstract IAffectationDao getIAffectation();
     public abstract IAgentDao getIAgentDao();
+    public abstract ITypeMenageDao getITypeMenageDao();
+    public abstract IMembreMenageDao getIMembreMenageDao();
+    public abstract ICampagneDao getICampagneDao();
 
 
     private static ScanCheckDB INSTANCE;

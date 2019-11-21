@@ -38,7 +38,7 @@ public class MacaronFragment extends Fragment {
 
     SharedPreferences mSharedPref;
     ScanCheckDB db;
-    String mCodeAs, mCodeAgentDenombrement;
+    String mCodeAs, mCodeAgentDenombrement, mCodeAgent;
 
     public MacaronFragment() {
         // Required empty public constructor
@@ -68,6 +68,7 @@ public class MacaronFragment extends Fragment {
         db = ScanCheckDB.getDatabase(mActivity);
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class MacaronFragment extends Fragment {
 
         if (mMacaronAdapter != null) {
             mMacaronAdapter.clear();
-            loadMacaron();
+            loadMacaron(mCodeAgent);
         }
     }
 
@@ -93,7 +94,7 @@ public class MacaronFragment extends Fragment {
         macaronRV.addItemDecoration(new DividerItemDecoration(mActivity,linearLayoutManager.getOrientation()));
         macaronRV.setAdapter(mMacaronAdapter);
 
-        loadMacaron();
+        loadMacaron(mCodeAgent);
 
         return view;
     }
@@ -103,7 +104,7 @@ public class MacaronFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void loadMacaron(){
+    public void loadMacaron(final String codeAgent){
         (new AsyncTask<Void, Void, List<Macaron>>(){
             @Override
             protected void onPostExecute(List<Macaron> macarons) {
@@ -120,7 +121,7 @@ public class MacaronFragment extends Fragment {
 
             @Override
             protected List<Macaron> doInBackground(Void... voids) {
-                return db.getIMacaronDao().all();
+                return db.getIMacaronDao().getByCodeAgent(codeAgent);
             }
         }).execute();
 

@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity(tableName = "AGENT")
 public class Agent {
 
@@ -18,6 +20,10 @@ public class Agent {
 
     @ColumnInfo(name="CODE_AUTHENTIFICATION")
     public String CodeAuthentification;
+
+    @ColumnInfo(name="TELEPHONE")
+    @SerializedName("Telephone")
+    public String telephone;
 
     public Agent() {
     }

@@ -3,9 +3,11 @@ package com.daawtec.scancheck.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -22,6 +24,7 @@ import com.daawtec.scancheck.R;
 import com.daawtec.scancheck.adapters.MenageAdapter;
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.Menage;
+import com.daawtec.scancheck.utils.Constant;
 
 import java.util.List;
 
@@ -41,6 +44,9 @@ public class MenageFragment extends Fragment {
     private Activity mActivity;
     ScanCheckDB db;
 
+    SharedPreferences mSharedPref;
+    String codeAgent;
+
     public MenageFragment() {
         // Required empty public constructor
     }
@@ -57,18 +63,21 @@ public class MenageFragment extends Fragment {
         if (mMenageAdapter != null) {
             mMenageAdapter.clear();
             if (db != null) {
-                new LoadMenageAsync(db).execute();
+                new LoadMenageAsync(db, codeAgent).execute();
             }
         }
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        codeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
         mMenageAdapter = new MenageAdapter(mActivity);
         db = ScanCheckDB.getDatabase(mActivity);
-        new LoadMenageAsync(db).execute();
+        new LoadMenageAsync(db, codeAgent).execute();
     }
 
     @Override
@@ -135,9 +144,11 @@ public class MenageFragment extends Fragment {
     class LoadMenageAsync extends AsyncTask<Void, Void, List<Menage>>{
 
         ScanCheckDB db;
+        String codeAgent;
 
-        public LoadMenageAsync(ScanCheckDB db) {
+        public LoadMenageAsync(ScanCheckDB db, final String codeAgent) {
             this.db = db;
+            this.codeAgent = codeAgent;
         }
 
         @Override
@@ -152,7 +163,7 @@ public class MenageFragment extends Fragment {
 
         @Override
         protected List<Menage> doInBackground(Void... voids) {
-            return db.getIMenageDao().all();
+            return db.getIMenageDao().getByCodeAgentDenombrement(codeAgent);
         }
     }
 }

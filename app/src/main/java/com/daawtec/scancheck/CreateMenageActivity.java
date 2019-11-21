@@ -6,11 +6,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,8 +27,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daawtec.scancheck.adapters.MembreMenageAdapter;
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.Macaron;
+import com.daawtec.scancheck.entites.MembreMenage;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.utils.Constant;
@@ -39,12 +47,13 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     TextView mDateIdentificationTV, mCodeMacaronTV, mLatitudeTV, mLongitudeTV;
     EditText mNomResponsableET, mPrenomResponsableET, mVillageET, mTailleMenageET, mRecoPrenomET, mRecoNomET, mNombreCouchetteET;
-    Spinner mSexeSP;
+    Spinner mSexeSP, mTypeMenage;
     Button mSaveMenageBT, mGpsBT;
     Spinner mSiteDistributionSP;
+    RecyclerView mMembreMenageRV;
 
     String mSexe;
-    String  mDateIdentification;
+    String  mDateIdentification, mCodeTypeMenage;
     double mLatitude=0.0, mLongitude=0.0;
 
     private Calendar mCalendar = Calendar.getInstance();
@@ -52,6 +61,10 @@ public class CreateMenageActivity extends AppCompatActivity {
     ScanCheckDB db;
     String qrCode, mCodeSD, mCodeAgentIT;
     GPSAsyncTask gpsAsyncTask;
+    SharedPreferences mSharedPref;
+    String codeAgent, codeTypeAgent;
+    final String codeMenage = Utils.getTimeStamp();
+    MembreMenageAdapter mMembreMenageAdapter;
 
     boolean isAgentIT;
 
@@ -61,12 +74,18 @@ public class CreateMenageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_menage);
 
         db = ScanCheckDB.getDatabase(this);
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        codeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
+        codeTypeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, null);
 
         Intent intent = getIntent();
         qrCode = intent.getStringExtra(Constant.CODE_QR);
         mCodeAgentIT = intent.getStringExtra(Constant.KEY_CODE_AGENT_IT);
 
-        if (mCodeAgentIT != null) {
+        mMembreMenageAdapter = new MembreMenageAdapter(this);
+
+        if (codeTypeAgent.equals("1002")) {
             isAgentIT = true;
             setTitle("Enregistrer ménage spécial");
         } else {
@@ -99,6 +118,21 @@ public class CreateMenageActivity extends AppCompatActivity {
         mCodeMacaronTV.setText(qrCode + "");
         mLongitudeTV = findViewById(R.id.longitude_tv);
         mLatitudeTV = findViewById(R.id.latitude_tv);
+
+        mMembreMenageRV = findViewById(R.id.membre_menage_rv);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mMembreMenageRV.setLayoutManager(linearLayoutManager);
+        mMembreMenageRV.setHasFixedSize(true);
+        mMembreMenageRV.addItemDecoration(new DividerItemDecoration(this,linearLayoutManager.getOrientation()));
+        mMembreMenageRV.setAdapter(mMembreMenageAdapter);
+
+        Button addMembreMenage = findViewById(R.id.add_membre_menage_bt);
+        addMembreMenage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddMembreMenageDialog(CreateMenageActivity.this);
+            }
+        });
 
         if (isAgentIt){
             mRecoNomET.setVisibility(View.GONE);
@@ -163,6 +197,19 @@ public class CreateMenageActivity extends AppCompatActivity {
             }
         });
 
+        mTypeMenage = findViewById(R.id.type_menage_sp);
+        mTypeMenage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mCodeTypeMenage = (String) parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         loadSD();
 
     }
@@ -177,7 +224,10 @@ public class CreateMenageActivity extends AppCompatActivity {
         int tailleMenage = Utils.stringToInt(mTailleMenageET.getText().toString()) ;
         int nombreCouchette = Utils.stringToInt(mNombreCouchetteET.getText().toString());
 
-        String codeMenage = Utils.getTimeStamp();
+        // Pour les menages traditionnels, nous derivons le type par rapport au nombre des membres du menage
+        if (!isAgentIT){
+            mCodeTypeMenage = getTypeMenage(tailleMenage);
+        }
 
         boolean isValid = true;
 
@@ -199,13 +249,21 @@ public class CreateMenageActivity extends AppCompatActivity {
 
             mDateIdentification = Utils.formatDate(mCalendar.getTime());
 
-            int nombreMILD = Utils.computeMildNumber(tailleMenage);
+            int nombreMILD;
+            if (isAgentIT){
+                nombreMILD = nombreCouchette;
+            } else {
+                nombreMILD = Utils.computeMildNumber(tailleMenage);
+            }
+
             String codeMacaron = qrCode;
             Menage menage = new Menage(codeMenage, nomResponsable + " " + prenomResponsable, mSexe, village, tailleMenage,
                     mDateIdentification, mCodeSD, nombreMILD, mLatitude, mLongitude, codeMacaron, false);
             menage.recoNom = recoNom;
             menage.recoPrenom = recoPrenom;
             menage.nombreCouchette = nombreCouchette;
+            menage.codeAgentDenombrement = codeAgent;
+            menage.codeTypeMenage = mCodeTypeMenage;
 
             saveMenage(menage);
 
@@ -227,14 +285,16 @@ public class CreateMenageActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(CreateMenageActivity.this, "Erreur lors de l'enregistrement de Macaron", Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override
             protected long[] doInBackground(Void... voids) {
                 long[] results = db.getIMenageDao().insert(menage);
+
                 if (results[0] > 0) {
                     db.getIMacaronDao().updateMacaronState(true, menage.codeMacaron);
+                    long[] membreMenageIds = db.getIMembreMenageDao().insert(mMembreMenageAdapter.all());
+                    Log.e(TAG, "doInBackground: membre menages : " + membreMenageIds[0]);
                 }
                 return results;
             }
@@ -377,5 +437,72 @@ public class CreateMenageActivity extends AppCompatActivity {
 
             Log.e(TAG, "onCancelled: " + "LATITUDE : " + latitude + " LONGITUDE : " + longitude  );
         }
+    }
+
+    public String getTypeMenage(int nombrePersonne){
+        if (nombrePersonne > 0 && nombrePersonne < 3){
+            return "1";
+        } else if (nombrePersonne > 2 && nombrePersonne < 5) {
+            return "2";
+        } else if (nombrePersonne > 4 && nombrePersonne < 7){
+            return "3";
+        } else if (nombrePersonne > 6 && nombrePersonne < 9) {
+            return "4";
+        } else if (nombrePersonne >= 9) {
+            return "5";
+        }
+        return null;
+    }
+
+    public void showAddMembreMenageDialog(Context context) {
+        // create an alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Enregistrer le membre menage");
+
+        // set the custom layout
+        final View customLayout = getLayoutInflater().inflate(R.layout.dialog_create_membre_menage, null);
+        builder.setView(customLayout);
+        final EditText nomMembreET = customLayout.findViewById(R.id.nom_membre_menage_et);
+        final EditText prenomMembreET = customLayout.findViewById(R.id.prenom_membre_menage_et);
+        final Spinner sexeSP = customLayout.findViewById(R.id.sexe_sp);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String nom = nomMembreET.getText().toString();
+                String prenom = prenomMembreET.getText().toString();
+                String sexe = (String) sexeSP.getSelectedItem();
+                MembreMenage membreMenage = new MembreMenage();
+                membreMenage.CodeMembreMenage = Utils.getTimeStamp();
+                membreMenage.Nom = nom;
+                membreMenage.Prenom = prenom;
+                membreMenage.sexe = sexe;
+                membreMenage.CodeMenage = codeMenage;
+                getMembreMenage(membreMenage);
+
+            }
+        });
+
+        builder.setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public Void getMembreMenage(MembreMenage membreMenage){
+        if (mMembreMenageAdapter.getItemCount() < 10) {
+            mMembreMenageAdapter.add(membreMenage);
+            mMembreMenageAdapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(this, "Nombre maximum de membre ménage atteint", Toast.LENGTH_SHORT).show();
+        }
+
+        return null;
     }
 }

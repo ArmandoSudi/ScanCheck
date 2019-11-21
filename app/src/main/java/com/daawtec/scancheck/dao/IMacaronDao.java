@@ -29,6 +29,9 @@ public interface IMacaronDao {
     @Query("SELECT * FROM MACARON")
     List<Macaron> all();
 
+    @Query("SELECT * FROM MACARON WHERE CODE_AGENT=:codeAgent")
+    List<Macaron> getByCodeAgent(String codeAgent);
+
     @Query("SELECT * FROM MACARON WHERE CODE_MACARON=:codeMacaron")
     Macaron get(String codeMacaron);
 

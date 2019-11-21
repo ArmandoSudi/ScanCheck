@@ -14,7 +14,10 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName="MENAGE", foreignKeys = {
         @ForeignKey(entity = SiteDistribution.class, parentColumns = "CODE_SD", childColumns = "CODE_SD", onDelete = CASCADE),
-        @ForeignKey(entity = Macaron.class, parentColumns = "CODE_MACARON", childColumns = "CODE_MACARON", onDelete = CASCADE)
+        @ForeignKey(entity = Macaron.class, parentColumns = "CODE_MACARON", childColumns = "CODE_MACARON", onDelete = CASCADE),
+        @ForeignKey(entity = Agent.class, parentColumns = "CODE_AGENT", childColumns = "CODE_AGENT_DISTRIBUTION"),
+        @ForeignKey(entity = Agent.class, parentColumns = "CODE_AGENT", childColumns = "CODE_AGENT_DENOMBREMENT"),
+        @ForeignKey(entity = TypeMenage.class, parentColumns = "CODE_TYPE_MENAGE", childColumns = "CODE_TYPE_MENAGE")
 })
 public class Menage {
 
@@ -23,6 +26,22 @@ public class Menage {
     @ColumnInfo(name="CODE_MENAGE")
     @SerializedName("codeMenage")
     public String codeMenage;
+
+    @ColumnInfo(name="CODE_MACARON")
+    @SerializedName("codeMacaron")
+    public String codeMacaron;
+
+    @ColumnInfo(name="CODE_AGENT_DENOMBREMENT")
+    @SerializedName("CodeAgentDenombrement")
+    public String codeAgentDenombrement;
+
+    @ColumnInfo(name="CODE_AGENT_DISTRIBUTION")
+    @SerializedName("CodeAgentDistribution")
+    public String codeAgentDistribution;
+
+    @ColumnInfo(name="CODE_TYPE_MENAGE")
+    @SerializedName("CodeTypeMenage")
+    public String codeTypeMenage;
 
     @ColumnInfo(name="NOM_RESPONSABLE")
     @SerializedName("nomResponsable")
@@ -59,18 +78,6 @@ public class Menage {
     @ColumnInfo(name="LONGITUDE")
     @SerializedName("longitude")
     public double longitude;
-
-    @ColumnInfo(name="CODE_MACARON")
-    @SerializedName("codeMacaron")
-    public String codeMacaron;
-
-    @ColumnInfo(name="CODE_AGENT_DENOMBREMENT")
-    @SerializedName("CodeAgentDenombrement")
-    public String codeAgentDenombrement;
-
-    @ColumnInfo(name="CODE_AGENT_DISTRIBUTION")
-    @SerializedName("CodeAgentDistribution")
-    public String codeAgentDistribution;
 
     @ColumnInfo(name="RECO_NOM")
     @SerializedName("RecoNom")

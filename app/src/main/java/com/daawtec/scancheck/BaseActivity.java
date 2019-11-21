@@ -60,7 +60,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
     String mDateFormat = "dd/MM/yyyy";
     SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(mDateFormat, Locale.FRANCE);
     ScanCheckDB db;
-    String mCodeAs, mCodeSd, mCodeAgentDenombrement, mCodeAgentDist, mCodeAgentIT;
+    String mCodeAs, mCodeSd, mCodeAgent, mCodeAgentDist, mCodeAgentIT;
     boolean isAgentIT = false;
     String mCodeAsSD;
 
@@ -79,7 +79,6 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
         mCodeAs = intent.getStringExtra(Constant.KEY_CODE_AGENT_AS);
         mCodeSd = intent.getStringExtra(Constant.KEY_CODE_AGENT_SD);
-        mCodeAgentDenombrement = intent.getStringExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT);
         mCodeAgentDist = intent.getStringExtra(Constant.KEY_CODE_AGENT_DIST);
         mCodeAgentIT = intent.getStringExtra(Constant.KEY_CODE_AGENT_IT);
 
@@ -89,6 +88,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mSharedPref.edit();
+        mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
         db = ScanCheckDB.getDatabase(this);
 
         fab = findViewById(R.id.fab);
@@ -145,7 +145,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                 //Getting the passed result
                 String qrCode = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
                 Log.e(TAG, "onActivityResult: code macaron: " + qrCode );
-                Macaron macaron = new Macaron(qrCode, mCodeAs, mCodeAgentDenombrement,
+                Macaron macaron = new Macaron(qrCode, mCodeAs, mCodeAgent,
                         dateEnregistrement, false );
                 saveMacaron(macaron);
             }
@@ -172,7 +172,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
         switch(action){
             case Constant.ACTION_MACARON_ACTIVITY :
                 setTitle("Macarons");
-                mCurrentFragment = MacaronFragment.newInstance(mCodeAgentDenombrement, mCodeAs);
+                mCurrentFragment = MacaronFragment.newInstance(mCodeAgent, mCodeAs);
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mCurrentFragment)
                         .commit();
@@ -180,7 +180,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
             case Constant.ACTION_MENAGE_ACTIVITY:
                 if (isAgentIT) setTitle("Ménages speciaux");
                 else setTitle("Ménages");
-                mCurrentFragment = MenageFragment.newInstance(mCodeAgentDenombrement);
+                mCurrentFragment = MenageFragment.newInstance(mCodeAgent);
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mCurrentFragment)
                         .commit();
