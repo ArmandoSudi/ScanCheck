@@ -55,13 +55,13 @@ public class HomeActivity extends AppCompatActivity {
     List<ZoneSante> mZSs = new ArrayList<>();
     List<AirsSante> mASs = new ArrayList<>();
     List<SiteDistribution> mSDs = new ArrayList<>();
-    List<AgentDenombrement> mAgents = new ArrayList<>();
-    List<AgentDistribution> mAgentDistDemos = new ArrayList<>();
-    List<AgentDenombrement> mAgentDenombrementDemos = new ArrayList<>();
+    //List<AgentDenombrement> mAgents = new ArrayList<>();
+    //List<AgentDistribution> mAgentDistDemos = new ArrayList<>();
+    //List<AgentDenombrement> mAgentDenombrementDemos = new ArrayList<>();
     List<TypeAgent> mTypeAgents = new ArrayList<>();
-    List<Agent> mAgentDemos = new ArrayList<>();
-    List<Affectation> mAffectationDemos = new ArrayList<>();
-    List<TypeAgent> mTypeAgentDemos = new ArrayList<>();
+    //List<Agent> mAgentDemos = new ArrayList<>();
+    //List<Affectation> mAffectationDemos = new ArrayList<>();
+    //List<TypeAgent> mTypeAgentDemos = new ArrayList<>();
     List<TypeMenage> mTypeMenageDemos = new ArrayList<>();
 
     public static final int REQUEST_CODE_QR_SCAN = 101;
@@ -146,12 +146,12 @@ public class HomeActivity extends AppCompatActivity {
         if (mDPSs.size() > 0 &&
                 mZSs.size() > 0 &&
                 mASs.size() > 0 &&
-                mSDs.size() > 0 &&
+                //mSDs.size() > 0 &&
                 mTypeAgents.size() > 0 &&
-                mAgentDenombrementDemos.size() > 0 &&
-                mAgentDistDemos.size() > 0 &&
-                mAffectationDemos.size() > 0 &&
-                mAgentDemos.size() > 0 &&
+                //mAgentDenombrementDemos.size() > 0 &&
+                //mAgentDistDemos.size() > 0 &&
+                //mAffectationDemos.size() > 0 &&
+                //mAgentDemos.size() > 0 &&
                 mTypeMenageDemos.size() > 0)
         {
             Log.i(TAG, "canInsert: INSERTING VALUES IN THE DATABASE");
@@ -169,12 +169,12 @@ public class HomeActivity extends AppCompatActivity {
         getAiresSante();
         getZoneSante();
         getSiteDistributions();
-        getAgentDenombrementDemos();
-        getAgenDistributionsDemo();
+        //getAgentDenombrementDemos();
+        //getAgenDistributionsDemo();
 
         // Pour la demo de jeudi 21/11/2019
-        getAffectationsDemos();
-        getAgentDemos();
+        //getAffectationsDemos();
+        //getAgentDemos();
         getTypeAgent();
         getTypemenageDemo();
 
@@ -224,10 +224,10 @@ public class HomeActivity extends AppCompatActivity {
             long[] as_ids = db.getIAirSanteDao().insert(mASs);
             long[] sd_ids = db.getISiteDistributionDao().insert(mSDs);
             long[] typeAgents = db.getITypeAgentDao().insert(mTypeAgents);
-            long[] agents = db.getIAgentDenombrementDao().insert(mAgentDenombrementDemos);
-            long [] agentDist = db.getIAgentDistributionDao().insert(mAgentDistDemos);
-            long[] agent_ids = db.getIAgentDao().insert(mAgentDemos);
-            long[] affecation_ids = db.getIAffectation().insert(mAffectationDemos);
+            //long[] agents = db.getIAgentDenombrementDao().insert(mAgentDenombrementDemos);
+            //long [] agentDist = db.getIAgentDistributionDao().insert(mAgentDistDemos);
+            //long[] agent_ids = db.getIAgentDao().insert(mAgentDemos);
+            //long[] affecation_ids = db.getIAffectation().insert(mAffectationDemos);
             long[] typeMenage_ids = db.getITypeMenageDao().insert(mTypeMenageDemos);
 
             return null;
@@ -316,32 +316,32 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void getTypeAgent() {
-        mTypeAgents.add(new TypeAgent("1001", "AGENT DENOMBREMENT"));
-        mTypeAgents.add(new TypeAgent("1002", "IT DENOMBREMENT"));
+        mTypeAgents.add(new TypeAgent("AGENT_DENOMBREMENT"));
+        mTypeAgents.add(new TypeAgent("IT_DENOMBREMENT"));
     }
 
-    public void getAgentDenombrementDemos(){
+    /*public void getAgentDenombrementDemos(){
         mAgentDenombrementDemos.add(new AgentDenombrement("1501", "David","ADR1001", "1001"));
         mAgentDenombrementDemos.add(new AgentDenombrement("1502", "Alain", "ADR1001", "1002"));
         mAgentDenombrementDemos.add(new AgentDenombrement("1503", "Willy", "ADR1001", "1003"));
         mAgentDenombrementDemos.add(new AgentDenombrement("1504", "Willy", "ADR1001", "1004"));
-    }
+    }*/
 
-    public void getAgentDemos(){
+    /*public void getAgentDemos(){
         mAgentDemos.add(new Agent("1", "David", "1111"));
         mAgentDemos.add(new Agent("2", "Willy", "0000"));
-    }
+    }*/
 
-    public void getAffectationsDemos() {
+    /*public void getAffectationsDemos() {
         mAffectationDemos.add(new Affectation("1", "1", "1001", "ADR1001", "20/11/2019"));
         mAffectationDemos.add(new Affectation("2", "2", "1002", "ADR1001", "20/11/2019"));
-    }
+    }*/
 
-    public void getAgenDistributionsDemo() {
+    /*public void getAgenDistributionsDemo() {
         mAgentDistDemos.add(new AgentDistribution("100001", "Agent Dist 1", "role 1", "000001", "1001"));
         mAgentDistDemos.add(new AgentDistribution("100002", "Agent Dist 2", "role 2", "000001", "1002"));
         mAgentDistDemos.add(new AgentDistribution("100002", "Agent Dist 2", "role 2", "000001", "1003"));
-    }
+    }*/
 
     public void getTypemenageDemo(){
         mTypeMenageDemos.add(new TypeMenage("1", "Ménage 1-2", "MENAGE TRADITIONNEL"));

@@ -72,7 +72,7 @@ public class RapportFragment extends Fragment {
         mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
         mCodeTypeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, null);
 
-        if (mCodeTypeAgent.equals("1002")){
+        if (mCodeTypeAgent.equals(Constant.IT_DENOMBREMENT)){
             isItDenombrement = true;
         } else {
             isItDenombrement = false;

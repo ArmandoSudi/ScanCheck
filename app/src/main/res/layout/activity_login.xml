@@ -1,80 +1,104 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     tools:context=".LoginActivity">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".LoginActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="30dp">
+
+            <ImageView
+                android:layout_width="79dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/scancheck_colored_icon" />
+
+            <!--<ImageView android:src="@drawable/logo"
+                android:layout_width="155dp"
+                android:layout_height="72dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginLeft="0dp"/>-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="scancheck"
+                android:textColor="@color/colorYellow"
+                android:textSize="40sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="Plateforme de suivi de distribution des moustiquaires."
+                android:textColor="#fff"
+                android:textSize="15dp" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                app:srcCompat="@drawable/scancheck_icon" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Veuillez choisir le type d'agent"
-                android:paddingLeft="8dp"
-                android:textStyle="bold" />
+            android:orientation="vertical"
+            android:padding="20dp">
 
             <Spinner
                 android:id="@+id/type_agent_sp"
-                android:padding="8dp"
-                android:background="#efefef"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                style="@style/Widget.AppCompat.Spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:entries="@array/type_agent"></Spinner>
+                android:layout_height="?attr/dropdownListPreferredItemHeight"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/spinner_style"
+                android:dropDownWidth="300dp"
+                android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+                android:entries="@array/type_agent"
+                android:paddingRight="14dp"
+                android:popupBackground="@android:color/white"
+                android:popupElevation="3dp"
+                android:stateListAnimator="@drawable/spinner_sla" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:hint="Code d'authentification">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/code_et"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="text"/>
+                    android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
+                    android:drawablePadding="10dp"
+                    android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
 
             <Button
+
                 android:id="@+id/scan_bt"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="connexion" />
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/button_style1"
+                android:text="Connexion"
+                android:textColor="#fff" />
 
         </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-</android.support.constraint.ConstraintLayout>
+    </LinearLayout>
+</ScrollView>

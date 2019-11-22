@@ -58,12 +58,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        if (mCodeTypeAgent != null && mCodeTypeAgent.equals("1000")){
+        if (mCodeTypeAgent != null && mCodeTypeAgent.equals(Constant.AGENT_DENOMBREMENT)){
             mMicroplanCD.setVisibility(View.GONE);
             mGestionMildCD.setVisibility(View.GONE);
             mDistributionCD.setVisibility(View.GONE);
             mDenombrementCD.setVisibility(View.GONE);
-        } else if (mCodeTypeAgent != null && mCodeTypeAgent.equals("1002")) {
+        } else if (mCodeTypeAgent != null && mCodeTypeAgent.equals(Constant.IT_DENOMBREMENT)) {
             mDistributionCD.setVisibility(View.GONE);
             mGestionMildCD.setVisibility(View.GONE);
             mDenombrementCD.setVisibility(View.GONE);

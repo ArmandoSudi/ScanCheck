@@ -1,14 +1,15 @@
 package com.daawtec.scancheck.service;
 
-import com.daawtec.scancheck.entites.AffectationMacaronAS;
+import com.daawtec.scancheck.entites.Affectation;
+import com.daawtec.scancheck.entites.Agent;
 import com.daawtec.scancheck.entites.AgentDenombrement;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.BadVerification;
+import com.daawtec.scancheck.entites.Campagne;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
 import com.daawtec.scancheck.entites.InventairePhysique;
 import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.Menage;
-import com.daawtec.scancheck.entites.RelaisCommunautaire;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.entites.ZoneSante;
 
@@ -57,5 +58,16 @@ public interface ScanCheckApiInterface {
     Call<String> postInventairesPhysiques(List<InventairePhysique> inventairePhysiques);
 
 
+    @GET("campagne/{codeCampagne}")
+    Call<Campagne> getCampagne(@Path("codeCampagne") String codeCampagne);
+
+    @GET("agent/{codeAuthentification}")
+    Call<Agent> getAgent(@Path("codeAuthentification") String codeAuthentification);
+
+    @GET("affectation/{codeAgent}")
+    Call<Affectation> getAffectation(@Path("codeAgent") String codeAgent);
+
+    @GET("population-macro-plan/{codeAffectation}/{populationMacroPlan}")
+    Call<String> updatePopulationMacroPlan(@Path("codeAffectation") String codeAffectation, @Path("populationMacroPlan") int populationMacroPlan);
 
 }

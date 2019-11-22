@@ -33,4 +33,10 @@
 
     <style name="AppThemePurple.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppCustomTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>

@@ -29,11 +29,8 @@
     </string-array>
 
     <string-array name="type_agent">
-        <item>AGENT DENOMBREMENT</item>
-        <!--<item>SITE DISTRIBUTION</item>-->
-        <item>IT DENOMBREMENT</item>
-        <!--<item>IT DISTRIBUTION</item>-->
-        <!--<item>BUREAU CENTRAL ZONE</item>-->
+        <item>AGENT_DENOMBREMENT</item>
+        <item>IT_DENOMBREMENT</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

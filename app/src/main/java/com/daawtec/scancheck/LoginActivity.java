@@ -1,6 +1,7 @@
 package com.daawtec.scancheck;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -21,14 +22,21 @@ import android.widget.Toast;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.Affectation;
 import com.daawtec.scancheck.entites.Agent;
 import com.daawtec.scancheck.entites.AgentDenombrement;
 import com.daawtec.scancheck.entites.AgentDistribution;
+import com.daawtec.scancheck.entites.Campagne;
+import com.daawtec.scancheck.service.ScanCheckApi;
+import com.daawtec.scancheck.service.ScanCheckApiInterface;
 import com.daawtec.scancheck.utils.Constant;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,6 +49,10 @@ public class LoginActivity extends AppCompatActivity {
     String mTypeAgent;
     SharedPreferences mSharedPref;
     SharedPreferences.Editor mEditor;
+
+    ScanCheckApiInterface scanCheckApiInterface;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         db = ScanCheckDB.getDatabase(this);
+        scanCheckApiInterface = ScanCheckApi.getService();
 
         Button scanBT = findViewById(R.id.scan_bt);
         scanBT.setOnClickListener(new View.OnClickListener() {
@@ -105,55 +118,156 @@ public class LoginActivity extends AppCompatActivity {
     public void login(final String codeAuthentification){
 
         Log.e(TAG, "login: TYPE AGENT: " + mTypeAgent );
-        (new AsyncTask<Void, Void, Boolean>(){
-            Agent agent;
-            Intent intent;
-            @Override
-            protected void onPostExecute(Boolean value) {
-                super.onPostExecute(value);
+        new AuthentificationTask(codeAuthentification).execute();
+    }
 
-                if (value) startActivity(intent);
-                else
-                    Toast.makeText(LoginActivity.this, "Cet agent n'existe pas", Toast.LENGTH_SHORT).show();
+    final class AuthentificationTask extends AsyncTask<Void, Void, Boolean>{
+
+        public String codeAuthentification;
+
+        public AuthentificationTask(String codeAuthentification) {
+            this.codeAuthentification = codeAuthentification;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgress("Authentification en cours...");
+        }
+
+        Agent agent;
+        Intent intent;
+        @Override
+        protected void onPostExecute(Boolean value) {
+            super.onPostExecute(value);
+
+            hideProgress();
+
+            if (value) startActivity(intent);
+            else
+                Toast.makeText(LoginActivity.this, "Cet agent n'existe pas", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            if (mTypeAgent.equals(Constant.AGENT_DENOMBREMENT)) {
+
+                agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
+
+                if (agent != null) {
+                    // C'est un agent de denombrement qui vas utiliser l'application
+                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.AGENT_DENOMBREMENT);
+                    mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
+                    mEditor.commit();
+                    intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                    return true;
+                }
             }
 
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                if (mTypeAgent.equals(Constant.AGENT_DENOMBREMENT)) {
+            else if (mTypeAgent.equals(Constant.IT_DENOMBREMENT)){
 
-                    agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
+                agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
 
-                    if (agent != null) {
-                        // C'est un agent de denombrement qui vas utiliser l'application
-                        mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, "1000");
-                        mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
-                        mEditor.commit();
-                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                        return true;
-                    } else {
-                        return false;
+                if (agent != null) {
+                    // C'est un IT denombrement qui va utiliser l'application
+                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.IT_DENOMBREMENT);
+                    mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
+                    mEditor.commit();
+                    intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                    return true;
+                }
+            }
+
+            if(agent == null){
+
+                Agent agent = null;
+                Affectation affectation = null;
+                Campagne campagne = null;
+
+                try {
+                    Response<Agent> rAgent = scanCheckApiInterface.getAgent(codeAuthentification).execute();
+                    if (rAgent != null && rAgent.isSuccessful()) {
+
+                        agent = rAgent.body();
+
+                        if(agent != null){
+
+                            Response<Affectation> rAffectation = scanCheckApiInterface.getAffectation(agent.CodeAgent).execute();
+                            if (rAffectation != null && rAffectation.isSuccessful()) {
+
+                                affectation = rAffectation.body();
+
+                                if(affectation != null){
+
+                                    Response<Campagne> rCampagne = scanCheckApiInterface.getCampagne(affectation.CodeCampagne).execute();
+                                    if (rCampagne != null && rCampagne.isSuccessful()) {
+
+                                        campagne = rCampagne.body();
+                                    }
+                                }
+                            }
+                        }
                     }
+                }catch (Exception ex){
 
                 }
 
-                else if (mTypeAgent.equals("IT DENOMBREMENT")){
+                if(agent != null && affectation != null && mTypeAgent.equals(affectation.codeTypeAgent)){
 
-                    agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
+                    if (campagne != null) {
+                        try {
+                            db.getICampagneDao().insert(campagne);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
 
-                    if (agent != null) {
-                        // C'est un IT denombrement qui va utiliser l'application
-                        mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, "1002");
-                        mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
-                        mEditor.commit();
-                        intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                        return true;
-                    } else {
+                    try {
+                        db.getIAgentDao().insert(agent);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                         return false;
                     }
-                }
 
-                return false;
+                    if(affectation != null){
+                        try {
+                            db.getIAffectation().insert(affectation);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, affectation.codeTypeAgent);
+                    mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
+                    mEditor.commit();
+                    intent = new Intent(LoginActivity.this, DashboardActivity.class);
+
+                    return true;
+                }
             }
-        }).execute();
+
+            return false;
+        }
+    }
+
+    protected void showProgress(final String message) {
+        hideProgress();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgressDialog = ProgressDialog.show(LoginActivity.this, "", message);
+            }
+        });
+    }
+
+    protected void hideProgress() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
+            }
+        });
     }
 }
