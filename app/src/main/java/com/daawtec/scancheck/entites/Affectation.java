@@ -33,12 +33,15 @@ public class Affectation {
     public String codeTypeAgent;
 
     @ColumnInfo(name="DATE_AFFECTATION")
-    @SerializedName("DateAffectation")
+    @SerializedName("DateAffectationSTR")
     public String dateAffectation;
 
     @ColumnInfo(name="POPULATION_MACROPLAN")
     @SerializedName("PopulationMacronPlan")
     public int populationMacroPlan;
+
+    @ColumnInfo(name="CODE_CAMPAGNE")
+    public String CodeCampagne;
 
     public Affectation() {
     }

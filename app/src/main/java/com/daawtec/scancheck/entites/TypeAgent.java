@@ -13,11 +13,7 @@ public class TypeAgent {
     @ColumnInfo(name="CODE_TYPE_AGENT")
     public String codeTypeAgent;
 
-    @ColumnInfo(name="LIBELLE")
-    public String libelle;
-
-    public TypeAgent(String codeTypeAgent, String libelle) {
+    public TypeAgent(String codeTypeAgent) {
         this.codeTypeAgent = codeTypeAgent;
-        this.libelle = libelle;
     }
 }

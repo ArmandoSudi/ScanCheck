@@ -85,7 +85,7 @@ public class CreateMenageActivity extends AppCompatActivity {
 
         mMembreMenageAdapter = new MembreMenageAdapter(this);
 
-        if (codeTypeAgent.equals("1002")) {
+        if (codeTypeAgent.equals(Constant.IT_DENOMBREMENT)) {
             isAgentIT = true;
             setTitle("Enregistrer ménage spécial");
         } else {
@@ -134,10 +134,27 @@ public class CreateMenageActivity extends AppCompatActivity {
             }
         });
 
+        mTypeMenage = findViewById(R.id.type_menage_sp);
+
         if (isAgentIt){
             mRecoNomET.setVisibility(View.GONE);
             mRecoPrenomET.setVisibility(View.GONE);
             mTailleMenageET.setVisibility(View.GONE);
+            mTypeMenage.setVisibility(View.VISIBLE);
+            mTypeMenage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    mCodeTypeMenage = (String) parent.getItemAtPosition(position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }else{
+            mTypeMenage.setVisibility(View.GONE);
         }
 
         mSaveMenageBT = findViewById(R.id.save_menage_bt);
@@ -189,19 +206,6 @@ public class CreateMenageActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SiteDistribution sd = (SiteDistribution) parent.getItemAtPosition(position);
                 mCodeSD = sd.codeSD;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        mTypeMenage = findViewById(R.id.type_menage_sp);
-        mTypeMenage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mCodeTypeMenage = (String) parent.getItemAtPosition(position);
             }
 
             @Override
@@ -293,8 +297,11 @@ public class CreateMenageActivity extends AppCompatActivity {
 
                 if (results[0] > 0) {
                     db.getIMacaronDao().updateMacaronState(true, menage.codeMacaron);
-                    long[] membreMenageIds = db.getIMembreMenageDao().insert(mMembreMenageAdapter.all());
-                    Log.e(TAG, "doInBackground: membre menages : " + membreMenageIds[0]);
+                    if(mMembreMenageAdapter != null && mMembreMenageAdapter.all() != null
+                            && mMembreMenageAdapter.all().size() > 0) {
+                        long[] membreMenageIds = db.getIMembreMenageDao().insert(mMembreMenageAdapter.all());
+                    }
+                    //Log.e(TAG, "doInBackground: membre menages : " + membreMenageIds[0]);
                 }
                 return results;
             }

@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity(tableName = "CAMPAGNE")
 public class Campagne {
 
@@ -14,9 +16,11 @@ public class Campagne {
     public String CodeCampagne;
 
     @ColumnInfo(name="DATE_DEBUT")
+    @SerializedName("DateDebutSTR")
     public String DateDebut;
 
     @ColumnInfo(name="DATE_FIN")
+    @SerializedName("DateFinSTR")
     public String DateFin;
 
     @ColumnInfo(name="CODE_TYPE_CAMPAGNE")

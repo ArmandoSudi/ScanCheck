@@ -43,7 +43,9 @@ public class Constant {
     public static int REQUEST_CODE_LOGIN = 105;
     public static int REQUEST_CODE_CHECK_AGENT = 106;
 
-    public static final String AGENT_DENOMBREMENT = "AGENT DENOMBREMENT";
+    public static final String AGENT_DENOMBREMENT = "AGENT_DENOMBREMENT";
+    public static final String IT_DENOMBREMENT = "IT_DENOMBREMENT";
+
     public static final String AGENT_SUPERVISEUR = "agent_superviseur";
     public static final String AGENT_DISTRIBUTION = "AGENT DISTRIBUTION";
 
