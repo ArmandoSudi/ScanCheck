@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.MembreMenage;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.SiteDistribution;
+import com.daawtec.scancheck.entites.TypeMenage;
 import com.daawtec.scancheck.utils.Constant;
 import com.daawtec.scancheck.utils.GPSTracker;
 import com.daawtec.scancheck.utils.Utils;
@@ -51,6 +53,7 @@ public class CreateMenageActivity extends AppCompatActivity {
     Button mSaveMenageBT, mGpsBT;
     Spinner mSiteDistributionSP;
     RecyclerView mMembreMenageRV;
+    LinearLayout mMembreMenageLinearLayout;
 
     String mSexe;
     String  mDateIdentification, mCodeTypeMenage;
@@ -113,6 +116,7 @@ public class CreateMenageActivity extends AppCompatActivity {
         mRecoPrenomET = findViewById(R.id.reco_prenom_et);
         mTailleMenageET = findViewById(R.id.taille_menage_et);
         mNombreCouchetteET = findViewById(R.id.nombre_couchete_et);
+        mMembreMenageLinearLayout = findViewById(R.id.membre_menage_layout);
 
         mCodeMacaronTV = findViewById(R.id.code_macaron_tv);
         mCodeMacaronTV.setText(qrCode + "");
@@ -138,6 +142,7 @@ public class CreateMenageActivity extends AppCompatActivity {
             mRecoNomET.setVisibility(View.GONE);
             mRecoPrenomET.setVisibility(View.GONE);
             mTailleMenageET.setVisibility(View.GONE);
+            mMembreMenageLinearLayout.setVisibility(View.GONE);
         }
 
         mSaveMenageBT = findViewById(R.id.save_menage_bt);
@@ -201,7 +206,7 @@ public class CreateMenageActivity extends AppCompatActivity {
         mTypeMenage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mCodeTypeMenage = (String) parent.getItemAtPosition(position);
+                mCodeTypeMenage = Utils.getCodeTypeMenage((String)parent.getItemAtPosition(position));
             }
 
             @Override
@@ -289,12 +294,16 @@ public class CreateMenageActivity extends AppCompatActivity {
 
             @Override
             protected long[] doInBackground(Void... voids) {
+                Log.e(TAG, "doInBackground: " + menage.toString() );
                 long[] results = db.getIMenageDao().insert(menage);
 
                 if (results[0] > 0) {
                     db.getIMacaronDao().updateMacaronState(true, menage.codeMacaron);
-                    long[] membreMenageIds = db.getIMembreMenageDao().insert(mMembreMenageAdapter.all());
-                    Log.e(TAG, "doInBackground: membre menages : " + membreMenageIds[0]);
+                    if (mMembreMenageAdapter.getItemCount() > 0) {
+                        long[] membreMenageIds = db.getIMembreMenageDao().insert(mMembreMenageAdapter.all());
+                        Log.e(TAG, "doInBackground: membre menages : " + membreMenageIds[0]);
+                    }
+
                 }
                 return results;
             }

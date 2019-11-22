@@ -69,6 +69,31 @@ public class Utils {
         }
     }
 
+    public static String getCodeTypeMenage(String value){
+        switch(value){
+            case "ORPHELINAT":
+                return "6";
+            case "COUVENT":
+                return "7";
+            case "INTERNAT":
+                return "8";
+            case "FOSA":
+                return "9";
+            case "HOTEL":
+                return "10";
+            case "MILITAIRE EN DEPLACEMENT":
+                return "11";
+            case "DEPLACES":
+                return "12";
+            case "REFUGIE":
+                return "13";
+            case "PRISON":
+                return "14";
+            default:
+                return null;
+        }
+    }
+
     public static String addDayToDate(String date, int days) throws Exception {
         Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
         long day = 24*60*60*1000*days;

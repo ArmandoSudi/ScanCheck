@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.daawtec.scancheck.R;
+import com.daawtec.scancheck.entites.RapportDenombrement;
 import com.daawtec.scancheck.entites.RapportDenombrementIT;
 
 import java.util.ArrayList;
@@ -20,14 +21,14 @@ public class RapportDenombrementITAdapter extends RecyclerView.Adapter<RapportDe
     List<RapportDenombrementIT> rapportDenombrementITS = new ArrayList<>();
 
     public static class VH extends RecyclerView.ViewHolder {
-        TextView macaronRecuTV, macaronUtiliseTV, menageTV, orphelinatTV, couventTV;
+        TextView macaronRecuTV, macaronUtiliseTV, soldeTV, orphelinatTV, couventTV;
         TextView internatTV, fosaTV, hotelTV, militaireTV, deplaceTV, refugieTV, prisonTV;
 
         public VH(View view){
             super(view);
             macaronRecuTV = view.findViewById(R.id.macaron_recu_tv);
             macaronUtiliseTV = view.findViewById(R.id.macaron_utilise_tv);
-            menageTV = view.findViewById(R.id.menage_tv);
+            soldeTV = view.findViewById(R.id.solde_macaron_tv);
             orphelinatTV = view.findViewById(R.id.orphelinat_tv);
             couventTV = view.findViewById(R.id.couvent_tv);
             internatTV = view.findViewById(R.id.internat_tv);
@@ -40,21 +41,44 @@ public class RapportDenombrementITAdapter extends RecyclerView.Adapter<RapportDe
         }
     }
 
+    public RapportDenombrementITAdapter(Activity mActivity) {
+        this.mActivity = mActivity;
+    }
+
     @NonNull
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.rapport_denombrement_it_item, viewGroup, false);
-        return new RapportDenombrementITAdapter.VH(view);
+        return new VH(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-
+        final RapportDenombrementIT rapport = rapportDenombrementITS.get(position);
+        holder.macaronRecuTV.setText(rapport.macaronRecu + "");
+        holder.macaronUtiliseTV.setText(rapport.macaronUtilise + "");
+        holder.soldeTV.setText(rapport.solde + "");
+        holder.orphelinatTV.setText(rapport.orphelinat + "");
+        holder.couventTV.setText(rapport.couvent + "");
+        holder.internatTV.setText(rapport.internat + "");
+        holder.fosaTV.setText(rapport.fosa + "");
+        holder.hotelTV.setText(rapport.hotel + "");
+        holder.militaireTV.setText(rapport.deplaces + "");
+        holder.refugieTV.setText(rapport.refugie + "");
+        holder.prisonTV.setText(rapport.prison + "");
     }
 
     @Override
     public int getItemCount() {
         return rapportDenombrementITS.size();
+    }
+
+    public void addAll(List<RapportDenombrementIT> rapports){
+        rapportDenombrementITS.addAll(rapports);
+    }
+
+    public void clear() {
+        rapportDenombrementITS.clear();
     }
 }

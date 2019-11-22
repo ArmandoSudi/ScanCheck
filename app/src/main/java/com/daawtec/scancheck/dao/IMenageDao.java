@@ -53,6 +53,9 @@ public interface IMenageDao {
     @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE TAILLE_MENAGE=:tailleMenage AND DATE_IDENTIFICATION=:date")
     int getCountByTailleMenage(int tailleMenage, String date);
 
+    @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE CODE_TYPE_MENAGE=:codeTypeMenage")
+    int getCountByType(String codeTypeMenage );
+
     @Query("SELECT COUNT(*) AS NBR FROM MENAGE WHERE TAILLE_MENAGE > 9")
     int getCountZBigMenage();
 

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import com.daawtec.scancheck.entites.TypeMenage;
@@ -24,4 +25,7 @@ public interface ITypeMenageDao {
 
     @Delete
     int delete(TypeMenage...typeMenages);
+
+    @Query("SELECT COUNT(*) AS NBR FROM TYPE_MENAGE WHERE CODE_TYPE_MENAGE=:codeTypeMenage")
+    int getByCodeTypeMenage(String codeTypeMenage);
 }

@@ -233,6 +233,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
             @Override
             protected long[] doInBackground(Void... voids) {
+                Log.e(TAG, "doInBackground: " + macaron.toString() );
                 return db.getIMacaronDao().insert(macaron);
             }
         }).execute();

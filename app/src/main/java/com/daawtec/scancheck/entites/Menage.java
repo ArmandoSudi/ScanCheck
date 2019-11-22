@@ -167,6 +167,10 @@ public class Menage {
     public String toString() {
         return "Menage{" +
                 "codeMenage='" + codeMenage + '\'' +
+                ", codeMacaron='" + codeMacaron + '\'' +
+                ", codeAgentDenombrement='" + codeAgentDenombrement + '\'' +
+                ", codeAgentDistribution='" + codeAgentDistribution + '\'' +
+                ", codeTypeMenage='" + codeTypeMenage + '\'' +
                 ", nomResponsable='" + nomResponsable + '\'' +
                 ", sexeResponsable='" + sexeResponsable + '\'' +
                 ", village='" + village + '\'' +
@@ -176,9 +180,6 @@ public class Menage {
                 ", nombreMild=" + nombreMild +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ", codeMacaron='" + codeMacaron + '\'' +
-                ", codeAgentDenombrement='" + codeAgentDenombrement + '\'' +
-                ", codeAgentDistribution='" + codeAgentDistribution + '\'' +
                 ", recoNom='" + recoNom + '\'' +
                 ", recoPrenom='" + recoPrenom + '\'' +
                 ", commentaire='" + commentaire + '\'' +

@@ -19,9 +19,11 @@ import android.widget.Toast;
 
 import com.daawtec.scancheck.R;
 import com.daawtec.scancheck.adapters.RapportDenombrementAdapter;
+import com.daawtec.scancheck.adapters.RapportDenombrementITAdapter;
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.InventairePhysique;
 import com.daawtec.scancheck.entites.RapportDenombrement;
+import com.daawtec.scancheck.entites.RapportDenombrementIT;
 import com.daawtec.scancheck.utils.Constant;
 import com.daawtec.scancheck.utils.Utils;
 
@@ -32,7 +34,6 @@ import java.util.List;
 public class RapportFragment extends Fragment {
 
     private static final String TAG = "RapportFragment";
-    TextView mMenageOneTV, mMenageTwoTV, mMenageThreeTV, mMenageFourTV, mMenageFiveTV;
     TextView mMildAttenduTv, mMildRecuTV, mMildServiTV, mSoldeTV;
     RecyclerView mDenombrementRV;
 
@@ -40,6 +41,7 @@ public class RapportFragment extends Fragment {
     ScanCheckDB db;
     String mCodeAs, mCodeSd, mCodeAgent, mCodeTypeAgent;
     RapportDenombrementAdapter mRapportDenombrementAdapter;
+    RapportDenombrementITAdapter mRapportDenombrementITAdapter;
     boolean isItDenombrement;
     SharedPreferences mSharedPref;
 
@@ -78,6 +80,7 @@ public class RapportFragment extends Fragment {
 
         db = ScanCheckDB.getDatabase(mActivity);
         mRapportDenombrementAdapter = new RapportDenombrementAdapter(mActivity);
+        mRapportDenombrementITAdapter = new RapportDenombrementITAdapter(mActivity);
 
     }
 
@@ -85,10 +88,18 @@ public class RapportFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        loadRapportDenombrement();
+
+
 
         View view = inflater.inflate(R.layout.fragment_rapport_denombrement, container, false);
-        initViewDenombrement(view);
+        if (!isItDenombrement) {
+            loadRapportDenombrement();
+            initViewDenombrement(view);
+        }
+        else {
+            loadRapportDenombrementIT();
+            initViewITdenombrement(view);
+        }
         return view;
 
     }
@@ -99,7 +110,16 @@ public class RapportFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         mDenombrementRV.setLayoutManager(linearLayoutManager);
         mDenombrementRV.setHasFixedSize(true);
-        mDenombrementRV.setAdapter(mRapportDenombrementAdapter);
+        mDenombrementRV.setAdapter(mRapportDenombrementITAdapter);
+    }
+
+    public void initViewITdenombrement(View view){
+        mDenombrementRV = view.findViewById(R.id.rapport_denombrement_tv);
+        mRapportDenombrementITAdapter = new RapportDenombrementITAdapter(mActivity);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+        mDenombrementRV.setLayoutManager(linearLayoutManager);
+        mDenombrementRV.setHasFixedSize(true);
+        mDenombrementRV.setAdapter(mRapportDenombrementITAdapter);
     }
 
     public void initViewDistribution(View view) {
@@ -113,8 +133,6 @@ public class RapportFragment extends Fragment {
         (new AsyncTask<Void, Void, Boolean>(){
 
             List<RapportDenombrement> rapportDenombrements = new ArrayList<>();
-            // TODO set this up for the first macaron used
-//            String dayOne = mSharedPref.getString(Constant.KEY_JOUR_ONE, null);
 
             String dayOne = "20/11/2019";
             int macaronUtilise, menage, menageOneTwo, menageThreeFour, menageFiveSix, menageSevenEight, macaronRecu;
@@ -183,15 +201,69 @@ public class RapportFragment extends Fragment {
     }
 
     public void loadRapportDenombrementIT(){
-        (new AsyncTask<Void, Void, Void>(){
+        (new AsyncTask<Void, Void, Boolean>(){
+
+            List<RapportDenombrementIT> rapports = new ArrayList<>();
+            String dayOne = "20/11/2019";
+
+            int macaronUtilise, macaronRecu;
+            public int orphelinat, couvent, internat, fosa, hotel;
+            public int militaire, deplaces, refugie, prison;
+
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
+            protected void onPostExecute(Boolean value) {
+                super.onPostExecute(value);
+
+                if (value) {
+                    if (rapports.size() > 0){
+                        mRapportDenombrementITAdapter.addAll(rapports);
+                        mRapportDenombrementITAdapter.notifyDataSetChanged();
+                    }
+                }
             }
 
             @Override
-            protected Void doInBackground(Void... voids) {
-                return null;
+            protected Boolean doInBackground(Void... voids) {
+                for ( int i=0; i <= 7; i++){
+                    RapportDenombrementIT rapport = new RapportDenombrementIT();
+
+                    try {
+                        rapport.date = Utils.addDayToDate(dayOne,i);
+                        macaronRecu = db.getIMacaronDao().getNombreMacaronRecusFromDay(Utils.addDayToDate(dayOne,i));
+                        macaronUtilise = db.getIMacaronDao().getNombreMacaronUtilisesFromDay(Utils.addDayToDate(dayOne,i), true);
+                        orphelinat = db.getIMenageDao().getCountByType("6");
+                        couvent = db.getIMenageDao().getCountByType("7");
+                        internat = db.getIMenageDao().getCountByType("8");
+                        fosa = db.getIMenageDao().getCountByType("9");
+                        hotel = db.getIMenageDao().getCountByType("10");
+                        militaire = db.getIMenageDao().getCountByType("11");
+                        deplaces = db.getIMenageDao().getCountByType("12");
+                        refugie = db.getIMenageDao().getCountByType("13");
+                        prison = db.getIMenageDao().getCountByType("14");
+                    } catch (Exception e) {
+                        Log.e(TAG, "doInBackground: " + e.getMessage() );
+                        return false;
+                    }
+
+                    int soldeMacaron = macaronRecu - macaronUtilise;
+
+                    rapport.macaronRecu = macaronRecu;
+                    rapport.macaronUtilise = macaronUtilise;
+                    rapport.solde = soldeMacaron;
+                    rapport.orphelinat = orphelinat;
+                    rapport.couvent = couvent;
+                    rapport.internat = internat;
+                    rapport.fosa = fosa;
+                    rapport.hotel = hotel;
+                    rapport.militaire = militaire;
+                    rapport.deplaces = deplaces;
+                    rapport.refugie = refugie;
+                    rapport.prison = prison;
+
+                    if (macaronRecu > 0) rapports.add(rapport);
+
+                }
+                return true;
             }
         }).execute();
     }

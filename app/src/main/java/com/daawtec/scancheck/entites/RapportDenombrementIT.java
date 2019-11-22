@@ -4,7 +4,7 @@ public class RapportDenombrementIT {
     public String date;
     public int macaronRecu;
     public int macaronUtilise;
-    public int menage;
+    public int solde;
     public int orphelinat, couvent, internat, fosa, hotel;
     public int militaire, deplaces, refugie, prison;
 
@@ -14,7 +14,7 @@ public class RapportDenombrementIT {
                 "date='" + date + '\'' +
                 ", macaronRecu=" + macaronRecu +
                 ", macaronUtilise=" + macaronUtilise +
-                ", menage=" + menage +
+                ", solde=" + solde +
                 ", orphelinat=" + orphelinat +
                 ", couvent=" + couvent +
                 ", internat=" + internat +
