@@ -27,16 +27,16 @@ public class RapportDenombrementITAdapter extends RecyclerView.Adapter<RapportDe
             super(view);
             macaronRecuTV = view.findViewById(R.id.macaron_recu_tv);
             macaronUtiliseTV = view.findViewById(R.id.macaron_utilise_tv);
-//            menageTV = view.findViewById(R.id.menage_tv);
-//            orphelinatTV = view.findViewById(R.id.orphelinat_tv);
-//            couventTV = view.findViewById(R.id.couvent_tv);
-//            internatTV = view.findViewById(R.id.internat_tv);
-//            fosaTV = view.findViewById(R.id.fosa_tv);
-//            hotelTV = view.findViewById(R.id.hotel_tv);
-//            militaireTV = view.findViewById(R.id.militaire_tv);
-//            deplaceTV = view.findViewById(R.id.deplace_tv);
-//            refugieTV = view.findViewById(R.id.refugie_tv);
-//            prisonTV = view.findViewById(R.id.prison_tv);
+            menageTV = view.findViewById(R.id.menage_tv);
+            orphelinatTV = view.findViewById(R.id.orphelinat_tv);
+            couventTV = view.findViewById(R.id.couvent_tv);
+            internatTV = view.findViewById(R.id.internat_tv);
+            fosaTV = view.findViewById(R.id.fosa_tv);
+            hotelTV = view.findViewById(R.id.hotel_tv);
+            militaireTV = view.findViewById(R.id.militaire_tv);
+            deplaceTV = view.findViewById(R.id.deplace_tv);
+            refugieTV = view.findViewById(R.id.refugie_tv);
+            prisonTV = view.findViewById(R.id.prison_tv);
         }
     }
 
