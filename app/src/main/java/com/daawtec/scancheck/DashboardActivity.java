@@ -9,9 +9,7 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Toast;
 
-import com.daawtec.scancheck.entites.AgentDenombrement;
 import com.daawtec.scancheck.utils.Constant;
 
 import butterknife.BindView;

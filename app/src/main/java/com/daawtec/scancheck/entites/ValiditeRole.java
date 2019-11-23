@@ -9,8 +9,7 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 
 @Entity(tableName = "VALIDITE_ROLE", foreignKeys = {
-        @ForeignKey(entity = AgentDenombrement.class, parentColumns = "CODE_AGENT_DENOMBREMENT", childColumns = "CODE_AGENT"),
-        @ForeignKey(entity = TypeAgent.class, parentColumns = "CODE_TYPE_AGENT", childColumns = "CODE_TYPE_AGENT")
+        @ForeignKey(entity = Agent.class, parentColumns = "CODE_AGENT", childColumns = "CODE_AGENT")
 })
 public class ValiditeRole {
 

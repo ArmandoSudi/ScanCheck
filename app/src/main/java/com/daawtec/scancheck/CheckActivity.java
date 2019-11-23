@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.database.ScanCheckDB;
-import com.daawtec.scancheck.entites.AgentDenombrement;
+import com.daawtec.scancheck.entites.Agent;
 import com.daawtec.scancheck.utils.Constant;
 
 import butterknife.ButterKnife;
@@ -64,7 +64,7 @@ public class CheckActivity extends AppCompatActivity {
 
     public void checkAgent(final String codeQR){
         (new AsyncTask<Void, Void, Boolean>(){
-            AgentDenombrement agent;
+            Agent agent;
             @Override
             protected void onPostExecute(Boolean value) {
                 super.onPostExecute(value);
@@ -72,19 +72,15 @@ public class CheckActivity extends AppCompatActivity {
                 if (value){
                     Intent intent = new Intent(CheckActivity.this, SupervisionActivity.class);
                     intent.putExtra(Constant.KEY_CODE_AGENT_SUPERVISEUR, mCodeAgentSuperviseur);
-                    intent.putExtra(Constant.KEY_CODE_AGENT_ENQUETEUR, agent.codeAgentDenombrement);
+                    intent.putExtra(Constant.KEY_CODE_AGENT_ENQUETEUR, agent.CodeAgent);
                     startActivity(intent);
                 }
             }
 
             @Override
             protected Boolean doInBackground(Void... voids) {
-                agent = db.getIAgentDenombrementDao().get(codeQR);
-                if (agent instanceof AgentDenombrement){
-                        return true;
-                } else {
-                    return false;
-                }
+                agent = db.getIAgentDao().getAgentByAuth(codeQR);
+                return false;
             }
         }).execute();
     }

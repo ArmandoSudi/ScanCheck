@@ -2,7 +2,6 @@ package com.daawtec.scancheck.service;
 
 import com.daawtec.scancheck.entites.Affectation;
 import com.daawtec.scancheck.entites.Agent;
-import com.daawtec.scancheck.entites.AgentDenombrement;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.BadVerification;
 import com.daawtec.scancheck.entites.Campagne;
@@ -37,9 +36,6 @@ public interface ScanCheckApiInterface {
 
     @GET("sd/")
     Call<List<SiteDistribution>> getSiteDistribution();
-
-    @GET("agents/")
-    Call<List<AgentDenombrement>> getAgents();
 
     @GET("macarons/")
     Call<List<Macaron>> getMacarons();

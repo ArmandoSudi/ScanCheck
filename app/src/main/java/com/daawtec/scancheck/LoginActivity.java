@@ -8,11 +8,9 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.BoringLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,18 +18,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.Affectation;
 import com.daawtec.scancheck.entites.Agent;
-import com.daawtec.scancheck.entites.AgentDenombrement;
-import com.daawtec.scancheck.entites.AgentDistribution;
 import com.daawtec.scancheck.entites.Campagne;
 import com.daawtec.scancheck.service.ScanCheckApi;
 import com.daawtec.scancheck.service.ScanCheckApiInterface;
 import com.daawtec.scancheck.utils.Constant;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -136,6 +129,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         Agent agent;
+        Affectation affectation;
+
         Intent intent;
         @Override
         protected void onPostExecute(Boolean value) {
@@ -150,13 +145,31 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            if (mTypeAgent.equals(Constant.AGENT_DENOMBREMENT)) {
 
-                agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
+            agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
+            if(agent != null ){
 
-                if (agent != null) {
-                    // C'est un agent de denombrement qui vas utiliser l'application
-                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.AGENT_DENOMBREMENT);
+                affectation = db.getIAffectation().getAffectationByAgent(agent.CodeAgent);
+                if(affectation != null) {
+
+                    if(!affectation.codeTypeAgent.equals(mTypeAgent)){
+                        return false;
+                    }
+
+                    if (mTypeAgent.equals(Constant.AGENT_DENOMBREMENT)) {
+
+                        if (agent != null) {
+                            mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.AGENT_DENOMBREMENT);
+                        }
+                    } else if (mTypeAgent.equals(Constant.IT_DENOMBREMENT)) {
+
+                        if (agent != null) {
+                            mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.IT_DENOMBREMENT);
+                        }
+                    }else{
+                        return false;
+                    }
+
                     mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
                     mEditor.commit();
                     intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -164,24 +177,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
 
-            else if (mTypeAgent.equals(Constant.IT_DENOMBREMENT)){
+            if(agent == null || affectation == null){
 
-                agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
-
-                if (agent != null) {
-                    // C'est un IT denombrement qui va utiliser l'application
-                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.IT_DENOMBREMENT);
-                    mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
-                    mEditor.commit();
-                    intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                    return true;
-                }
-            }
-
-            if(agent == null){
-
-                Agent agent = null;
-                Affectation affectation = null;
                 Campagne campagne = null;
 
                 try {

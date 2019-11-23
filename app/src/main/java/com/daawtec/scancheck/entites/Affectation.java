@@ -9,10 +9,10 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "AFFECTATION", foreignKeys = {
-        @ForeignKey(entity=Agent.class, childColumns = "CODE_AGENT", parentColumns = "CODE_AGENT"),
-        @ForeignKey(entity=TypeAgent.class, childColumns = "CODE_TYPE_AGENT", parentColumns = "CODE_TYPE_AGENT"),
+        @ForeignKey(entity = Agent.class, childColumns = "CODE_AGENT", parentColumns = "CODE_AGENT"),
         @ForeignKey(entity = AirsSante.class, childColumns = "CODE_AS", parentColumns = "CODE_AS")
 })
+
 public class Affectation {
 
     @PrimaryKey

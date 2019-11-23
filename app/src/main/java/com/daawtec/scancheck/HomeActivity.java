@@ -16,15 +16,9 @@ import android.view.Menu;
 import android.widget.ProgressBar;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
-import com.daawtec.scancheck.entites.Affectation;
-import com.daawtec.scancheck.entites.Agent;
-import com.daawtec.scancheck.entites.AgentDenombrement;
-import com.daawtec.scancheck.entites.AgentDistribution;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
-import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.SiteDistribution;
-import com.daawtec.scancheck.entites.TypeAgent;
 import com.daawtec.scancheck.entites.TypeMenage;
 import com.daawtec.scancheck.entites.ZoneSante;
 import com.daawtec.scancheck.service.ScanCheckApi;
@@ -58,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
     //List<AgentDenombrement> mAgents = new ArrayList<>();
     //List<AgentDistribution> mAgentDistDemos = new ArrayList<>();
     //List<AgentDenombrement> mAgentDenombrementDemos = new ArrayList<>();
-    List<TypeAgent> mTypeAgents = new ArrayList<>();
+    //List<TypeAgent> mTypeAgents = new ArrayList<>();
     //List<Agent> mAgentDemos = new ArrayList<>();
     //List<Affectation> mAffectationDemos = new ArrayList<>();
     //List<TypeAgent> mTypeAgentDemos = new ArrayList<>();
@@ -147,7 +141,7 @@ public class HomeActivity extends AppCompatActivity {
                 mZSs.size() > 0 &&
                 mASs.size() > 0 &&
                 //mSDs.size() > 0 &&
-                mTypeAgents.size() > 0 &&
+                //mTypeAgents.size() > 0 &&
                 //mAgentDenombrementDemos.size() > 0 &&
                 //mAgentDistDemos.size() > 0 &&
                 //mAffectationDemos.size() > 0 &&
@@ -175,7 +169,7 @@ public class HomeActivity extends AppCompatActivity {
         // Pour la demo de jeudi 21/11/2019
         //getAffectationsDemos();
         //getAgentDemos();
-        getTypeAgent();
+        //getTypeAgent();
         getTypemenageDemo();
 
     }
@@ -223,7 +217,7 @@ public class HomeActivity extends AppCompatActivity {
             long[] zs_ids = db.getIZoneSanteDao().insert(mZSs);
             long[] as_ids = db.getIAirSanteDao().insert(mASs);
             long[] sd_ids = db.getISiteDistributionDao().insert(mSDs);
-            long[] typeAgents = db.getITypeAgentDao().insert(mTypeAgents);
+            //long[] typeAgents = db.getITypeAgentDao().insert(mTypeAgents);
             //long[] agents = db.getIAgentDenombrementDao().insert(mAgentDenombrementDemos);
             //long [] agentDist = db.getIAgentDistributionDao().insert(mAgentDistDemos);
             //long[] agent_ids = db.getIAgentDao().insert(mAgentDemos);
@@ -315,10 +309,10 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    public void getTypeAgent() {
+    /*public void getTypeAgent() {
         mTypeAgents.add(new TypeAgent("AGENT_DENOMBREMENT"));
         mTypeAgents.add(new TypeAgent("IT_DENOMBREMENT"));
-    }
+    }*/
 
     /*public void getAgentDenombrementDemos(){
         mAgentDenombrementDemos.add(new AgentDenombrement("1501", "David","ADR1001", "1001"));

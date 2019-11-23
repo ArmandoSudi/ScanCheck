@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.daawtec.scancheck.DashboardActivity;
 import com.daawtec.scancheck.R;
 import com.daawtec.scancheck.database.ScanCheckDB;
-import com.daawtec.scancheck.entites.AgentDenombrement;
 import com.daawtec.scancheck.entites.AirsSante;
 
 import java.util.List;
@@ -88,35 +87,6 @@ public class CreateAgentActivity extends AppCompatActivity {
 //            agent.codeAgentDenombrement = Utils.getTimeStamp();
 //            saveAgent(agent);
         }
-    }
-
-    public void saveAgent(final AgentDenombrement agent){
-        (new AsyncTask<Void, Void, long[]>(){
-            @Override
-            protected long[] doInBackground(Void... voids) {
-                return db.getIAgentDenombrementDao().insert(agent);
-            }
-
-            @Override
-            protected void onPostExecute(long[] longs) {
-                super.onPostExecute(longs);
-
-                if (longs[0] > 0){
-
-                    SharedPreferences.Editor editor = mSharedPref.edit();
-                    editor.putBoolean(Constant.KEY_IS_AGENT_REGISTERED, true);
-                    editor.putString(Constant.KEY_CODE_AGENT_DENOMBREMENT, agent.codeAgentDenombrement);
-                    editor.putString(Constant.KEY_CODE_AGENT_AS, agent.codeAs);
-                    editor.commit();
-
-                    Toast.makeText(CreateAgentActivity.this, "Agent crée", Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(CreateAgentActivity.this, DashboardActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
-            }
-        }).execute();
     }
 
     public void loadAirSante(){
