@@ -4,27 +4,24 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.daawtec.scancheck.entites.MembreMenage;
+import com.daawtec.scancheck.entites.CleRepartitionMenage;
 
 import java.util.List;
 
 @Dao
-public interface IMembreMenageDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long[] insert(MembreMenage...membreMenages);
+public interface ICleRepartitionMenageDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long[] insert(List<MembreMenage> membreMenages);
+    long[] insert(CleRepartitionMenage...cleRepartitionMenages);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long[] insert(List<CleRepartitionMenage> cleRepartitionMenages);
 
     @Update
-    int update(MembreMenage...membreMenages);
+    int update(CleRepartitionMenage...cleRepartitionMenages);
 
     @Delete
-    int delete(MembreMenage...membreMenages);
-
-    @Query("SELECT * FROM MEMBRE_MENAGE")
-    List<MembreMenage> all();
+    int delete(CleRepartitionMenage...cleRepartitionMenages);
 }

@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -54,6 +55,14 @@ public class Utils {
         return new SimpleDateFormat("yyMMddHHmmss").format(new Date());
     }
 
+    public static String generateId(){
+        Random random = new Random();
+        int random1 = 10 + random.nextInt(90);
+        String date = getTimeStamp();
+        int random2 = 100 + random.nextInt(900);
+        return Integer.toString(random1) + date + Integer.toString(random2);
+
+    }
     public static String formatDate(Date date){
         return new SimpleDateFormat("dd/MM/yyyy").format(date);
     }

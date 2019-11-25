@@ -30,17 +30,16 @@ import android.widget.Toast;
 
 import com.daawtec.scancheck.adapters.MembreMenageAdapter;
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.Affectation;
 import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.MembreMenage;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.SiteDistribution;
-import com.daawtec.scancheck.entites.TypeMenage;
 import com.daawtec.scancheck.utils.Constant;
 import com.daawtec.scancheck.utils.GPSTracker;
 import com.daawtec.scancheck.utils.Utils;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class CreateMenageActivity extends AppCompatActivity {
@@ -62,11 +61,11 @@ public class CreateMenageActivity extends AppCompatActivity {
     private Calendar mCalendar = Calendar.getInstance();
 
     ScanCheckDB db;
-    String qrCode, mCodeSD, mCodeAgentIT;
+    String qrCode, mCodeSD;
     GPSAsyncTask gpsAsyncTask;
     SharedPreferences mSharedPref;
-    String codeAgent, codeTypeAgent;
-    final String codeMenage = Utils.getTimeStamp();
+    String mCodeAgent, codeTypeAgent;
+    final String codeMenage = Utils.generateId();
     MembreMenageAdapter mMembreMenageAdapter;
 
     boolean isAgentIT;
@@ -79,16 +78,15 @@ public class CreateMenageActivity extends AppCompatActivity {
         db = ScanCheckDB.getDatabase(this);
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        codeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
+        mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
         codeTypeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, null);
 
         Intent intent = getIntent();
         qrCode = intent.getStringExtra(Constant.CODE_QR);
-        mCodeAgentIT = intent.getStringExtra(Constant.KEY_CODE_AGENT_IT);
 
         mMembreMenageAdapter = new MembreMenageAdapter(this);
 
-        if (codeTypeAgent.equals("1002")) {
+        if (codeTypeAgent.equals(Constant.IT_DENOMBREMENT)) {
             isAgentIT = true;
             setTitle("Enregistrer ménage spécial");
         } else {
@@ -237,12 +235,13 @@ public class CreateMenageActivity extends AppCompatActivity {
         boolean isValid = true;
 
         // Validation Menage
-//        if (nomResponsable.equals("")){ isValid = false;}
+        if (nomResponsable.equals("")){ isValid = false;}
 //
-//        if (tailleMenage == 0){ isValid = false;}
+        if (tailleMenage == 0){ isValid = false;}
 //        if (mCodeSD == null) isValid = false;
-//        if (mLatitude == 0.0) isValid = false;
-//        if (mLongitude == 0.0) isValid = false;
+        if (mLatitude == 0.0) isValid = false;
+        if (mLongitude == 0.0) isValid = false;
+        if (nombreCouchette < 0) isValid = false;
 
 //        if (!isAgentIT) {
 //            if (village.equals("")) { isValid = false; }
@@ -267,7 +266,7 @@ public class CreateMenageActivity extends AppCompatActivity {
             menage.recoNom = recoNom;
             menage.recoPrenom = recoPrenom;
             menage.nombreCouchette = nombreCouchette;
-            menage.codeAgentDenombrement = codeAgent;
+            menage.codeAgentDenombrement = mCodeAgent;
             menage.codeTypeMenage = mCodeTypeMenage;
 
             saveMenage(menage);
@@ -357,7 +356,8 @@ public class CreateMenageActivity extends AppCompatActivity {
 
             @Override
             protected List<SiteDistribution> doInBackground(Void... voids) {
-                return db.getISiteDistributionDao().all();
+                Affectation affectation = db.getIAffectation().getAffectationByAgent(mCodeAgent);
+                return db.getISiteDistributionDao().get(affectation.CodeAs);
             }
         }).execute();
 
@@ -450,15 +450,15 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     public String getTypeMenage(int nombrePersonne){
         if (nombrePersonne > 0 && nombrePersonne < 3){
-            return "1";
+            return "1001";
         } else if (nombrePersonne > 2 && nombrePersonne < 5) {
-            return "2";
+            return "1002";
         } else if (nombrePersonne > 4 && nombrePersonne < 7){
-            return "3";
+            return "1003";
         } else if (nombrePersonne > 6 && nombrePersonne < 9) {
-            return "4";
+            return "1004";
         } else if (nombrePersonne >= 9) {
-            return "5";
+            return "1005";
         }
         return null;
     }

@@ -17,19 +17,31 @@
         android:fontFamily="sans-serif"
         android:hint="Entrez le nom du site de distribution"/>
 
-    <TextView
+    <EditText
+        android:id="@+id/population_et"
+        android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:text="Choisir l'Aire de santé"/>
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:hint="Entrez le nombre de la Population Macro"/>
 
-    <Spinner
-        android:id="@+id/as_sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="4dp"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:layout_marginRight="4dp"-->
+        <!--android:text="Choisir l'Aire de santé"/>-->
+
+    <!--<Spinner-->
+        <!--android:id="@+id/as_sp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:layout_marginRight="4dp"-->
+        <!--android:layout_marginBottom="16dp"/>-->
 </LinearLayout>

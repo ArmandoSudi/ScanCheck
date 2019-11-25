@@ -20,6 +20,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,6 +33,7 @@ import android.widget.Toast;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.Affectation;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.SiteDistribution;
@@ -39,6 +43,7 @@ import com.daawtec.scancheck.ui.MenageFragment;
 import com.daawtec.scancheck.ui.RapportFragment;
 import com.daawtec.scancheck.ui.SiteDistributionFragment;
 import com.daawtec.scancheck.utils.Constant;
+import com.daawtec.scancheck.utils.SyncAsyncTask;
 import com.daawtec.scancheck.utils.Utils;
 
 import java.text.SimpleDateFormat;
@@ -60,7 +65,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
     String mDateFormat = "dd/MM/yyyy";
     SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(mDateFormat, Locale.FRANCE);
     ScanCheckDB db;
-    String mCodeAs, mCodeSd, mCodeAgent, mCodeAgentDist, mCodeAgentIT;
+    String mCodeAs, mCodeSd, mCodeAgent, mCodeTypeAgent;
     boolean isAgentIT = false;
     String mCodeAsSD;
 
@@ -79,17 +84,19 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
         mCodeAs = intent.getStringExtra(Constant.KEY_CODE_AGENT_AS);
         mCodeSd = intent.getStringExtra(Constant.KEY_CODE_AGENT_SD);
-        mCodeAgentDist = intent.getStringExtra(Constant.KEY_CODE_AGENT_DIST);
-        mCodeAgentIT = intent.getStringExtra(Constant.KEY_CODE_AGENT_IT);
-
-        if (mCodeAgentIT != null) {
-            isAgentIT = true;
-        }
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mSharedPref.edit();
         mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
+        mCodeTypeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
         db = ScanCheckDB.getDatabase(this);
+
+        if (mCodeTypeAgent.equals(Constant.IT_DENOMBREMENT)) {
+            isAgentIT = true;
+            setTitle("Enregistrer ménage spécial");
+        } else {
+            setTitle("Enregistrer ménage");
+        }
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +169,26 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.base_activity_menu, menu);
+
+        // return true so that the menu pop up is opened
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_synchroniser){
+            new SyncAsyncTask(this).execute();
+        }
+
+        return true;
+    }
+
+    @Override
     public void onFragmentInteraction(Uri uri) {
         mFragmentManager.beginTransaction()
                 .replace(R.id.container, mCurrentFragment)
@@ -187,7 +214,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                 break;
                 case Constant.ACTION_DISTRIBUTION_ACTIVITY:
                     setTitle("Distribution");
-                    mCurrentFragment = DistributionFragment.newInstance(mCodeAgentDist);
+                    mCurrentFragment = DistributionFragment.newInstance("");
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, mCurrentFragment)
                         .commit();
@@ -234,6 +261,8 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
             @Override
             protected long[] doInBackground(Void... voids) {
                 Log.e(TAG, "doInBackground: " + macaron.toString() );
+                Affectation affectation = db.getIAffectation().getAffectationByAgent(mCodeAgent);
+                macaron.codeAs = affectation.CodeAs;
                 return db.getIMacaronDao().insert(macaron);
             }
         }).execute();
@@ -250,7 +279,6 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                     } else {
                         Intent intent = new Intent(BaseActivity.this, CreateMenageActivity.class);
                         intent.putExtra(Constant.CODE_QR, macaron.codeMacaron);
-                        if (mCodeAgentIT != null) intent.putExtra(Constant.KEY_CODE_AGENT_IT, mCodeAgentIT);
                         startActivityForResult(intent, Constant.CODE_ACTION_ADD_MENAGE);
                     }
                 } else {
@@ -275,27 +303,29 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
         final View customLayout = getLayoutInflater().inflate(R.layout.dialog_confirmation_mild, null);
         builder.setView(customLayout);
         final EditText nomET = customLayout.findViewById(R.id.nombre_mild_et);
-        final Spinner asSP = customLayout.findViewById(R.id.as_sp);
-        loadAs(asSP);
+        final EditText populationET = customLayout.findViewById(R.id.population_et);
+//        final Spinner asSP = customLayout.findViewById(R.id.as_sp);
+//        loadAs(asSP);
 
-        asSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                AirsSante as = (AirsSante) parent.getItemAtPosition(position);
-                mCodeAsSD = as.getCodeAS();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        asSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                AirsSante as = (AirsSante) parent.getItemAtPosition(position);
+//                mCodeAsSD = as.getCodeAS();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String nom = nomET.getText().toString();
-                saveSD(nom);
+                int population = Integer.parseInt(populationET.getText().toString());
+                saveSD(nom, population);
             }
         });
 
@@ -311,7 +341,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
         dialog.show();
     }
 
-    public void saveSD(final String nom){
+    public void saveSD(final String nom, final int population){
         (new AsyncTask<Void, Void, long[]>(){
             @Override
             protected void onPostExecute(long[] longs) {
@@ -328,9 +358,15 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
             @Override
             protected long[] doInBackground(Void... voids) {
                 SiteDistribution site = new SiteDistribution();
-                site.codeSD = Utils.getTimeStamp();
-                site.codeAS = mCodeAsSD;
+                site.codeSD = Utils.generateId();
+                Affectation affectation = db.getIAffectation().getAffectationByAgent(mCodeAgent);
+
+                site.codeAS = affectation.CodeAs;
                 site.nom = nom;
+
+                affectation.populationMacroPlan = population;
+                db.getIAffectation().update(affectation);
+
                 return db.getISiteDistributionDao().insert(site);
             }
         }).execute();

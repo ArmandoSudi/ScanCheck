@@ -30,4 +30,7 @@ public interface IAffectationDao {
 
     @Query("SELECT * FROM AFFECTATION WHERE CODE_AGENT=:codeAgent")
     Affectation getAffectationByAgent(String codeAgent);
+
+    @Query("SELECT * FROM AFFECTATION")
+    List<Affectation> all();
 }

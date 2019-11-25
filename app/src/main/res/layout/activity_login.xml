@@ -28,11 +28,11 @@
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/scancheck_colored_icon" />
 
-            <!--<ImageView android:src="@drawable/logo"
-                android:layout_width="155dp"
-                android:layout_height="72dp"
-                android:layout_marginBottom="24dp"
-                android:layout_marginLeft="0dp"/>-->
+            <!--<ImageView android:src="@drawable/logo"-->
+                <!--android:layout_width="155dp"-->
+                <!--android:layout_height="72dp"-->
+                <!--android:layout_marginBottom="24dp"-->
+                <!--android:layout_marginLeft="0dp"/>-->
 
             <TextView
                 android:layout_width="wrap_content"

@@ -28,6 +28,7 @@ import com.daawtec.scancheck.entites.Agent;
 import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.BadVerification;
 import com.daawtec.scancheck.entites.Campagne;
+import com.daawtec.scancheck.entites.CleRepartitionMenage;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
 import com.daawtec.scancheck.entites.InventairePhysique;
 import com.daawtec.scancheck.entites.Macaron;
@@ -58,7 +59,7 @@ import com.daawtec.scancheck.utils.DateConverts;
         Affectation.class,
         TypeMenage.class,
         MembreMenage.class,
-        Campagne.class},
+        Campagne.class,},
         version = 23
 )
 @TypeConverters(DateConverts.class)

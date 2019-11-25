@@ -12,6 +12,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -114,6 +117,25 @@ public class LoginActivity extends AppCompatActivity {
         new AuthentificationTask(codeAuthentification).execute();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.login_activity_menu, menu);
+
+        // return true so that the menu pop up is opened
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_recuperer_parametres){
+
+        }
+
+        return true;
+    }
+
     final class AuthentificationTask extends AsyncTask<Void, Void, Boolean>{
 
         public String codeAuthentification;
@@ -130,8 +152,8 @@ public class LoginActivity extends AppCompatActivity {
 
         Agent agent;
         Affectation affectation;
-
         Intent intent;
+
         @Override
         protected void onPostExecute(Boolean value) {
             super.onPostExecute(value);
@@ -147,29 +169,28 @@ public class LoginActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... voids) {
 
             agent = db.getIAgentDao().getAgentByAuth(codeAuthentification);
+
+            // L'agent existe deja dans la base des donnees
             if(agent != null ){
 
                 affectation = db.getIAffectation().getAffectationByAgent(agent.CodeAgent);
                 if(affectation != null) {
 
+                    // retouner FAUX si le role choisi pour l'authentification n'est pas affecte a l'agent.
                     if(!affectation.codeTypeAgent.equals(mTypeAgent)){
                         return false;
                     }
 
+                    // Enregistrer de facon globable le role de l'agent
                     if (mTypeAgent.equals(Constant.AGENT_DENOMBREMENT)) {
-
-                        if (agent != null) {
-                            mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.AGENT_DENOMBREMENT);
-                        }
+                        mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.AGENT_DENOMBREMENT);
                     } else if (mTypeAgent.equals(Constant.IT_DENOMBREMENT)) {
-
-                        if (agent != null) {
-                            mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.IT_DENOMBREMENT);
-                        }
+                        mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, Constant.IT_DENOMBREMENT);
                     }else{
                         return false;
                     }
 
+                    // Enregistrer de facon globale le code de l'agent
                     mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
                     mEditor.commit();
                     intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -177,71 +198,72 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
 
-            if(agent == null || affectation == null){
-
-                Campagne campagne = null;
-
-                try {
-                    Response<Agent> rAgent = scanCheckApiInterface.getAgent(codeAuthentification).execute();
-                    if (rAgent != null && rAgent.isSuccessful()) {
-
-                        agent = rAgent.body();
-
-                        if(agent != null){
-
-                            Response<Affectation> rAffectation = scanCheckApiInterface.getAffectation(agent.CodeAgent).execute();
-                            if (rAffectation != null && rAffectation.isSuccessful()) {
-
-                                affectation = rAffectation.body();
-
-                                if(affectation != null){
-
-                                    Response<Campagne> rCampagne = scanCheckApiInterface.getCampagne(affectation.CodeCampagne).execute();
-                                    if (rCampagne != null && rCampagne.isSuccessful()) {
-
-                                        campagne = rCampagne.body();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }catch (Exception ex){
-
-                }
-
-                if(agent != null && affectation != null && mTypeAgent.equals(affectation.codeTypeAgent)){
-
-                    if (campagne != null) {
-                        try {
-                            db.getICampagneDao().insert(campagne);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-
-                    try {
-                        db.getIAgentDao().insert(agent);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        return false;
-                    }
-
-                    if(affectation != null){
-                        try {
-                            db.getIAffectation().insert(affectation);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-
-                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, affectation.codeTypeAgent);
-                    mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
-                    mEditor.commit();
-                    intent = new Intent(LoginActivity.this, DashboardActivity.class);
-
-                    return true;
-                }
-            }
+            // Premier login de l'agent, aller se connecter en ligne pour avoir ses informations
+//            if(agent == null || affectation == null){
+//
+//                Campagne campagne = null;
+//
+//                try {
+//                    Response<Agent> rAgent = scanCheckApiInterface.getAgent(codeAuthentification).execute();
+//                    if (rAgent != null && rAgent.isSuccessful()) {
+//
+//                        agent = rAgent.body();
+//
+//                        if(agent != null){
+//
+//                            Response<Affectation> rAffectation = scanCheckApiInterface.getAffectation(agent.CodeAgent).execute();
+//                            if (rAffectation != null && rAffectation.isSuccessful()) {
+//
+//                                affectation = rAffectation.body();
+//
+//                                if(affectation != null){
+//
+//                                    Response<Campagne> rCampagne = scanCheckApiInterface.getCampagne(affectation.CodeCampagne).execute();
+//                                    if (rCampagne != null && rCampagne.isSuccessful()) {
+//
+//                                        campagne = rCampagne.body();
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }catch (Exception ex){
+//
+//                }
+//
+//                if(agent != null && affectation != null && mTypeAgent.equals(affectation.codeTypeAgent)){
+//
+//                    if (campagne != null) {
+//                        try {
+//                            db.getICampagneDao().insert(campagne);
+//                        } catch (Exception ex) {
+//                            ex.printStackTrace();
+//                        }
+//                    }
+//
+//                    try {
+//                        db.getIAgentDao().insert(agent);
+//                    } catch (Exception ex) {
+//                        ex.printStackTrace();
+//                        return false;
+//                    }
+//
+//                    if(affectation != null){
+//                        try {
+//                            db.getIAffectation().insert(affectation);
+//                        } catch (Exception ex) {
+//                            ex.printStackTrace();
+//                        }
+//                    }
+//
+//                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, affectation.codeTypeAgent);
+//                    mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
+//                    mEditor.commit();
+//                    intent = new Intent(LoginActivity.this, DashboardActivity.class);
+//
+//                    return true;
+//                }
+//            }
 
             return false;
         }

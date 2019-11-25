@@ -53,4 +53,5 @@ public class Affectation {
         this.dateAffectation = dateAffectation;
         this.CodeAs = codeAs;
     }
+
 }

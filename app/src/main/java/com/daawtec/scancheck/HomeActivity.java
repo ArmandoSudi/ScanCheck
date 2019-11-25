@@ -16,7 +16,10 @@ import android.view.Menu;
 import android.widget.ProgressBar;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
+import com.daawtec.scancheck.entites.Affectation;
+import com.daawtec.scancheck.entites.Agent;
 import com.daawtec.scancheck.entites.AirsSante;
+import com.daawtec.scancheck.entites.Campagne;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.entites.TypeMenage;
@@ -26,6 +29,7 @@ import com.daawtec.scancheck.service.ScanCheckApiInterface;
 
 import com.daawtec.scancheck.utils.Constant;
 
+import java.lang.annotation.AnnotationFormatError;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,13 +53,9 @@ public class HomeActivity extends AppCompatActivity {
     List<ZoneSante> mZSs = new ArrayList<>();
     List<AirsSante> mASs = new ArrayList<>();
     List<SiteDistribution> mSDs = new ArrayList<>();
-    //List<AgentDenombrement> mAgents = new ArrayList<>();
-    //List<AgentDistribution> mAgentDistDemos = new ArrayList<>();
-    //List<AgentDenombrement> mAgentDenombrementDemos = new ArrayList<>();
-    //List<TypeAgent> mTypeAgents = new ArrayList<>();
-    //List<Agent> mAgentDemos = new ArrayList<>();
-    //List<Affectation> mAffectationDemos = new ArrayList<>();
-    //List<TypeAgent> mTypeAgentDemos = new ArrayList<>();
+    List<Agent> mAgents = new ArrayList<>();
+    List<Campagne> mCampagnes = new ArrayList<>();
+    List<Affectation> mAffectations = new ArrayList<>();
     List<TypeMenage> mTypeMenageDemos = new ArrayList<>();
 
     public static final int REQUEST_CODE_QR_SCAN = 101;
@@ -140,13 +140,9 @@ public class HomeActivity extends AppCompatActivity {
         if (mDPSs.size() > 0 &&
                 mZSs.size() > 0 &&
                 mASs.size() > 0 &&
-                //mSDs.size() > 0 &&
-                //mTypeAgents.size() > 0 &&
-                //mAgentDenombrementDemos.size() > 0 &&
-                //mAgentDistDemos.size() > 0 &&
-                //mAffectationDemos.size() > 0 &&
-                //mAgentDemos.size() > 0 &&
-                mTypeMenageDemos.size() > 0)
+                mAgents.size() > 0 &&
+                mAffectations.size() > 0 &&
+                mCampagnes.size() > 0 )
         {
             Log.i(TAG, "canInsert: INSERTING VALUES IN THE DATABASE");
             new InitDB(db).execute();
@@ -163,13 +159,11 @@ public class HomeActivity extends AppCompatActivity {
         getAiresSante();
         getZoneSante();
         getSiteDistributions();
-        //getAgentDenombrementDemos();
-        //getAgenDistributionsDemo();
 
-        // Pour la demo de jeudi 21/11/2019
-        //getAffectationsDemos();
-        //getAgentDemos();
-        //getTypeAgent();
+        getAgents();
+        getAffectations();
+        getCampagnes();
+
         getTypemenageDemo();
 
     }
@@ -217,12 +211,10 @@ public class HomeActivity extends AppCompatActivity {
             long[] zs_ids = db.getIZoneSanteDao().insert(mZSs);
             long[] as_ids = db.getIAirSanteDao().insert(mASs);
             long[] sd_ids = db.getISiteDistributionDao().insert(mSDs);
-            //long[] typeAgents = db.getITypeAgentDao().insert(mTypeAgents);
-            //long[] agents = db.getIAgentDenombrementDao().insert(mAgentDenombrementDemos);
-            //long [] agentDist = db.getIAgentDistributionDao().insert(mAgentDistDemos);
-            //long[] agent_ids = db.getIAgentDao().insert(mAgentDemos);
-            //long[] affecation_ids = db.getIAffectation().insert(mAffectationDemos);
-            long[] typeMenage_ids = db.getITypeMenageDao().insert(mTypeMenageDemos);
+            long[] campagne_ids = db.getICampagneDao().insert(mCampagnes);
+            long[] agent_ids = db.getIAgentDao().insert(mAgents);
+            long[] affecation_ids = db.getIAffectation().insert(mAffectations);
+            long[] type_menage_ids = db.getITypeMenageDao().insert(mTypeMenageDemos);
 
             return null;
         }
@@ -309,49 +301,81 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    /*public void getTypeAgent() {
-        mTypeAgents.add(new TypeAgent("AGENT_DENOMBREMENT"));
-        mTypeAgents.add(new TypeAgent("IT_DENOMBREMENT"));
-    }*/
+    public void getAgents(){
+        scanCheckApiInterface.getAgents().enqueue(new Callback<List<Agent>>() {
+            @Override
+            public void onResponse(Call<List<Agent>> call, Response<List<Agent>> response) {
+                if (response.isSuccessful()){
+                    if (response.body() != null) {
+                        mAgents.addAll(response.body());
+                        Log.d(TAG, "onResponse: Liste des Agents : " + mAgents.size());
+                        canInsert();
+                    }
+                }
+            }
 
-    /*public void getAgentDenombrementDemos(){
-        mAgentDenombrementDemos.add(new AgentDenombrement("1501", "David","ADR1001", "1001"));
-        mAgentDenombrementDemos.add(new AgentDenombrement("1502", "Alain", "ADR1001", "1002"));
-        mAgentDenombrementDemos.add(new AgentDenombrement("1503", "Willy", "ADR1001", "1003"));
-        mAgentDenombrementDemos.add(new AgentDenombrement("1504", "Willy", "ADR1001", "1004"));
-    }*/
+            @Override
+            public void onFailure(Call<List<Agent>> call, Throwable t) {
+                Log.e(TAG, "getSiteDistribution onFailure: NETWORK FAILURE");
+            }
+        });
+    }
 
-    /*public void getAgentDemos(){
-        mAgentDemos.add(new Agent("1", "David", "1111"));
-        mAgentDemos.add(new Agent("2", "Willy", "0000"));
-    }*/
+    public void getCampagnes(){
+        scanCheckApiInterface.getCampagnes().enqueue(new Callback<List<Campagne>>() {
+            @Override
+            public void onResponse(Call<List<Campagne>> call, Response<List<Campagne>> response) {
+                if (response.isSuccessful()){
+                    if (response.body() != null) {
+                        mCampagnes.addAll(response.body());
+                        Log.d(TAG, "onResponse: Liste des Campagnes : " + mAgents.size());
+                        canInsert();
+                    }
+                }
+            }
 
-    /*public void getAffectationsDemos() {
-        mAffectationDemos.add(new Affectation("1", "1", "1001", "ADR1001", "20/11/2019"));
-        mAffectationDemos.add(new Affectation("2", "2", "1002", "ADR1001", "20/11/2019"));
-    }*/
+            @Override
+            public void onFailure(Call<List<Campagne>> call, Throwable t) {
+                Log.e(TAG, "getSiteDistribution onFailure: NETWORK FAILURE");
+            }
+        });
+    }
 
-    /*public void getAgenDistributionsDemo() {
-        mAgentDistDemos.add(new AgentDistribution("100001", "Agent Dist 1", "role 1", "000001", "1001"));
-        mAgentDistDemos.add(new AgentDistribution("100002", "Agent Dist 2", "role 2", "000001", "1002"));
-        mAgentDistDemos.add(new AgentDistribution("100002", "Agent Dist 2", "role 2", "000001", "1003"));
-    }*/
+    public void getAffectations(){
+        scanCheckApiInterface.getAffectations().enqueue(new Callback<List<Affectation>>() {
+            @Override
+            public void onResponse(Call<List<Affectation>> call, Response<List<Affectation>> response) {
+                if (response.isSuccessful()){
+                    if (response.body() != null) {
+                        mAffectations.addAll(response.body());
+                        Log.d(TAG, "onResponse: Liste des Campagnes : " + mAffectations.size());
+                        canInsert();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Affectation>> call, Throwable t) {
+                Log.e(TAG, "getSiteDistribution onFailure: NETWORK FAILURE");
+            }
+        });
+    }
 
     public void getTypemenageDemo(){
-        mTypeMenageDemos.add(new TypeMenage("1", "Ménage 1-2", "MENAGE TRADITIONNEL"));
-        mTypeMenageDemos.add(new TypeMenage("2", "Ménage 3-4", "MENAGE TRADITIONNEL"));
-        mTypeMenageDemos.add(new TypeMenage("3", "Ménage 4-6", "MENAGE TRADITIONNEL"));
-        mTypeMenageDemos.add(new TypeMenage("4", "Ménage 7-8", "MENAGE TRADITIONNEL"));
-        mTypeMenageDemos.add(new TypeMenage("5", "Ménage 9 ou plus", "MENAGE TRADITIONNEL"));
-        mTypeMenageDemos.add(new TypeMenage("6", "ORPHELINAT", "MENAGE SPECIAL"));
-        mTypeMenageDemos.add(new TypeMenage("7", "COUVENT", "MENAGE SPECIAL"));
-        mTypeMenageDemos.add(new TypeMenage("8", "INTERNAT", "MENAGE SPECIALSPECIAL"));
-        mTypeMenageDemos.add(new TypeMenage("9", "FOSA", "MENAGE SPECIAL"));
-        mTypeMenageDemos.add(new TypeMenage("10", "HOTEL", "MENAGE SPECIAL"));
-        mTypeMenageDemos.add(new TypeMenage("11", "MILITAIRE EN DEPLACEMENT", "MENAGE SPECIAL"));
-        mTypeMenageDemos.add(new TypeMenage("12", "DEPLACES", "MENAGE SPECIAL"));
-        mTypeMenageDemos.add(new TypeMenage("13", "REFUGIE", "MENAGE SPECIAL"));
-        mTypeMenageDemos.add(new TypeMenage("14", "PRISON", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("1001", "Ménage 1-2", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("1002", "Ménage 3-4", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("1003", "Ménage 4-6", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("1004", "Ménage 7-8", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("1005", "Ménage 9 ou plus", "MENAGE TRADITIONNEL"));
+        mTypeMenageDemos.add(new TypeMenage("1006", "ORPHELINAT", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("1007", "COUVENT", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("1008", "INTERNAT", "MENAGE SPECIALSPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("1009", "FOSA", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("1010", "HOTEL", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("1011", "MILITAIRE EN DEPLACEMENT", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("1012", "DEPLACES", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("1013", "REFUGIE", "MENAGE SPECIAL"));
+        mTypeMenageDemos.add(new TypeMenage("1014", "PRISON", "MENAGE SPECIAL"));
     }
 
     void showProgressDiag(ProgressDialog progressDiag){

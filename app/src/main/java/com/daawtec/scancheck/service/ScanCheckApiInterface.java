@@ -8,6 +8,7 @@ import com.daawtec.scancheck.entites.Campagne;
 import com.daawtec.scancheck.entites.DivisionProvincialeSante;
 import com.daawtec.scancheck.entites.InventairePhysique;
 import com.daawtec.scancheck.entites.Macaron;
+import com.daawtec.scancheck.entites.MembreMenage;
 import com.daawtec.scancheck.entites.Menage;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.entites.ZoneSante;
@@ -40,10 +41,29 @@ public interface ScanCheckApiInterface {
     @GET("macarons/")
     Call<List<Macaron>> getMacarons();
 
-    @POST("saveMenages/")
+    @GET("affectations/")
+    Call<List<Affectation>> getAffectations();
+
+    @GET("agents/")
+    Call<List<Agent>> getAgents();
+
+    @GET("campagnes/")
+    Call<List<Campagne>> getCampagnes();
+
+    @POST("save-menages/")
     Call<String> postMenage(@Body List<Menage> menages);
-    @POST("saveMacarons/")
+
+    @POST("save-macarons/")
     Call<String> postMacarons(@Body List<Macaron> macarons);
+
+    @POST("update-affectation/")
+    Call<String> postAffectations(@Body List<Affectation> affectations);
+
+    @POST("save-sites-distribution/")
+    Call<String> postSds(@Body List<SiteDistribution> sd);
+
+    @POST("save-membres-menages/")
+    Call<String> postMembreMenage(@Body List<MembreMenage> membreMenages);
 
     //TODO SERVICE WEB A IMPLEMENTER
     //TODO posterAffectationAS, recupererAffectationAS,
