@@ -39,7 +39,7 @@ public class RapportFragment extends Fragment {
 
     Activity mActivity;
     ScanCheckDB db;
-    String mCodeAs, mCodeSd, mCodeAgent, mCodeTypeAgent;
+    String mCodeAs, mCodeSd, mCodeAgent, mCodeTypeAgent, mDateDebutCampagne;
     RapportDenombrementAdapter mRapportDenombrementAdapter;
     RapportDenombrementITAdapter mRapportDenombrementITAdapter;
     boolean isItDenombrement;
@@ -71,6 +71,7 @@ public class RapportFragment extends Fragment {
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(mActivity);
         mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
         mCodeTypeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, null);
+        mDateDebutCampagne = mSharedPref.getString(Constant.KEY_DATE_DEBUT_CAMPAGNE, null);
 
         if (mCodeTypeAgent.equals(Constant.IT_DENOMBREMENT)){
             isItDenombrement = true;
@@ -88,16 +89,20 @@ public class RapportFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
-
         View view = inflater.inflate(R.layout.fragment_rapport_denombrement, container, false);
+        TextView dateDebutTV = view.findViewById(R.id.date_debut_campagne_tv);
+
+        if (mDateDebutCampagne == null){
+            dateDebutTV.setText("La Campagne n'est pas encore disponible");
+        } else {
+            dateDebutTV.setText("Date debut de la campagne : " + mDateDebutCampagne);
+        }
         if (!isItDenombrement) {
-            loadRapportDenombrement();
+            loadRapportDenombrement(mDateDebutCampagne);
             initViewDenombrement(view);
         }
         else {
-            loadRapportDenombrementIT();
+            loadRapportDenombrementIT(mDateDebutCampagne);
             initViewITdenombrement(view);
         }
         return view;
@@ -129,13 +134,12 @@ public class RapportFragment extends Fragment {
         mSoldeTV = view.findViewById(R.id.solde_tv);
     }
 
-    public void loadRapportDenombrement(){
+    public void loadRapportDenombrement(final String dateDebutCampagne){
         (new AsyncTask<Void, Void, Boolean>(){
 
             List<RapportDenombrement> rapportDenombrements = new ArrayList<>();
-
-            String dayOne = "20/11/2019";
             int macaronUtilise, menage, menageOneTwo, menageThreeFour, menageFiveSix, menageSevenEight, macaronRecu;
+
             @Override
             protected void onPostExecute(Boolean value) {
                 super.onPostExecute(value);
@@ -158,17 +162,17 @@ public class RapportFragment extends Fragment {
                     RapportDenombrement rapportDenombrement = new RapportDenombrement();
 
                     try {
-                        rapportDenombrement.date = Utils.addDayToDate(dayOne,i);
-                        macaronRecu = db.getIMacaronDao().getNombreMacaronRecusFromDay(Utils.addDayToDate(dayOne,i));
+                        rapportDenombrement.date = Utils.addDayToDate(dateDebutCampagne,i);
+                        macaronRecu = db.getIMacaronDao().getNombreMacaronRecusFromDay(Utils.addDayToDate(dateDebutCampagne,i));
                         Log.i(TAG, "MACARONS RECUS : " + macaronRecu);
-                         macaronUtilise = db.getIMacaronDao().getNombreMacaronUtilisesFromDay(Utils.addDayToDate(dayOne,i), true);
+                         macaronUtilise = db.getIMacaronDao().getNombreMacaronUtilisesFromDay(Utils.addDayToDate(dateDebutCampagne,i), true);
                         Log.i(TAG, "MACARONS UTILISES : " + macaronUtilise);
-                         menage = db.getIMenageDao().getNombreMenageByDay(Utils.addDayToDate(dayOne,i));
+                         menage = db.getIMenageDao().getNombreMenageByDay(Utils.addDayToDate(dateDebutCampagne,i));
                         Log.i(TAG, "MENAGES : " + menage);
-                         menageOneTwo = db.getIMenageDao().getCountByTailleMenage(1, Utils.addDayToDate(dayOne,i)) + db.getIMenageDao().getCountByTailleMenage(2, Utils.addDayToDate(dayOne,i));
-                         menageThreeFour = db.getIMenageDao().getCountByTailleMenage(3, Utils.addDayToDate(dayOne,i)) + db.getIMenageDao().getCountByTailleMenage(4, Utils.addDayToDate(dayOne,i));
-                         menageFiveSix = db.getIMenageDao().getCountByTailleMenage(5, Utils.addDayToDate(dayOne,i)) + db.getIMenageDao().getCountByTailleMenage(6, Utils.addDayToDate(dayOne,i));
-                         menageSevenEight = db.getIMenageDao().getCountByTailleMenage(7, Utils.addDayToDate(dayOne,i)) + db.getIMenageDao().getCountByTailleMenage(8, Utils.addDayToDate(dayOne,i));
+                         menageOneTwo = db.getIMenageDao().getCountByTailleMenage(1, Utils.addDayToDate(dateDebutCampagne,i)) + db.getIMenageDao().getCountByTailleMenage(2, Utils.addDayToDate(dateDebutCampagne,i));
+                         menageThreeFour = db.getIMenageDao().getCountByTailleMenage(3, Utils.addDayToDate(dateDebutCampagne,i)) + db.getIMenageDao().getCountByTailleMenage(4, Utils.addDayToDate(dateDebutCampagne,i));
+                         menageFiveSix = db.getIMenageDao().getCountByTailleMenage(5, Utils.addDayToDate(dateDebutCampagne,i)) + db.getIMenageDao().getCountByTailleMenage(6, Utils.addDayToDate(dateDebutCampagne,i));
+                         menageSevenEight = db.getIMenageDao().getCountByTailleMenage(7, Utils.addDayToDate(dateDebutCampagne,i)) + db.getIMenageDao().getCountByTailleMenage(8, Utils.addDayToDate(dateDebutCampagne,i));
                     } catch (Exception ex){
                         Log.e(TAG, "doInBackground: " + ex.getMessage());
                         return false;
@@ -200,11 +204,10 @@ public class RapportFragment extends Fragment {
         }).execute();
     }
 
-    public void loadRapportDenombrementIT(){
+    public void loadRapportDenombrementIT(final String dateDebutCampagne){
         (new AsyncTask<Void, Void, Boolean>(){
 
             List<RapportDenombrementIT> rapports = new ArrayList<>();
-            String dayOne = "20/11/2019";
 
             int macaronUtilise, macaronRecu;
             public int orphelinat, couvent, internat, fosa, hotel;
@@ -228,9 +231,9 @@ public class RapportFragment extends Fragment {
                     RapportDenombrementIT rapport = new RapportDenombrementIT();
 
                     try {
-                        rapport.date = Utils.addDayToDate(dayOne,i);
-                        macaronRecu = db.getIMacaronDao().getNombreMacaronRecusFromDay(Utils.addDayToDate(dayOne,i));
-                        macaronUtilise = db.getIMacaronDao().getNombreMacaronUtilisesFromDay(Utils.addDayToDate(dayOne,i), true);
+                        rapport.date = Utils.addDayToDate(dateDebutCampagne,i);
+                        macaronRecu = db.getIMacaronDao().getNombreMacaronRecusFromDay(Utils.addDayToDate(dateDebutCampagne,i));
+                        macaronUtilise = db.getIMacaronDao().getNombreMacaronUtilisesFromDay(Utils.addDayToDate(dateDebutCampagne,i), true);
                         orphelinat = db.getIMenageDao().getCountByType("6");
                         couvent = db.getIMenageDao().getCountByType("7");
                         internat = db.getIMenageDao().getCountByType("8");

@@ -4,11 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ededed"
+    android:orientation="vertical"
     tools:context=".ui.RapportFragment">
+
+    <TextView
+        android:id="@+id/date_debut_campagne_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date debut de la campagne : "
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rapport_denombrement_tv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
 
 </LinearLayout>

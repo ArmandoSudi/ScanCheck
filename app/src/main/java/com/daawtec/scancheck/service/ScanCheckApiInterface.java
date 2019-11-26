@@ -65,9 +65,6 @@ public interface ScanCheckApiInterface {
     @POST("save-membres-menages/")
     Call<String> postMembreMenage(@Body List<MembreMenage> membreMenages);
 
-    //TODO SERVICE WEB A IMPLEMENTER
-    //TODO posterAffectationAS, recupererAffectationAS,
-
     @POST("/")
     Call<String> postBadVerification(List<BadVerification> badVerifications);
     @POST("/")

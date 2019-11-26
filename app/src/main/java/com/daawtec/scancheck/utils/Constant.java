@@ -19,7 +19,7 @@ public class Constant {
     public static String KEY_CODE_IT_DISTRIBUTION = "itDistribution";
     public static String KEY_CODE_SITE_DISTRIBUTION = "codeSiteDistribution";
     public static String KEY_CODE_BUREAU_CENTRAL_ZONE = "codeBureauCentralZone";
-    public static String KEY_JOUR_ONE = "jourOne";
+    public static String KEY_DATE_DEBUT_CAMPAGNE = "dateDebutCampagne";
     public static String KEY_CURRENT_CODE_AGENT = "currentCodeAgent";
     public static String KEY_CURRENT_CODE_TYPE_AGENT = "currentCodeTypeAgent";
 

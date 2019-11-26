@@ -24,17 +24,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.SimpleCursorTreeAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.Affectation;
-import com.daawtec.scancheck.entites.AirsSante;
 import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.SiteDistribution;
 import com.daawtec.scancheck.ui.DistributionFragment;
@@ -49,7 +44,6 @@ import com.daawtec.scancheck.utils.Utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity implements MenageFragment.OnFragmentInteractionListener {
@@ -246,12 +240,12 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
                 if(longs[0] > 0){
                     Toast.makeText(BaseActivity.this, "Macaron enregistré", Toast.LENGTH_SHORT).show();
-                    String jourOne = mSharedPref.getString(Constant.KEY_JOUR_ONE, null);
+                    String jourOne = mSharedPref.getString(Constant.KEY_DATE_DEBUT_CAMPAGNE, null);
                     if (jourOne == null){
                         // C'est le premier jour de denombrement
-                        Date date = mCalendar.getTime();
+                        Date date = new Date();
                         String jour = mSimpleDateFormat.format(date);
-                        mEditor.putString(Constant.KEY_JOUR_ONE, jour);
+                        mEditor.putString(Constant.KEY_DATE_DEBUT_CAMPAGNE, jour);
                     } else {
 
                     }
@@ -304,21 +298,6 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
         builder.setView(customLayout);
         final EditText nomET = customLayout.findViewById(R.id.nombre_mild_et);
         final EditText populationET = customLayout.findViewById(R.id.population_et);
-//        final Spinner asSP = customLayout.findViewById(R.id.as_sp);
-//        loadAs(asSP);
-
-//        asSP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                AirsSante as = (AirsSante) parent.getItemAtPosition(position);
-//                mCodeAsSD = as.getCodeAS();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -371,31 +350,6 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
             }
         }).execute();
 
-    }
-
-    public void loadAs(final Spinner sp){
-        (new AsyncTask<Void, Void, List<AirsSante>>(){
-            @Override
-            protected void onPostExecute(List<AirsSante> airsSantes) {
-                super.onPostExecute(airsSantes);
-
-                if (airsSantes != null) {
-                    if (airsSantes.size() > 0) {
-                        airsSantes.add(0, new AirsSante());
-                        sp.setAdapter(new ArrayAdapter<>(
-                                BaseActivity.this,
-                                android.R.layout.simple_spinner_dropdown_item,
-                                airsSantes
-                        ));
-                    }
-                }
-            }
-
-            @Override
-            protected List<AirsSante> doInBackground(Void... voids) {
-                return db.getIAirSanteDao().all();
-            }
-        }).execute();
     }
 
     public void checkCameraPermission(){
