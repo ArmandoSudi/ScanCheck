@@ -110,16 +110,16 @@ public class RapportFragment extends Fragment {
     }
 
     public void initViewDenombrement(View view){
-        mDenombrementRV = view.findViewById(R.id.rapport_denombrement_tv);
+        mDenombrementRV = view.findViewById(R.id.rapport_denombrement_rv);
         mRapportDenombrementAdapter = new RapportDenombrementAdapter(mActivity);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         mDenombrementRV.setLayoutManager(linearLayoutManager);
         mDenombrementRV.setHasFixedSize(true);
-        mDenombrementRV.setAdapter(mRapportDenombrementITAdapter);
+        mDenombrementRV.setAdapter(mRapportDenombrementAdapter);
     }
 
     public void initViewITdenombrement(View view){
-        mDenombrementRV = view.findViewById(R.id.rapport_denombrement_tv);
+        mDenombrementRV = view.findViewById(R.id.rapport_denombrement_rv);
         mRapportDenombrementITAdapter = new RapportDenombrementITAdapter(mActivity);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         mDenombrementRV.setLayoutManager(linearLayoutManager);
@@ -201,6 +201,7 @@ public class RapportFragment extends Fragment {
 
                 return true;
             }
+
         }).execute();
     }
 

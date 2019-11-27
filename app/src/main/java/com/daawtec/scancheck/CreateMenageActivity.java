@@ -262,8 +262,6 @@ public class CreateMenageActivity extends AppCompatActivity {
         // Validation Menage
         if (nomResponsable.equals("")){ isValid = false;}
         if (mCodeSD == null) isValid = false;
-        if (mLatitude == 0.0) isValid = false;
-        if (mLongitude == 0.0) isValid = false;
         if (nombreCouchette < 0) isValid = false;
 
         if (!isAgentIT) {
