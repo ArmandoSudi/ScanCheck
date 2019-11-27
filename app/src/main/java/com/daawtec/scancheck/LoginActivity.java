@@ -199,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     // Enregistrer de facon global la date de debut de la campagne
-                    mEditor.putString(Constant.KEY_DATE_DEBUT_CAMPAGNE, affectation.dateAffectation);
+                    //mEditor.putString(Constant.KEY_DATE_DEBUT_CAMPAGNE, affectation.dateAffectation);
 
                     // Enregistrer de facon globable le role de l'agent
                     if (mTypeAgent.equals(Constant.AGENT_DENOMBREMENT)) {

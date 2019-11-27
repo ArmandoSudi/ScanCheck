@@ -252,6 +252,7 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                         Date date = new Date();
                         String jour = mSimpleDateFormat.format(date);
                         mEditor.putString(Constant.KEY_DATE_DEBUT_CAMPAGNE, jour);
+                        mEditor.commit();
                     } else {
 
                     }
