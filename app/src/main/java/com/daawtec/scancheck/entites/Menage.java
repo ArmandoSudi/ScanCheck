@@ -24,19 +24,19 @@ public class Menage {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_MENAGE")
-    @SerializedName("codeMenage")
+    @SerializedName("CodeMenage")
     public String codeMenage;
 
     @ColumnInfo(name="CODE_MACARON")
-    @SerializedName("codeMacaron")
+    @SerializedName("CodeMacaron")
     public String codeMacaron;
 
     @ColumnInfo(name="CODE_AGENT_DENOMBREMENT")
-    @SerializedName("CodeAgentDenombrement")
+    @SerializedName("AgentDenombrement")
     public String codeAgentDenombrement;
 
     @ColumnInfo(name="CODE_AGENT_DISTRIBUTION")
-    @SerializedName("CodeAgentDistribution")
+    @SerializedName("AgentDistribution")
     public String codeAgentDistribution;
 
     @ColumnInfo(name="CODE_TYPE_MENAGE")
@@ -44,11 +44,15 @@ public class Menage {
     public String codeTypeMenage;
 
     @ColumnInfo(name="NOM_RESPONSABLE")
-    @SerializedName("nomResponsable")
+    @SerializedName("NomResponsable")
     public String nomResponsable;
 
+    @ColumnInfo(name="PRENOM_RESPONSABLE")
+    @SerializedName("PrenomResponsable")
+    public String PrenomResponsable;
+
     @ColumnInfo(name="SEXE_RESPONSABLE")
-    @SerializedName("sexeResponsable")
+    @SerializedName("SexeResponsableMenage")
     public String sexeResponsable;
 
     @ColumnInfo(name="VILLAGE")
@@ -56,27 +60,27 @@ public class Menage {
     public String village;
 
     @ColumnInfo(name="TAILLE_MENAGE")
-    @SerializedName("tailleMenage")
+    @SerializedName("TailleMenage")
     public int tailleMenage;
 
     @ColumnInfo(name="DATE_IDENTIFICATION")
-    @SerializedName("dateIdentification")
+    @SerializedName("DateIdentificationStr")
     public String dateIdentification;
 
     @ColumnInfo(name="CODE_SD")
-    @SerializedName("codeSD")
+    @SerializedName("CodeSd")
     public String codeSD;
 
     @ColumnInfo(name="NOMBRE_MILD")
-    @SerializedName("nombreMild")
+    @SerializedName("NombreMild")
     public int nombreMild;
 
     @ColumnInfo(name="LATITUDE")
-    @SerializedName("latitude")
+    @SerializedName("Lat")
     public double latitude;
 
     @ColumnInfo(name="LONGITUDE")
-    @SerializedName("longitude")
+    @SerializedName("Long")
     public double longitude;
 
     @ColumnInfo(name="RECO_NOM")
@@ -92,15 +96,15 @@ public class Menage {
     public String commentaire;
 
     @ColumnInfo(name="NOMBRE_MILD_SERVI")
-    @SerializedName("NombreMildServi")
+    @SerializedName("NbreMildsAServir")
     public int nombreMildServi;
 
     @ColumnInfo(name="NOMBRE_COUCHETTE")
-    @SerializedName("NombreCouchette")
+    @SerializedName("NombreCouchettes")
     public int nombreCouchette;
 
     @ColumnInfo(name="ETAT_SERVI")
-    @SerializedName("etatServi")
+    @SerializedName("EtatServi")
     public boolean etatServi;
 
 

@@ -18,23 +18,23 @@ public class Macaron {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="CODE_MACARON")
-    @SerializedName("codeMacaron")
+    @SerializedName("CodeMacaron")
     public String codeMacaron;
 
     @ColumnInfo(name="CODE_AS")
-    @SerializedName("codeAs")
+    @SerializedName("CodeAs")
     public String codeAs;
 
     @ColumnInfo(name="CODE_AGENT")
-    @SerializedName("codeAgent")
+    @SerializedName("CodeAgent")
     public String codeAgent;
 
     @ColumnInfo(name="DATE_ENREGISTREMENT")
-    @SerializedName("dateEnregistrement")
+    @SerializedName("DateEnregistrementStr")
     public String dateEnregistrement;
 
     @ColumnInfo(name="IS_AFFECTED")
-    @SerializedName("isAffected")
+    @SerializedName("IsAffected")
     public boolean isAffected;
 
 

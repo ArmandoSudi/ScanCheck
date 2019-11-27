@@ -285,7 +285,7 @@ public class CreateMenageActivity extends AppCompatActivity {
             }
 
             String codeMacaron = qrCode;
-            Menage menage = new Menage(codeMenage, nomResponsable + " " + prenomResponsable, mSexe, village, tailleMenage,
+            Menage menage = new Menage(codeMenage, nomResponsable, mSexe, village, tailleMenage,
                     mDateIdentification, mCodeSD, nombreMILD, mLatitude, mLongitude, null, false);
             menage.recoNom = recoNom;
             menage.recoPrenom = recoPrenom;
@@ -293,6 +293,8 @@ public class CreateMenageActivity extends AppCompatActivity {
             menage.codeAgentDenombrement = mCodeAgent;
             menage.codeTypeMenage = mCodeTypeMenage;
             menage.commentaire = commentaire;
+            menage.codeMacaron = codeMacaron;
+            menage.PrenomResponsable = prenomResponsable;
 
             saveMenage(menage);
 

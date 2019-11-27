@@ -74,7 +74,6 @@ public class SyncAsyncTask extends AsyncTask<Void, Void, Void> {
             Log.e(TAG, "doInBackground: " + ex.getMessage() );
         }
 
-        if (menages.size() > 0) postMenage(menages);
         if (macarons.size() > 0) postMacaron(macarons);
         if (agents.size() > 0) postAgents(agents);
         if (affectations.size() > 0) {
@@ -87,6 +86,8 @@ public class SyncAsyncTask extends AsyncTask<Void, Void, Void> {
             postAffectation(affectations);
         }
         if (siteDistributions.size() > 0) postSDs(siteDistributions);
+
+        if (menages.size() > 0) postMenage(menages);
         if (membreMenages.size() > 0) postMembreMenage(membreMenages);
 
 

@@ -60,7 +60,7 @@ import com.daawtec.scancheck.utils.DateConverts;
         TypeMenage.class,
         MembreMenage.class,
         Campagne.class,},
-        version = 23
+        version = 27
 )
 @TypeConverters(DateConverts.class)
 public abstract class ScanCheckDB extends RoomDatabase {
