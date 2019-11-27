@@ -91,10 +91,10 @@ public class ListeAgentActivity extends AppCompatActivity {
                 List<Agent> agents = new ArrayList<>();
                 if (affectations != null && affectations.size()>0){
                     for(int i=0; i<affectations.size(); i++){
-                        agents.add(db.getIAgentDao().get(affectations.get(i).codeAgent));
+                        agents.add(db.getIAgentDao().getByCodeAgent(affectations.get(i).codeAgent));
                     }
                 }
-                return db.getIAgentDao().all();
+                return agents;
             }
         }).execute();
     }

@@ -28,6 +28,9 @@ public interface IAgentDao {
     @Query("SELECT * FROM AGENT WHERE CODE_AUTHENTIFICATION=:codeAgent")
     Agent get(String codeAgent);
 
+    @Query("SELECT * FROM AGENT WHERE CODE_AGENT=:codeAgent")
+    Agent getByCodeAgent(String codeAgent);
+
     @Query("SELECT * FROM AGENT WHERE CODE_AUTHENTIFICATION=:codeAgentAuth")
     Agent getAgentByAuth(String codeAgentAuth);
 
