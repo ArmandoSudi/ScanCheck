@@ -246,16 +246,6 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
 
                 if(longs[0] > 0){
                     Toast.makeText(BaseActivity.this, "Macaron enregistré", Toast.LENGTH_SHORT).show();
-                    String jourOne = mSharedPref.getString(Constant.KEY_DATE_DEBUT_CAMPAGNE, null);
-                    if (jourOne == null){
-                        // C'est le premier jour de denombrement
-                        Date date = new Date();
-                        String jour = mSimpleDateFormat.format(date);
-                        mEditor.putString(Constant.KEY_DATE_DEBUT_CAMPAGNE, jour);
-                        mEditor.commit();
-                    } else {
-
-                    }
                 }
             }
 

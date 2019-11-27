@@ -16,7 +16,7 @@
         android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rapport_denombrement_tv"
+        android:id="@+id/rapport_denombrement_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"/>
