@@ -186,14 +186,13 @@ public class CreateMenageActivity extends AppCompatActivity {
                                         Manifest.permission.ACCESS_FINE_LOCATION,},
                                 Constant.REQUEST_CODE_ASK_PERMISSIONS
                         );
-
-                        gpsAsyncTask = new GPSAsyncTask(CreateMenageActivity.this);
-                        gpsAsyncTask.execute();
-
                     } else {
                         gpsAsyncTask = new GPSAsyncTask(CreateMenageActivity.this);
                         gpsAsyncTask.execute();
                     }
+                } else {
+                    gpsAsyncTask = new GPSAsyncTask(CreateMenageActivity.this);
+                    gpsAsyncTask.execute();
                 }
             }
         });
@@ -263,6 +262,8 @@ public class CreateMenageActivity extends AppCompatActivity {
         if (nomResponsable.equals("")){ isValid = false;}
         if (mCodeSD == null) isValid = false;
         if (nombreCouchette < 0) isValid = false;
+        if (mLatitude == 0.0) isValid = false;
+        if (mLongitude == 0.0) isValid = false;
 
         if (!isAgentIT) {
             if (tailleMenage == 0){ isValid = false;}
