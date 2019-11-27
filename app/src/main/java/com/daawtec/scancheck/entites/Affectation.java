@@ -54,4 +54,16 @@ public class Affectation {
         this.CodeAs = codeAs;
     }
 
+    @Override
+    public String toString() {
+        return "Affectation{" +
+                "codeAffectation='" + codeAffectation + '\'' +
+                ", codeAgent='" + codeAgent + '\'' +
+                ", CodeAs='" + CodeAs + '\'' +
+                ", codeTypeAgent='" + codeTypeAgent + '\'' +
+                ", dateAffectation='" + dateAffectation + '\'' +
+                ", populationMacroPlan=" + populationMacroPlan +
+                ", CodeCampagne='" + CodeCampagne + '\'' +
+                '}';
+    }
 }

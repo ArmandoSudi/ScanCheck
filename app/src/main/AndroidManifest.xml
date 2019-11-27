@@ -17,9 +17,13 @@
         android:theme="@style/AppThemePurple"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ListeAgentActivity"
+            android:label="Liste des agents"></activity>
+        <activity android:name=".CreateAgentDenombrementActivity" />
+        <activity
             android:name=".CreateMembreMenageActivity"
             android:label="@string/title_activity_create_membre_menage"
-            android:theme="@style/AppThemePurple.NoActionBar"></activity>
+            android:theme="@style/AppThemePurple.NoActionBar" />
         <activity
             android:name=".GestionMildSiteDistActivity"
             android:label="@string/title_activity_gestion_mild_site_dist"
@@ -32,7 +36,9 @@
             android:name=".SupervisionActivity"
             android:label="Formulaire de supervision" />
         <activity android:name=".CheckActivity" />
-        <activity android:name=".LoginActivity" android:theme="@style/AppCustomTheme" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".utils.CreateAgentActivity"
             android:label="Enregistrer Agent Denombrement" />

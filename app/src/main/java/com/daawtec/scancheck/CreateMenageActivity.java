@@ -46,8 +46,8 @@ public class CreateMenageActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateMenageActivity";
 
-    TextView mDateIdentificationTV, mCodeMacaronTV, mLatitudeTV, mLongitudeTV;
-    EditText mNomResponsableET, mPrenomResponsableET, mVillageET, mTailleMenageET, mRecoPrenomET, mRecoNomET, mNombreCouchetteET;
+    TextView mDateIdentificationTV, mCodeMacaronTV, mLatitudeTV, mLongitudeTV, mTypeMenageLabelTV;
+    EditText mNomResponsableET, mPrenomResponsableET, mVillageET, mTailleMenageET, mRecoPrenomET, mRecoNomET, mNombreCouchetteET, mCommentaireET;
     Spinner mSexeSP, mTypeMenage;
     Button mSaveMenageBT, mGpsBT;
     Spinner mSiteDistributionSP;
@@ -77,6 +77,20 @@ public class CreateMenageActivity extends AppCompatActivity {
 
         db = ScanCheckDB.getDatabase(this);
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (CreateMenageActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || CreateMenageActivity.this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(
+                        new String[]{
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,},
+                        Constant.REQUEST_CODE_ASK_PERMISSIONS
+                );
+
+            }
+        }
 
         mCodeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_AGENT, null);
         codeTypeAgent = mSharedPref.getString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, null);
@@ -114,12 +128,16 @@ public class CreateMenageActivity extends AppCompatActivity {
         mRecoPrenomET = findViewById(R.id.reco_prenom_et);
         mTailleMenageET = findViewById(R.id.taille_menage_et);
         mNombreCouchetteET = findViewById(R.id.nombre_couchete_et);
+        mCommentaireET = findViewById(R.id.commentaire_et);
         mMembreMenageLinearLayout = findViewById(R.id.membre_menage_layout);
 
         mCodeMacaronTV = findViewById(R.id.code_macaron_tv);
         mCodeMacaronTV.setText(qrCode + "");
         mLongitudeTV = findViewById(R.id.longitude_tv);
         mLatitudeTV = findViewById(R.id.latitude_tv);
+        mTypeMenageLabelTV = findViewById(R.id.type_menage_label);
+
+        mTypeMenage = findViewById(R.id.type_menage_sp);
 
         mMembreMenageRV = findViewById(R.id.membre_menage_rv);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -141,6 +159,9 @@ public class CreateMenageActivity extends AppCompatActivity {
             mRecoPrenomET.setVisibility(View.GONE);
             mTailleMenageET.setVisibility(View.GONE);
             mMembreMenageLinearLayout.setVisibility(View.GONE);
+        } else {
+            mTypeMenageLabelTV.setVisibility(View.GONE);
+            mTypeMenage.setVisibility(View.GONE);
         }
 
         mSaveMenageBT = findViewById(R.id.save_menage_bt);
@@ -165,6 +186,10 @@ public class CreateMenageActivity extends AppCompatActivity {
                                         Manifest.permission.ACCESS_FINE_LOCATION,},
                                 Constant.REQUEST_CODE_ASK_PERMISSIONS
                         );
+
+                        gpsAsyncTask = new GPSAsyncTask(CreateMenageActivity.this);
+                        gpsAsyncTask.execute();
+
                     } else {
                         gpsAsyncTask = new GPSAsyncTask(CreateMenageActivity.this);
                         gpsAsyncTask.execute();
@@ -200,7 +225,6 @@ public class CreateMenageActivity extends AppCompatActivity {
             }
         });
 
-        mTypeMenage = findViewById(R.id.type_menage_sp);
         mTypeMenage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -224,6 +248,7 @@ public class CreateMenageActivity extends AppCompatActivity {
         String village = mVillageET.getText().toString();
         String recoNom = mRecoNomET.getText().toString();
         String recoPrenom = mRecoPrenomET.getText().toString();
+        String commentaire = mCommentaireET.getText().toString();
         int tailleMenage = Utils.stringToInt(mTailleMenageET.getText().toString()) ;
         int nombreCouchette = Utils.stringToInt(mNombreCouchetteET.getText().toString());
 
@@ -236,18 +261,17 @@ public class CreateMenageActivity extends AppCompatActivity {
 
         // Validation Menage
         if (nomResponsable.equals("")){ isValid = false;}
-//
-        if (tailleMenage == 0){ isValid = false;}
-//        if (mCodeSD == null) isValid = false;
+        if (mCodeSD == null) isValid = false;
         if (mLatitude == 0.0) isValid = false;
         if (mLongitude == 0.0) isValid = false;
         if (nombreCouchette < 0) isValid = false;
 
-//        if (!isAgentIT) {
-//            if (village.equals("")) { isValid = false; }
-//            if (recoNom.equals("")) isValid = false;
-//            if (recoPrenom.equals("")) isValid = false;
-//        }
+        if (!isAgentIT) {
+            if (tailleMenage == 0){ isValid = false;}
+            if (village.equals("")) { isValid = false; }
+            if (recoNom.equals("")) isValid = false;
+            if (recoPrenom.equals("")) isValid = false;
+        }
 
         if (isValid){
 
@@ -262,12 +286,13 @@ public class CreateMenageActivity extends AppCompatActivity {
 
             String codeMacaron = qrCode;
             Menage menage = new Menage(codeMenage, nomResponsable + " " + prenomResponsable, mSexe, village, tailleMenage,
-                    mDateIdentification, mCodeSD, nombreMILD, mLatitude, mLongitude, codeMacaron, false);
+                    mDateIdentification, mCodeSD, nombreMILD, mLatitude, mLongitude, null, false);
             menage.recoNom = recoNom;
             menage.recoPrenom = recoPrenom;
             menage.nombreCouchette = nombreCouchette;
             menage.codeAgentDenombrement = mCodeAgent;
             menage.codeTypeMenage = mCodeTypeMenage;
+            menage.commentaire = commentaire;
 
             saveMenage(menage);
 
@@ -277,11 +302,11 @@ public class CreateMenageActivity extends AppCompatActivity {
     }
 
     public void saveMenage(final Menage menage){
-        (new AsyncTask<Void, Void, long[]>(){
+        (new AsyncTask<Void, Void, Boolean>(){
             @Override
-            protected void onPostExecute(long[] results) {
+            protected void onPostExecute(Boolean results) {
                 super.onPostExecute(results);
-                if (results[0] > 0) {
+                if (results) {
                     Toast.makeText(CreateMenageActivity.this, "Menage enregistré", Toast.LENGTH_SHORT).show();
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK,returnIntent);
@@ -292,11 +317,18 @@ public class CreateMenageActivity extends AppCompatActivity {
             }
 
             @Override
-            protected long[] doInBackground(Void... voids) {
+            protected Boolean doInBackground(Void... voids) {
                 Log.e(TAG, "doInBackground: " + menage.toString() );
-                long[] results = db.getIMenageDao().insert(menage);
+                boolean isSuccess = false;
+                try {
+                    db.getIMenageDao().insert(menage);
+                    isSuccess = true;
+                }catch (Exception ex){
+                    Log.e(TAG, "doInBackground: " + ex.getMessage() );
+                    isSuccess = false;
+                }
 
-                if (results[0] > 0) {
+                if (isSuccess) {
                     db.getIMacaronDao().updateMacaronState(true, menage.codeMacaron);
                     if (mMembreMenageAdapter.getItemCount() > 0) {
                         long[] membreMenageIds = db.getIMembreMenageDao().insert(mMembreMenageAdapter.all());
@@ -304,7 +336,7 @@ public class CreateMenageActivity extends AppCompatActivity {
                     }
 
                 }
-                return results;
+                return isSuccess;
             }
         }).execute();
     }
@@ -500,12 +532,17 @@ public class CreateMenageActivity extends AppCompatActivity {
         });
 
         // create and show the alert dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        if (mMembreMenageAdapter.getItemCount() < 9) {
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else {
+            Toast.makeText(context, "Nombre maximum des membres ménage atteint", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public Void getMembreMenage(MembreMenage membreMenage){
-        if (mMembreMenageAdapter.getItemCount() < 10) {
+        if (mMembreMenageAdapter.getItemCount() < 9) {
             mMembreMenageAdapter.add(membreMenage);
             mMembreMenageAdapter.notifyDataSetChanged();
         } else {

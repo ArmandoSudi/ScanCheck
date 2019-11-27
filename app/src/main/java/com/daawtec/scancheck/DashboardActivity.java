@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.daawtec.scancheck.utils.Constant;
+import com.daawtec.scancheck.utils.SyncAsyncTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +37,8 @@ public class DashboardActivity extends AppCompatActivity {
     CardView mMicroplanCD;
     @BindView(R.id.denombrement_card)
     CardView mDenombrementCD;
+    @BindView(R.id.ajouter_agent_card)
+    CardView mAjouterAgentCD;
 
     Intent mIntent;
     String mCodeAs, mCodeAgentDenombrement, mCodeSd, mCodeItDenombrement, mCodeItDistribution, mCodeBureauCentralZone;
@@ -61,6 +66,7 @@ public class DashboardActivity extends AppCompatActivity {
             mGestionMildCD.setVisibility(View.GONE);
             mDistributionCD.setVisibility(View.GONE);
             mDenombrementCD.setVisibility(View.GONE);
+            mAjouterAgentCD.setVisibility(View.GONE);
         } else if (mCodeTypeAgent != null && mCodeTypeAgent.equals(Constant.IT_DENOMBREMENT)) {
             mDistributionCD.setVisibility(View.GONE);
             mGestionMildCD.setVisibility(View.GONE);
@@ -70,37 +76,53 @@ public class DashboardActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    public void initView(){
-        if (mCodeAgentDenombrement != null){
-            mMicroplanCD.setVisibility(View.GONE);
-            mGestionMildCD.setVisibility(View.GONE);
-            mDistributionCD.setVisibility(View.GONE);
-            mDenombrementCD.setVisibility(View.GONE);
-        } else if (mCodeSd != null) {
-            mMicroplanCD.setVisibility(View.GONE);
-            mMacaronCD.setVisibility(View.GONE);
-            mDistributionCD.setVisibility(View.GONE);
-            mDenombrementCD.setVisibility(View.GONE);
-        } else if (mCodeItDenombrement != null){
-            mDistributionCD.setVisibility(View.GONE);
-            mGestionMildCD.setVisibility(View.GONE);
-            mDenombrementCD.setVisibility(View.GONE);
-        } else if (mCodeItDistribution != null) {
-            mMacaronCD.setVisibility(View.GONE);
-            mMicroplanCD.setVisibility(View.GONE);
-            mMenageCD.setVisibility(View.GONE);
-            mDenombrementCD.setVisibility(View.GONE);
-        } else if (mCodeBureauCentralZone != null){
-            mMacaronCD.setVisibility(View.GONE);
-            mMicroplanCD.setVisibility(View.GONE);
-            mMenageCD.setVisibility(View.GONE);
-            mGestionMildCD.setVisibility(View.GONE);
-        }
-    }
+//    public void initView(){
+//        if (mCodeAgentDenombrement != null){
+//            mMicroplanCD.setVisibility(View.GONE);
+//            mGestionMildCD.setVisibility(View.GONE);
+//            mDistributionCD.setVisibility(View.GONE);
+//            mDenombrementCD.setVisibility(View.GONE);
+//        } else if (mCodeSd != null) {
+//            mMicroplanCD.setVisibility(View.GONE);
+//            mMacaronCD.setVisibility(View.GONE);
+//            mDistributionCD.setVisibility(View.GONE);
+//            mDenombrementCD.setVisibility(View.GONE);
+//        } else if (mCodeItDenombrement != null){
+//            mDistributionCD.setVisibility(View.GONE);
+//            mGestionMildCD.setVisibility(View.GONE);
+//            mDenombrementCD.setVisibility(View.GONE);
+//        } else if (mCodeItDistribution != null) {
+//            mMacaronCD.setVisibility(View.GONE);
+//            mMicroplanCD.setVisibility(View.GONE);
+//            mMenageCD.setVisibility(View.GONE);
+//            mDenombrementCD.setVisibility(View.GONE);
+//        } else if (mCodeBureauCentralZone != null){
+//            mMacaronCD.setVisibility(View.GONE);
+//            mMicroplanCD.setVisibility(View.GONE);
+//            mMenageCD.setVisibility(View.GONE);
+//            mGestionMildCD.setVisibility(View.GONE);
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.base_activity_menu, menu);
+
+        // return true so that the menu pop up is opened
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_synchroniser){
+            new SyncAsyncTask(this).execute();
+        }
+
+        return true;
     }
 
     @OnClick(R.id.macaron_card)
@@ -120,6 +142,12 @@ public class DashboardActivity extends AppCompatActivity {
         mIntent.putExtra(Constant.KEY_CODE_AGENT_DENOMBREMENT, mCodeAgentDenombrement);
         mIntent.putExtra(Constant.KEY_CODE_AGENT_IT, mCodeItDenombrement);
         startActivity(mIntent);
+    }
+
+    @OnClick(R.id.ajouter_agent_card)
+    public void startCreateAgentActivity(){
+        Intent intent = new Intent(DashboardActivity.this, ListeAgentActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.distribution_card)

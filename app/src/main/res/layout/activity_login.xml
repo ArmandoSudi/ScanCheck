@@ -99,6 +99,13 @@
                 android:text="Connexion"
                 android:textColor="#fff" />
 
+            <TextView
+                android:id="@+id/actualiser_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accentPurple"
+                android:text="Actualiser les données de base"/>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

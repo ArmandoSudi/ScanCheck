@@ -81,23 +81,23 @@ public class Utils {
     public static String getCodeTypeMenage(String value){
         switch(value){
             case "ORPHELINAT":
-                return "6";
+                return "1006";
             case "COUVENT":
-                return "7";
+                return "1007";
             case "INTERNAT":
-                return "8";
+                return "1008";
             case "FOSA":
-                return "9";
+                return "1009";
             case "HOTEL":
-                return "10";
+                return "1010";
             case "MILITAIRE EN DEPLACEMENT":
-                return "11";
+                return "1011";
             case "DEPLACES":
-                return "12";
+                return "1012";
             case "REFUGIE":
-                return "13";
+                return "1013";
             case "PRISON":
-                return "14";
+                return "1014";
             default:
                 return null;
         }

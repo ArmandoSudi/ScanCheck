@@ -22,6 +22,8 @@ public class Constant {
     public static String KEY_DATE_DEBUT_CAMPAGNE = "dateDebutCampagne";
     public static String KEY_CURRENT_CODE_AGENT = "currentCodeAgent";
     public static String KEY_CURRENT_CODE_TYPE_AGENT = "currentCodeTypeAgent";
+    public static String KEY_ACTION_ACTUALISER = "keyActualiser";
+
 
     public static String ACTION = "action";
     public static final String ACTION_MENAGE_ACTIVITY = "startMenageActivity";
@@ -29,6 +31,7 @@ public class Constant {
     public static final String ACTION_DISTRIBUTION_ACTIVITY = "startDistributionActivity";
     public static final String ACTION_RAPPORT_ACTIVITY = "startRapportActivity";
     public static final String ACTION_SITEDIST_ACTIVITY = "startSiteDist";
+    public static final String ACTION_ACTUALISER = "actualiser";
     public static final int CODE_ACTION_ADD_MENAGE = 4543;
     public static final String ACTION_ADD_MACARON = "addMacaron";
     public static final String CODE_QR = "codeQr";
@@ -39,6 +42,7 @@ public class Constant {
     public static int REQUEST_CODE_ASK_PERMISSIONS = 104;
     public static int REQUEST_CODE_LOGIN = 105;
     public static int REQUEST_CODE_CHECK_AGENT = 106;
+    public static int REQUEST_CODE_CREATE_AGENT = 155;
 
     public static final String AGENT_DENOMBREMENT = "AGENT_DENOMBREMENT";
     public static final String IT_DENOMBREMENT = "IT_DENOMBREMENT";

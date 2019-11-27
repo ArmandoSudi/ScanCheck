@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
@@ -42,6 +43,9 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.code_et)
     EditText mCodeET;
 
+    @BindView(R.id.actualiser_tv)
+    TextView mActualiserTV;
+
     String mTypeAgent;
     SharedPreferences mSharedPref;
     SharedPreferences.Editor mEditor;
@@ -62,6 +66,8 @@ public class LoginActivity extends AppCompatActivity {
             if (LoginActivity.this.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                     || LoginActivity.this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                     || LoginActivity.this.checkSelfPermission(Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED
+                    || LoginActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || LoginActivity.this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     || LoginActivity.this.checkSelfPermission(Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
 
                 requestPermissions(
@@ -69,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
                                 Manifest.permission.INTERNET,
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.VIBRATE,
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
                                 Manifest.permission.CAMERA},
                         Constant.REQUEST_CODE_ASK_PERMISSIONS
                 );
@@ -87,6 +95,15 @@ public class LoginActivity extends AppCompatActivity {
             String code = mCodeET.getText().toString();
             login(code);
 
+            }
+        });
+
+        mActualiserTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                intent.putExtra(Constant.KEY_ACTION_ACTUALISER, Constant.ACTION_ACTUALISER);
+                startActivity(intent);
             }
         });
     }
@@ -200,73 +217,6 @@ public class LoginActivity extends AppCompatActivity {
                     return true;
                 }
             }
-
-            // Premier login de l'agent, aller se connecter en ligne pour avoir ses informations
-//            if(agent == null || affectation == null){
-//
-//                Campagne campagne = null;
-//
-//                try {
-//                    Response<Agent> rAgent = scanCheckApiInterface.getAgent(codeAuthentification).execute();
-//                    if (rAgent != null && rAgent.isSuccessful()) {
-//
-//                        agent = rAgent.body();
-//
-//                        if(agent != null){
-//
-//                            Response<Affectation> rAffectation = scanCheckApiInterface.getAffectation(agent.CodeAgent).execute();
-//                            if (rAffectation != null && rAffectation.isSuccessful()) {
-//
-//                                affectation = rAffectation.body();
-//
-//                                if(affectation != null){
-//
-//                                    Response<Campagne> rCampagne = scanCheckApiInterface.getCampagne(affectation.CodeCampagne).execute();
-//                                    if (rCampagne != null && rCampagne.isSuccessful()) {
-//
-//                                        campagne = rCampagne.body();
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }catch (Exception ex){
-//
-//                }
-//
-//                if(agent != null && affectation != null && mTypeAgent.equals(affectation.codeTypeAgent)){
-//
-//                    if (campagne != null) {
-//                        try {
-//                            db.getICampagneDao().insert(campagne);
-//                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    }
-//
-//                    try {
-//                        db.getIAgentDao().insert(agent);
-//                    } catch (Exception ex) {
-//                        ex.printStackTrace();
-//                        return false;
-//                    }
-//
-//                    if(affectation != null){
-//                        try {
-//                            db.getIAffectation().insert(affectation);
-//                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    }
-//
-//                    mEditor.putString(Constant.KEY_CURRENT_CODE_TYPE_AGENT, affectation.codeTypeAgent);
-//                    mEditor.putString(Constant.KEY_CURRENT_CODE_AGENT, agent.CodeAgent);
-//                    mEditor.commit();
-//                    intent = new Intent(LoginActivity.this, DashboardActivity.class);
-//
-//                    return true;
-//                }
-//            }
 
             return false;
         }

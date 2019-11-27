@@ -113,6 +113,7 @@
             android:paddingBottom="8dp">
 
             <TextView
+                android:id="@+id/type_menage_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Choisir le type de menage"
@@ -258,7 +259,8 @@
         <LinearLayout
             android:id="@+id/membre_menage_layout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:background="#ffffff"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -272,7 +274,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/membre_menage_rv"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"/>
+                android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/add_membre_menage_bt"
                 style="@style/Widget.AppCompat.Button.Colored"
@@ -294,6 +296,19 @@
                 android:hint="Entrez le nombre des couchettes"
                 android:inputType="number" />
 
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/commentaire_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="commentaire"
+                android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
 

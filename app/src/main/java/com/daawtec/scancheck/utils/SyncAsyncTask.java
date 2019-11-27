@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.Affectation;
+import com.daawtec.scancheck.entites.Agent;
 import com.daawtec.scancheck.entites.Macaron;
 import com.daawtec.scancheck.entites.MembreMenage;
 import com.daawtec.scancheck.entites.Menage;
@@ -35,6 +36,7 @@ public class SyncAsyncTask extends AsyncTask<Void, Void, Void> {
     List<Affectation> affectations = new ArrayList<>();
     List<SiteDistribution> siteDistributions = new ArrayList<>();
     List<MembreMenage> membreMenages = new ArrayList<>();
+    List<Agent> agents = new ArrayList<>();
 
     ProgressDialog mProgressDialog;
 
@@ -65,6 +67,7 @@ public class SyncAsyncTask extends AsyncTask<Void, Void, Void> {
             menages = db.getIMenageDao().all();
             macarons = db.getIMacaronDao().all();
             affectations = db.getIAffectation().all();
+            agents = db.getIAgentDao().all();
             siteDistributions = db.getISiteDistributionDao().all();
             membreMenages = db.getIMembreMenageDao().all();
         } catch (Exception ex){
@@ -73,9 +76,19 @@ public class SyncAsyncTask extends AsyncTask<Void, Void, Void> {
 
         if (menages.size() > 0) postMenage(menages);
         if (macarons.size() > 0) postMacaron(macarons);
-        if (affectations.size() > 0) postAffectation(affectations);
+        if (agents.size() > 0) postAgents(agents);
+        if (affectations.size() > 0) {
+            for (Affectation affectation : affectations){
+                updateAffecation(affectation.codeAffectation, affectation.populationMacroPlan);
+                Log.e(TAG, "doInBackground: POPULATION : " + affectation.populationMacroPlan );
+            }
+
+            //TODO DECOMMENTER L'UPLOAD DES AFFECTATIONS
+            postAffectation(affectations);
+        }
         if (siteDistributions.size() > 0) postSDs(siteDistributions);
         if (membreMenages.size() > 0) postMembreMenage(membreMenages);
+
 
         getSDs(db);
 
@@ -105,14 +118,14 @@ public class SyncAsyncTask extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    private void postAffectation(List<Affectation> affectations){
-        try {
-            Response<String> rAffecations = scanCheckApiInterface.postAffectations(affectations).execute();
-            if (rAffecations != null && rAffecations.isSuccessful()){
-                Log.i(TAG, "postAffectation: " + rAffecations.body());
+    private void updateAffecation(String codeAffectaiton, int nombrePopulation){
+        try{
+            Response<String> rAffectation = scanCheckApiInterface.updatePopulationMacroPlan(codeAffectaiton, nombrePopulation).execute();
+            if (rAffectation != null && rAffectation.isSuccessful()){
+                Log.i(TAG, "updateAffecation: " + rAffectation.body());
             }
         } catch (Exception ex){
-            Log.e(TAG, "postAffectation: " + ex.getMessage());
+            Log.e(TAG, "updateAffecation: " + ex.getMessage() );
         }
     }
 
@@ -135,6 +148,28 @@ public class SyncAsyncTask extends AsyncTask<Void, Void, Void> {
             }
         } catch (Exception ex){
             Log.e(TAG, "postMembreMenage: " + ex.getMessage() );
+        }
+    }
+
+    public void postAgents(List<Agent> agents){
+        try {
+            Response<String> rAgent = scanCheckApiInterface.postAgents(agents).execute();
+            if (rAgent != null && rAgent.isSuccessful()){
+                Log.i(TAG, "postAgents: " + rAgent.body());
+            }
+        } catch (Exception ex){
+            Log.e(TAG, "postAgents: " + ex.getMessage() );
+        }
+    }
+
+    public void postAffectation(List<Affectation> affectations){
+        try {
+            Response<String> rAffectations = scanCheckApiInterface.postAffectations(affectations).execute();
+            if (rAffectations != null && rAffectations.isSuccessful()){
+                Log.i(TAG, "postAffectations: " + rAffectations.body());
+            }
+        } catch (Exception ex){
+            Log.e(TAG, "postAffectations: " + ex.getMessage() );
         }
     }
 

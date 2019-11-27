@@ -4,6 +4,16 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:text="Enregistrement du site de distribution"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
 
     <EditText
         android:id="@+id/nombre_mild_et"
@@ -15,7 +25,7 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
-        android:hint="Entrez le nom du site de distribution"/>
+        android:hint="Nom du site de distribution"/>
 
     <EditText
         android:id="@+id/population_et"
@@ -27,15 +37,9 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
-        android:hint="Entrez le nombre de la Population Macro"/>
+        android:hint="Nombre de la Population Macro"/>
 
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="4dp"-->
-        <!--android:layout_marginLeft="4dp"-->
-        <!--android:layout_marginRight="4dp"-->
-        <!--android:text="Choisir l'Aire de santé"/>-->
+
 
     <!--<Spinner-->
         <!--android:id="@+id/as_sp"-->

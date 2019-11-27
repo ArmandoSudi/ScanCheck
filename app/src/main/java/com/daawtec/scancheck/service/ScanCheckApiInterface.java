@@ -56,7 +56,7 @@ public interface ScanCheckApiInterface {
     @POST("save-macarons/")
     Call<String> postMacarons(@Body List<Macaron> macarons);
 
-    @POST("update-affectation/")
+    @POST("save-affectations/")
     Call<String> postAffectations(@Body List<Affectation> affectations);
 
     @POST("save-sites-distribution/")
@@ -64,6 +64,9 @@ public interface ScanCheckApiInterface {
 
     @POST("save-membres-menages/")
     Call<String> postMembreMenage(@Body List<MembreMenage> membreMenages);
+
+    @POST("save-agents/")
+    Call<String> postAgents(@Body List<Agent> agents);
 
     @POST("/")
     Call<String> postBadVerification(List<BadVerification> badVerifications);

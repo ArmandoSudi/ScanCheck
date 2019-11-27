@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.daawtec.scancheck.database.ScanCheckDB;
 import com.daawtec.scancheck.entites.Affectation;
@@ -77,13 +78,16 @@ public class HomeActivity extends AppCompatActivity {
         mProgressDialog = new ProgressDialog(this);
         mLoadingPG = findViewById(R.id.loading_pb);
 
-//        showProgressDiag(mProgressDialog);
-
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         mEditor = mSharedPref.edit();
 
         boolean isInitialized = mSharedPref.getBoolean(Constant.KEY_IS_INITIALIZED, false);
 
+        Intent i = getIntent();
+        String action = i.getStringExtra(Constant.KEY_ACTION_ACTUALISER);
+        if (action!= null && action.equals(Constant.ACTION_ACTUALISER)){
+            getInitialData();
+        }
 
         if(!isInitialized){
             getInitialData();
@@ -105,6 +109,8 @@ public class HomeActivity extends AppCompatActivity {
             if (HomeActivity.this.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                 || HomeActivity.this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 || HomeActivity.this.checkSelfPermission(Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED
+                || HomeActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || HomeActivity.this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || HomeActivity.this.checkSelfPermission(Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
 
                 requestPermissions(
@@ -112,6 +118,8 @@ public class HomeActivity extends AppCompatActivity {
                                 Manifest.permission.INTERNET,
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.VIBRATE,
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
                                 Manifest.permission.CAMERA},
                         Constant.REQUEST_CODE_ASK_PERMISSIONS
                 );
@@ -152,8 +160,6 @@ public class HomeActivity extends AppCompatActivity {
     public void getInitialData() {
 
         Log.d(TAG, "getInitialData: INITIALIZING DATA");
-//        showProgressDiag(mProgressDialog);
-//        mLoadingPG.setVisibility(View.VISIBLE);
 
         getDivisionSantes();
         getAiresSante();
@@ -181,8 +187,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgressDiag(mProgressDialog);
-//            mLoadingPG.setVisibility(View.VISIBLE);
+//            showProgressDiag(mProgressDialog);
         }
 
         @Override
@@ -190,11 +195,11 @@ public class HomeActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
 
             Log.i(TAG, "onPostExecute: DATABASE INITIALIZED ");
+            Toast.makeText(HomeActivity.this, "Données Actualiées", Toast.LENGTH_SHORT).show();
             // pour ne pas initialiser la base des donnees lors de redemarrage ulterieurs
             mEditor.putBoolean(Constant.KEY_IS_INITIALIZED, true);
             mEditor.commit();
-            hideProgressDiag(mProgressDialog);
-//            mLoadingPG.setVisibility(View.INVISIBLE);
+//            hideProgressDiag(mProgressDialog);
 
             // Go to set the parameter of the user for the first initialization of the data of the app
             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);

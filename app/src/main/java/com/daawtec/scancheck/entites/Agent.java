@@ -26,11 +26,17 @@ public class Agent {
     public String telephone;
 
     public Agent() {
+
     }
 
     public Agent(@NonNull String codeAgent, String nomAgent, String codeAuthentification) {
         CodeAgent = codeAgent;
         NomAgent = nomAgent;
         CodeAuthentification = codeAuthentification;
+    }
+
+    @Override
+    public String toString() {
+        return NomAgent + " " + "(" + CodeAuthentification +")";
     }
 }

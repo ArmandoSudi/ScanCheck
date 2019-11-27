@@ -25,6 +25,12 @@ public interface IAgentDao {
     @Delete
     int delete(Agent...agents);
 
+    @Query("SELECT * FROM AGENT WHERE CODE_AUTHENTIFICATION=:codeAgent")
+    Agent get(String codeAgent);
+
     @Query("SELECT * FROM AGENT WHERE CODE_AUTHENTIFICATION=:codeAgentAuth")
     Agent getAgentByAuth(String codeAgentAuth);
+
+    @Query("SELECT * FROM AGENT")
+    List<Agent> all();
 }

@@ -33,4 +33,7 @@ public interface IAffectationDao {
 
     @Query("SELECT * FROM AFFECTATION")
     List<Affectation> all();
+
+    @Query("SELECT * FROM AFFECTATION WHERE CODE_AS=:codeAs")
+    List<Affectation> getByCodeAs(String codeAs);
 }
