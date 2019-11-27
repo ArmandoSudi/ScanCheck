@@ -101,12 +101,12 @@ public class BaseActivity extends AppCompatActivity implements MenageFragment.On
                     startActivityForResult( intent, Constant.REQUEST_CODE_QR_SCAN_MACARON);
                 } else if (mCurrentFragment instanceof MenageFragment) {
 
-                    Intent intent = new Intent(BaseActivity.this, CreateMenageActivity.class);
-                    intent.putExtra(Constant.CODE_QR, "code_qr");
-                    startActivityForResult(intent, Constant.CODE_ACTION_ADD_MENAGE);
+//                    Intent intent = new Intent(BaseActivity.this, CreateMenageActivity.class);
+//                    intent.putExtra(Constant.CODE_QR, "code_qr");
+//                    startActivityForResult(intent, Constant.CODE_ACTION_ADD_MENAGE);
 
-//                    Intent intent = new Intent(BaseActivity.this, QrCodeActivity.class);
-//                    startActivityForResult( intent, Constant.REQUEST_CODE_QR_SCAN_MENAGE);
+                    Intent intent = new Intent(BaseActivity.this, QrCodeActivity.class);
+                    startActivityForResult( intent, Constant.REQUEST_CODE_QR_SCAN_MENAGE);
 
                 } else if (mCurrentFragment instanceof RapportFragment) {
                     Snackbar.make(view, "Rapport Fragment", Snackbar.LENGTH_LONG)
